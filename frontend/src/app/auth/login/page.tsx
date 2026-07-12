@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
  *   drop-in with zero tailwind.config changes.
  */
 
-const ENDPOINT = "/api/auth/login";
+const ENDPOINT = "/auth/login";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -64,7 +64,7 @@ export default function LoginPage() {
         }
       }
 
-      router.push("/dashboard");
+      router.push("/field_officer/dashboard");
       router.refresh();
     } catch {
       setError("Couldn't reach the server. Check your connection and try again.");

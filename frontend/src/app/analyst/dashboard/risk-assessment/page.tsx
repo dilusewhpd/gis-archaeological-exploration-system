@@ -38,8 +38,8 @@ export default async function RiskAssessmentPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="border-b border-[#DEDBD1] bg-white px-8 py-4">
-        <h1 className="font-serif text-[20px] tracking-tight text-[#16283F]">
+      <header className="border-b border-[#DEDBD1] bg-[#FAF6EB] px-8 py-4">
+        <h1 className="font-serif text-[20px] tracking-tight text-[#3A2A12]">
           Risk assessment
         </h1>
         <p className="mt-0.5 text-[13px] text-[#5B6472]">

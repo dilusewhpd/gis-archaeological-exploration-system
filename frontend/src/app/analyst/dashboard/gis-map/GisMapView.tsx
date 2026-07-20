@@ -96,11 +96,11 @@ export default function GisMapView({ sites }: { sites: MapSite[] }) {
             placeholder="Search exploration sites…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full max-w-[320px] rounded-[6px] border border-[#D4CFC3] bg-white px-3.5 py-2 text-[13px] text-[#23262B] placeholder:text-[#A6A199] outline-none transition focus:border-[#16283F] focus:ring-2 focus:ring-[#16283F]/10"
+            className="w-full max-w-[320px] rounded-[6px] border border-[#D4CFC3] bg-white px-3.5 py-2 text-[13px] text-[#23262B] placeholder:text-[#A6A199] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
           />
         </div>
 
-        <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#F4F3EF]">
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#FAF6EB]">
           <div
             className="absolute inset-0 origin-center transition-transform duration-200"
             style={{ transform: `scale(${zoom})` }}
@@ -120,7 +120,7 @@ export default function GisMapView({ sites }: { sites: MapSite[] }) {
               onClick={() => setZoom((z) => Math.min(ZOOM_MAX, z + ZOOM_STEP))}
               disabled={zoom >= ZOOM_MAX}
               aria-label="Zoom in"
-              className="flex h-8 w-8 items-center justify-center text-[#3A4048] transition hover:bg-[#F4F3EF] disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex h-8 w-8 items-center justify-center text-[#3A4048] transition hover:bg-[#FAF6EB] disabled:cursor-not-allowed disabled:opacity-40"
             >
               <PlusIcon />
             </button>
@@ -130,7 +130,7 @@ export default function GisMapView({ sites }: { sites: MapSite[] }) {
               onClick={() => setZoom((z) => Math.max(ZOOM_MIN, z - ZOOM_STEP))}
               disabled={zoom <= ZOOM_MIN}
               aria-label="Zoom out"
-              className="flex h-8 w-8 items-center justify-center text-[#3A4048] transition hover:bg-[#F4F3EF] disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex h-8 w-8 items-center justify-center text-[#3A4048] transition hover:bg-[#FAF6EB] disabled:cursor-not-allowed disabled:opacity-40"
             >
               <MinusIcon />
             </button>
@@ -140,7 +140,7 @@ export default function GisMapView({ sites }: { sites: MapSite[] }) {
             <button
               type="button"
               onClick={() => setZoom(1)}
-              className="absolute right-3 top-[92px] rounded-[6px] border border-[#DEDBD1] bg-white px-2 py-1 text-[11px] font-medium text-[#5B6472] shadow-[0_1px_2px_rgba(20,25,33,0.08)] hover:text-[#16283F]"
+              className="absolute right-3 top-[92px] rounded-[6px] border border-[#DEDBD1] bg-white px-2 py-1 text-[11px] font-medium text-[#5B6472] shadow-[0_1px_2px_rgba(20,25,33,0.08)] hover:text-[#BB892C]"
             >
               Reset
             </button>
@@ -156,7 +156,7 @@ export default function GisMapView({ sites }: { sites: MapSite[] }) {
       {/* Layers & filters */}
       <div className="space-y-4">
         <div className="rounded-[8px] border border-[#DEDBD1] bg-white px-5 py-4">
-          <h2 className="text-[13px] font-medium text-[#16283F]">Layers</h2>
+          <h2 className="text-[13px] font-medium text-[#3A2A12]">Layers</h2>
           <div className="mt-2.5 space-y-2">
             <LayerCheckbox
               label="Exploration sites"
@@ -182,11 +182,11 @@ export default function GisMapView({ sites }: { sites: MapSite[] }) {
         </div>
 
         <div className="rounded-[8px] border border-[#DEDBD1] bg-white px-5 py-4">
-          <h2 className="text-[13px] font-medium text-[#16283F]">Filter by status</h2>
+          <h2 className="text-[13px] font-medium text-[#3A2A12]">Filter by status</h2>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as SiteStatus | "all")}
-            className="mt-2.5 w-full rounded-[6px] border border-[#D4CFC3] bg-white px-3 py-2 text-[13px] text-[#23262B] outline-none transition focus:border-[#16283F] focus:ring-2 focus:ring-[#16283F]/10"
+            className="mt-2.5 w-full rounded-[6px] border border-[#D4CFC3] bg-white px-3 py-2 text-[13px] text-[#23262B] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
           >
             {STATUS_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -271,7 +271,7 @@ function MapCanvas({
           return (
             <div
               key={`density-${s.id}`}
-              className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#16283F] opacity-[0.08]"
+              className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#3A2A12] opacity-[0.08]"
               style={{
                 left: `${xPct}%`,
                 top: `${yPct}%`,
@@ -317,7 +317,7 @@ function MapCanvas({
                 width: isSelected ? 14 : 10,
                 height: isSelected ? 14 : 10,
                 backgroundColor: STATUS_COLORS[s.status],
-                boxShadow: isSelected ? "0 0 0 3px rgba(22,40,63,0.25)" : undefined,
+                boxShadow: isSelected ? "0 0 0 3px rgba(187,137,44,0.25)" : undefined,
               }}
             />
           );
@@ -330,7 +330,7 @@ function SiteDetailCard({ site, onClose }: { site: MapSite; onClose: () => void 
   return (
     <div className="absolute bottom-3 left-3 w-[260px] rounded-[8px] border border-[#DEDBD1] bg-white p-4 shadow-[0_2px_8px_rgba(20,25,33,0.12)]">
       <div className="flex items-start justify-between gap-2">
-        <p className="text-[14px] font-medium text-[#16283F]">{site.name}</p>
+        <p className="text-[14px] font-medium text-[#3A2A12]">{site.name}</p>
         <button
           type="button"
           onClick={onClose}
@@ -401,7 +401,7 @@ function LayerCheckbox({
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className="h-4 w-4 rounded border-[#D4CFC3] text-[#16283F] focus:ring-[#16283F]/20"
+        className="h-4 w-4 rounded border-[#D4CFC3] text-[#BB892C] focus:ring-[#BB892C]/20"
       />
       {label}
     </label>

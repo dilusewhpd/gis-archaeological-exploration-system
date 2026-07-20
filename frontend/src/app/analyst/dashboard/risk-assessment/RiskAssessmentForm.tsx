@@ -101,7 +101,7 @@ export default function RiskAssessmentForm({ datasets }: { datasets: Dataset[] }
         onSubmit={handleRun}
         className="h-fit rounded-[8px] border border-[#DEDBD1] bg-white px-5 py-5"
       >
-        <h2 className="text-[14px] font-medium text-[#16283F]">Configure clustering</h2>
+        <h2 className="text-[14px] font-medium text-[#3A2A12]">Configure clustering</h2>
 
         <div className="mt-4">
           <label htmlFor="dataset" className="block text-[13px] font-medium text-[#3A4048]">
@@ -111,7 +111,7 @@ export default function RiskAssessmentForm({ datasets }: { datasets: Dataset[] }
             id="dataset"
             value={datasetId}
             onChange={(e) => setDatasetId(e.target.value)}
-            className="mt-1.5 w-full rounded-[6px] border border-[#D4CFC3] bg-white px-3 py-2 text-[13px] text-[#23262B] outline-none transition focus:border-[#16283F] focus:ring-2 focus:ring-[#16283F]/10"
+            className="mt-1.5 w-full rounded-[6px] border border-[#D4CFC3] bg-white px-3 py-2 text-[13px] text-[#23262B] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
           >
             {datasets.map((d) => (
               <option key={d.id} value={d.id}>
@@ -137,7 +137,7 @@ export default function RiskAssessmentForm({ datasets }: { datasets: Dataset[] }
             max={10}
             value={k}
             onChange={(e) => setK(clamp(parseInt(e.target.value, 10) || 2, 2, 10))}
-            className="mt-1.5 w-full rounded-[6px] border border-[#D4CFC3] bg-white px-3 py-2 text-[13px] text-[#23262B] outline-none transition focus:border-[#16283F] focus:ring-2 focus:ring-[#16283F]/10"
+            className="mt-1.5 w-full rounded-[6px] border border-[#D4CFC3] bg-white px-3 py-2 text-[13px] text-[#23262B] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
           />
         </div>
 
@@ -149,7 +149,7 @@ export default function RiskAssessmentForm({ datasets }: { datasets: Dataset[] }
             id="distance"
             value={distanceMetric}
             onChange={(e) => setDistanceMetric(e.target.value as DistanceMetric)}
-            className="mt-1.5 w-full rounded-[6px] border border-[#D4CFC3] bg-white px-3 py-2 text-[13px] text-[#23262B] outline-none transition focus:border-[#16283F] focus:ring-2 focus:ring-[#16283F]/10"
+            className="mt-1.5 w-full rounded-[6px] border border-[#D4CFC3] bg-white px-3 py-2 text-[13px] text-[#23262B] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
           >
             <option value="haversine">Haversine (geographic distance)</option>
             <option value="euclidean">Euclidean</option>
@@ -171,7 +171,7 @@ export default function RiskAssessmentForm({ datasets }: { datasets: Dataset[] }
         <button
           type="submit"
           disabled={isRunning}
-          className="mt-5 flex w-full items-center justify-center gap-2 rounded-[6px] bg-[#16283F] px-4 py-2.5 text-[13px] font-medium text-[#F4F2ED] transition hover:bg-[#1D3450] disabled:cursor-not-allowed disabled:opacity-60"
+          className="mt-5 flex w-full items-center justify-center gap-2 rounded-[6px] bg-[#BB892C] px-4 py-2.5 text-[13px] font-medium text-[#F4F2ED] transition hover:bg-[#8F6A21] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isRunning && <Spinner />}
           {isRunning ? "Running K-Means clustering…" : "Run K-Means clustering"}
@@ -181,7 +181,7 @@ export default function RiskAssessmentForm({ datasets }: { datasets: Dataset[] }
       {/* Output */}
       <div className="space-y-5">
         <div className="overflow-hidden rounded-[8px] border border-[#DEDBD1] bg-white">
-          <div className="aspect-[16/9] w-full bg-[#F4F3EF]">
+          <div className="aspect-[16/9] w-full bg-[#FAF6EB]">
             {result ? (
               <RiskZoneMap zones={result.zones} />
             ) : (
@@ -195,7 +195,7 @@ export default function RiskAssessmentForm({ datasets }: { datasets: Dataset[] }
         {result && (
           <div className="rounded-[8px] border border-[#DEDBD1] bg-white">
             <div className="flex items-center justify-between border-b border-[#DEDBD1] px-5 py-3.5">
-              <h2 className="text-[14px] font-medium text-[#16283F]">Results</h2>
+              <h2 className="text-[14px] font-medium text-[#3A2A12]">Results</h2>
               <p className="text-[12px] text-[#8A8D86]">
                 {result.totalSitesAnalyzed} sites analyzed
               </p>
@@ -203,7 +203,7 @@ export default function RiskAssessmentForm({ datasets }: { datasets: Dataset[] }
 
             <table className="w-full text-left text-[13px]">
               <thead>
-                <tr className="bg-[#16283F] text-[#F4F2ED]">
+                <tr className="bg-[#3A2A12] text-[#F4F2ED]">
                   <th className="px-4 py-2.5 font-medium">Zone</th>
                   <th className="px-4 py-2.5 font-medium">Risk level</th>
                   <th className="px-4 py-2.5 font-medium">Sites</th>
@@ -235,7 +235,7 @@ export default function RiskAssessmentForm({ datasets }: { datasets: Dataset[] }
                 type="button"
                 onClick={handleGenerateReport}
                 disabled={isGeneratingReport}
-                className="flex items-center gap-2 rounded-[6px] bg-[#16283F] px-4 py-2 text-[13px] font-medium text-[#F4F2ED] transition hover:bg-[#1D3450] disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex items-center gap-2 rounded-[6px] bg-[#BB892C] px-4 py-2 text-[13px] font-medium text-[#F4F2ED] transition hover:bg-[#8F6A21] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isGeneratingReport && <Spinner />}
                 {isGeneratingReport ? "Generating…" : "Generate risk assessment report"}
@@ -243,7 +243,7 @@ export default function RiskAssessmentForm({ datasets }: { datasets: Dataset[] }
 
               <Link
                 href="/analyst/dashboard/gis-map"
-                className="text-[13px] font-medium text-[#16283F] hover:underline"
+                className="text-[13px] font-medium text-[#BB892C] hover:underline"
               >
                 View risk zones on GIS map →
               </Link>

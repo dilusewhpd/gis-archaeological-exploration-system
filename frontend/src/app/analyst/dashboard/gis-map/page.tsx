@@ -47,8 +47,8 @@ export default async function GisMapPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="border-b border-[#DEDBD1] bg-white px-8 py-4">
-        <h1 className="font-serif text-[20px] tracking-tight text-[#16283F]">GIS map</h1>
+      <header className="border-b border-[#DEDBD1] bg-[#FAF6EB] px-8 py-4">
+        <h1 className="font-serif text-[20px] tracking-tight text-[#3A2A12]">GIS map</h1>
       </header>
 
       <main className="flex-1 px-8 py-7">

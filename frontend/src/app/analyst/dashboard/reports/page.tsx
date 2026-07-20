@@ -106,12 +106,12 @@ export default async function AnalystReportsPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="flex items-center justify-between border-b border-[#DEDBD1] bg-white px-8 py-4">
-        <h1 className="font-serif text-[20px] tracking-tight text-[#16283F]">Reports</h1>
+      <header className="flex items-center justify-between border-b border-[#DEDBD1] bg-[#FAF6EB] px-8 py-4">
+        <h1 className="font-serif text-[20px] tracking-tight text-[#3A2A12]">Reports</h1>
         <Link
           href="/analyst/dashboard/profile"
           aria-label="View profile"
-          className="h-8 w-8 rounded-full border border-[#DEDBD1] bg-[#F4F3EF] transition hover:border-[#16283F]/30"
+          className="h-8 w-8 rounded-full border border-[#DEDBD1] bg-[#F0E6C8] transition hover:border-[#BB892C]/40"
         />
       </header>
 
@@ -150,7 +150,7 @@ export default async function AnalystReportsPage() {
         {/* Report history */}
         <div className="mt-6 rounded-[8px] border border-[#DEDBD1] bg-white">
           <div className="flex items-center justify-between border-b border-[#DEDBD1] px-5 py-4">
-            <h2 className="text-[14px] font-medium text-[#16283F]">Report history</h2>
+            <h2 className="text-[14px] font-medium text-[#3A2A12]">Report history</h2>
             <p className="text-[13px] text-[#8A8D86]">{recentReports.length} reports</p>
           </div>
 
@@ -203,21 +203,21 @@ function GenerateReportCard({
 }) {
   return (
     <div className="rounded-[8px] border border-[#DEDBD1] bg-white px-5 py-5">
-      <h2 className="font-serif text-[16px] text-[#16283F]">{title}</h2>
+      <h2 className="font-serif text-[16px] text-[#3A2A12]">{title}</h2>
       <p className="mt-1.5 text-[13px] leading-relaxed text-[#5B6472]">{description}</p>
       <p className="mt-3 text-[12px] text-[#8A8D86]">{sourceLabel}</p>
 
       {disabled ? (
         <Link
           href={prerequisiteHref}
-          className="mt-4 flex w-full items-center justify-center rounded-[6px] border border-[#DEDBD1] px-4 py-2.5 text-[13px] font-medium text-[#16283F] transition hover:border-[#16283F]/30"
+          className="mt-4 flex w-full items-center justify-center rounded-[6px] border border-[#DEDBD1] px-4 py-2.5 text-[13px] font-medium text-[#3A2A12] transition hover:border-[#BB892C]/40 hover:text-[#BB892C]"
         >
           {prerequisiteLabel}
         </Link>
       ) : (
         <Link
           href={action}
-          className="mt-4 flex w-full items-center justify-center rounded-[6px] bg-[#16283F] px-4 py-2.5 text-[13px] font-medium text-[#F4F2ED] transition hover:bg-[#1D3450]"
+          className="mt-4 flex w-full items-center justify-center rounded-[6px] bg-[#BB892C] px-4 py-2.5 text-[13px] font-medium text-[#F4F2ED] transition hover:bg-[#8F6A21]"
         >
           Generate report
         </Link>
@@ -231,7 +231,7 @@ function ReportRow({ report }: { report: ReportRecord }) {
 
   return (
     <tr className="border-t border-[#DEDBD1]">
-      <td className="px-5 py-3 text-[#16283F]">{report.title}</td>
+      <td className="px-5 py-3 text-[#3A2A12]">{report.title}</td>
       <td className="px-5 py-3 text-[#3A4048]">{typeLabel}</td>
       <td className="px-5 py-3 text-[#3A4048]">{report.region}</td>
       <td className="px-5 py-3 text-[#3A4048]">{report.generatedAt}</td>
@@ -242,7 +242,7 @@ function ReportRow({ report }: { report: ReportRecord }) {
         {report.status === "ready" ? (
           <Link
             href={`/analyst/dashboard/reports/${report.id}`}
-            className="text-[13px] font-medium text-[#16283F] underline-offset-2 hover:underline"
+            className="text-[13px] font-medium text-[#BB892C] underline-offset-2 hover:underline"
           >
             View
           </Link>
@@ -264,7 +264,7 @@ function ReportRow({ report }: { report: ReportRecord }) {
 function StatusBadge({ status }: { status: ReportStatus }) {
   const styles: Record<ReportStatus, string> = {
     ready: "bg-[#EAF1EA] text-[#2F5C3B]",
-    generating: "bg-[#F4F3EF] text-[#5B6472]",
+    generating: "bg-[#FAF6EB] text-[#8A8478]",
     failed: "bg-[#F6E8E3] text-[#9A4B2E]",
   };
 

@@ -61,12 +61,12 @@ export default async function AnalystProfilePage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="flex items-center justify-between border-b border-[#DEDBD1] bg-white px-8 py-4">
-        <h1 className="font-serif text-[20px] tracking-tight text-[#16283F]">Profile</h1>
+      <header className="flex items-center justify-between border-b border-[#DEDBD1] bg-[#FAF6EB] px-8 py-4">
+        <h1 className="font-serif text-[20px] tracking-tight text-[#3A2A12]">Profile</h1>
         <div className="flex items-center gap-4">
           <Link
             href="/auth/logout"
-            className="text-[13px] font-medium text-[#5B6472] transition hover:text-[#16283F]"
+            className="text-[13px] font-medium text-[#5B6472] transition hover:text-[#BB892C]"
           >
             Log out
           </Link>
@@ -83,10 +83,10 @@ export default async function AnalystProfilePage() {
 
               <PhotoUploadControl hasPhoto={Boolean(profile.photoUrl)} />
 
-              <h2 className="mt-4 font-serif text-[17px] text-[#16283F]">{profile.fullName}</h2>
+              <h2 className="mt-4 font-serif text-[17px] text-[#3A2A12]">{profile.fullName}</h2>
               <p className="mt-0.5 text-[13px] text-[#5B6472]">{profile.role}</p>
 
-              <span className="mt-3 rounded-full bg-[#F4F3EF] px-3 py-1 text-[12px] text-[#5B6472]">
+              <span className="mt-3 rounded-full bg-[#FAF6EB] px-3 py-1 text-[12px] text-[#8A8478]">
                 {profile.region}
               </span>
             </div>
@@ -101,7 +101,7 @@ export default async function AnalystProfilePage() {
 
           {/* Editable profile info */}
           <div className="rounded-[8px] border border-[#DEDBD1] bg-white px-5 py-5">
-            <h2 className="text-[14px] font-medium text-[#16283F]">Profile information</h2>
+            <h2 className="text-[14px] font-medium text-[#3A2A12]">Profile information</h2>
             <p className="mt-1 text-[13px] text-[#8A8D86]">
               Keep your contact details up to date so admins and field officers can reach you.
             </p>
@@ -145,7 +145,7 @@ function Avatar({
 
   return (
     <div
-      className="flex items-center justify-center rounded-full border border-[#DEDBD1] bg-[#F4F3EF] font-serif text-[#16283F]"
+      className="flex items-center justify-center rounded-full border border-[#DEDBD1] bg-[#F0E6C8] font-serif text-[#8F6A21]"
       style={{ width: size, height: size, fontSize: size / 2.6 }}
       aria-label={name}
     >
@@ -161,7 +161,7 @@ function Avatar({
  */
 function PhotoUploadControl({ hasPhoto }: { hasPhoto: boolean }) {
   return (
-    <label className="mt-3 cursor-pointer text-[12px] font-medium text-[#16283F] underline-offset-2 hover:underline">
+    <label className="mt-3 cursor-pointer text-[12px] font-medium text-[#BB892C] underline-offset-2 hover:underline">
       {hasPhoto ? "Replace photo" : "Add profile photo"}
       <input type="file" accept="image/*" className="sr-only" />
     </label>

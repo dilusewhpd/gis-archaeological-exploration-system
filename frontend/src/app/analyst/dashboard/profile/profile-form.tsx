@@ -58,7 +58,7 @@ export function ProfileForm({ profile }: { profile: UserProfile }) {
             setFullName(e.target.value);
             setSaveState("idle");
           }}
-          className="w-full rounded-[6px] border border-[#DEDBD1] px-3 py-2 text-[13px] text-[#16283F] outline-none focus:border-[#16283F]/40"
+          className="w-full rounded-[6px] border border-[#DEDBD1] px-3 py-2 text-[13px] text-[#3A2A12] outline-none focus:border-[#BB892C]/40"
         />
       </Field>
 
@@ -70,7 +70,7 @@ export function ProfileForm({ profile }: { profile: UserProfile }) {
             setEmail(e.target.value);
             setSaveState("idle");
           }}
-          className="w-full rounded-[6px] border border-[#DEDBD1] px-3 py-2 text-[13px] text-[#16283F] outline-none focus:border-[#16283F]/40"
+          className="w-full rounded-[6px] border border-[#DEDBD1] px-3 py-2 text-[13px] text-[#3A2A12] outline-none focus:border-[#BB892C]/40"
         />
       </Field>
 
@@ -83,7 +83,7 @@ export function ProfileForm({ profile }: { profile: UserProfile }) {
             setPhone(e.target.value);
             setSaveState("idle");
           }}
-          className="w-full rounded-[6px] border border-[#DEDBD1] px-3 py-2 text-[13px] text-[#16283F] outline-none placeholder:text-[#8A8D86] focus:border-[#16283F]/40"
+          className="w-full rounded-[6px] border border-[#DEDBD1] px-3 py-2 text-[13px] text-[#3A2A12] outline-none placeholder:text-[#8A8D86] focus:border-[#BB892C]/40"
         />
       </Field>
 
@@ -92,7 +92,7 @@ export function ProfileForm({ profile }: { profile: UserProfile }) {
           type="text"
           value={profile.role}
           disabled
-          className="w-full rounded-[6px] border border-[#DEDBD1] bg-[#F4F3EF] px-3 py-2 text-[13px] text-[#8A8D86]"
+          className="w-full rounded-[6px] border border-[#DEDBD1] bg-[#FAF6EB] px-3 py-2 text-[13px] text-[#8A8D86]"
         />
       </Field>
 
@@ -100,7 +100,7 @@ export function ProfileForm({ profile }: { profile: UserProfile }) {
         <button
           type="submit"
           disabled={!isDirty || saveState === "saving"}
-          className="rounded-[6px] bg-[#16283F] px-4 py-2.5 text-[13px] font-medium text-[#F4F2ED] transition hover:bg-[#1D3450] disabled:cursor-not-allowed disabled:bg-[#DEDBD1] disabled:text-[#8A8D86]"
+          className="rounded-[6px] bg-[#BB892C] px-4 py-2.5 text-[13px] font-medium text-[#F4F2ED] transition hover:bg-[#8F6A21] disabled:cursor-not-allowed disabled:bg-[#DEDBD1] disabled:text-[#8A8D86]"
         >
           {saveState === "saving" ? "Saving…" : "Save changes"}
         </button>
@@ -109,7 +109,7 @@ export function ProfileForm({ profile }: { profile: UserProfile }) {
           <button
             type="button"
             onClick={handleCancel}
-            className="text-[13px] font-medium text-[#5B6472] hover:text-[#16283F]"
+            className="text-[13px] font-medium text-[#5B6472] hover:text-[#BB892C]"
           >
             Cancel
           </button>

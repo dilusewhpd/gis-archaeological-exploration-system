@@ -21,6 +21,35 @@ import { useRouter } from "next/navigation";
 // Sri Lanka's approximate onshore bounding box (WGS84)
 const SL_BOUNDS = { latMin: 5.9, latMax: 9.9, lngMin: 79.5, lngMax: 81.9 };
 
+const SRI_LANKA_POLYGON = [
+  { lat: 9.80, lng: 80.20 }, // Jaffna
+  { lat: 9.30, lng: 80.40 }, // Northeast (Mullaitivu)
+  { lat: 8.50, lng: 81.20 }, // Trincomalee
+  { lat: 7.70, lng: 81.80 }, // Batticaloa
+  { lat: 7.00, lng: 81.80 }, // East coast
+  { lat: 6.30, lng: 81.70 }, // Southeast (Yala)
+  { lat: 5.92, lng: 80.60 }, // Dondra (South)
+  { lat: 6.20, lng: 80.10 }, // Galle
+  { lat: 6.90, lng: 79.82 }, // Colombo
+  { lat: 8.00, lng: 79.70 }, // Kalpitiya
+  { lat: 9.00, lng: 79.80 }, // Mannar
+  { lat: 9.50, lng: 80.00 }, // Pooneryn
+  { lat: 9.80, lng: 80.20 }, // Close loop
+];
+
+function isPointInPolygon(lat: number, lng: number, polygon: { lat: number; lng: number }[]) {
+  let inside = false;
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const xi = polygon[i].lng, yi = polygon[i].lat;
+    const xj = polygon[j].lng, yj = polygon[j].lat;
+
+    const intersect = ((yi > lat) !== (yj > lat))
+        && (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi);
+    if (intersect) inside = !inside;
+  }
+  return inside;
+}
+
 const DISTRICTS = [
   "Ampara", "Anuradhapura", "Badulla", "Batticaloa", "Colombo", "Galle",
   "Gampaha", "Hambantota", "Jaffna", "Kalutara", "Kandy", "Kegalle",
@@ -72,6 +101,10 @@ export default function NewSitePage() {
       setError("Pick a GPS location on the map, or enter coordinates manually.");
       return;
     }
+    if (!isPointInPolygon(coords.lat, coords.lng, SRI_LANKA_POLYGON)) {
+      setError("The selected coordinate is outside Sri Lanka's land mass (in the ocean). Please select a valid onshore point.");
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -104,7 +137,7 @@ export default function NewSitePage() {
     <div className="flex flex-1 flex-col">
       <header className="border-b border-[#DEDBD1] bg-[#FAF6EB] px-8 py-4">
         <h1 className="font-serif text-[20px] tracking-tight text-[#3A2A12]">
-          Register new exploration site
+          Submit exploration report
         </h1>
       </header>
 
@@ -211,7 +244,7 @@ export default function NewSitePage() {
               className="mt-6 flex items-center justify-center gap-2 rounded-[6px] bg-[#BB892C] px-5 py-2.5 text-[14px] font-medium text-[#F4F2ED] transition hover:bg-[#8F6A21] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting && <Spinner />}
-              {isSubmitting ? "Submitting…" : "Submit for review"}
+              {isSubmitting ? "Submitting…" : "Submit exploration report"}
             </button>
           </div>
 
@@ -223,6 +256,17 @@ export default function NewSitePage() {
             </p>
 
             <CoordinatePicker value={coords} onChange={setCoords} />
+
+            {coords && (
+              <div className="mt-3 rounded-[6px] bg-[#FAF6EB] p-2.5 text-[11px] text-[#8F6A21]">
+                <span className="font-semibold">GPS Quality/Confidence (simulated):</span>{" "}
+                {isPointInPolygon(coords.lat, coords.lng, SRI_LANKA_POLYGON) ? (
+                  <span className="text-[#2C6B33]">Excellent Accuracy (±3.2m simulated) • HDOP 1.1 (9 Satellites)</span>
+                ) : (
+                  <span className="text-[#B03A2E]">Outside Land Territory (Ocean detected)</span>
+                )}
+              </div>
+            )}
 
             <div className="mt-4 grid grid-cols-2 gap-3">
               <ManualCoordField
@@ -251,11 +295,6 @@ export default function NewSitePage() {
   );
 }
 
-/* ------------------------------------------------------------------------ */
-/* CoordinatePicker — dependency-free stand-in for a real GIS map.          */
-/* Maps a click position inside the panel linearly onto Sri Lanka's         */
-/* onshore lat/lng bounding box. Swap for react-leaflet/mapbox-gl later.    */
-/* ------------------------------------------------------------------------ */
 function CoordinatePicker({
   value,
   onChange,
@@ -263,6 +302,14 @@ function CoordinatePicker({
   value: Coordinates | null;
   onChange: (c: Coordinates) => void;
 }) {
+  const polygonPointsString = useMemo(() => {
+    return SRI_LANKA_POLYGON.map(p => {
+      const xPct = ((p.lng - SL_BOUNDS.lngMin) / (SL_BOUNDS.lngMax - SL_BOUNDS.lngMin)) * 100;
+      const yPct = ((SL_BOUNDS.latMax - p.lat) / (SL_BOUNDS.latMax - SL_BOUNDS.latMin)) * 100;
+      return `${xPct.toFixed(1)},${yPct.toFixed(1)}`;
+    }).join(" ");
+  }, []);
+
   const gridLines = useMemo(() => Array.from({ length: 6 }), []);
 
   function handleClick(e: MouseEvent<HTMLDivElement>) {
@@ -303,6 +350,14 @@ function CoordinatePicker({
     >
       {/* grid */}
       <svg className="absolute inset-0 h-full w-full" aria-hidden="true">
+        {/* Sri Lanka landmass outline */}
+        <polygon
+          points={polygonPointsString}
+          fill="#F3E9CD"
+          stroke="#D5C5A1"
+          strokeWidth="1.5"
+          className="opacity-80"
+        />
         {gridLines.map((_, i) => (
           <line
             key={`v${i}`}
@@ -312,6 +367,7 @@ function CoordinatePicker({
             y2="100%"
             stroke="#DEDBD1"
             strokeWidth={1}
+            strokeDasharray="2,2"
           />
         ))}
         {gridLines.map((_, i) => (
@@ -323,6 +379,7 @@ function CoordinatePicker({
             y2={`${(i / (gridLines.length - 1)) * 100}%`}
             stroke="#DEDBD1"
             strokeWidth={1}
+            strokeDasharray="2,2"
           />
         ))}
       </svg>

@@ -30,9 +30,9 @@ type ManagementReport = {
 };
 
 const INITIAL_REPORTS: ManagementReport[] = [
-  { id: "rep1", title: "Management report — July 2026", generatedAt: "2026-07-10", status: "Ready" },
-  { id: "rep2", title: "Management report — June 2026", generatedAt: "2026-06-10", status: "Ready" },
-  { id: "rep3", title: "Management report — May 2026", generatedAt: "2026-05-10", status: "Ready" },
+  { id: "rep1", title: "Archaeological Management Report — July 2026", generatedAt: "2026-07-10", status: "Ready" },
+  { id: "rep2", title: "Archaeological Management Report — June 2026", generatedAt: "2026-06-10", status: "Ready" },
+  { id: "rep3", title: "Archaeological Management Report — May 2026", generatedAt: "2026-05-10", status: "Ready" },
 ];
 
 export default function AdminReportsPage() {
@@ -46,7 +46,7 @@ export default function AdminReportsPage() {
     const today = new Date().toISOString().slice(0, 10);
 
     setReports((prev) => [
-      { id: pendingId, title: `Management report — ${formatMonth(today)}`, generatedAt: today, status: "Generating" },
+      { id: pendingId, title: `Archaeological Management Report — ${formatMonth(today)}`, generatedAt: today, status: "Generating" },
       ...prev,
     ]);
 
@@ -62,16 +62,15 @@ export default function AdminReportsPage() {
   return (
     <div className="flex flex-1 flex-col">
       <header className="flex items-center justify-between border-b border-[#DEDBD1] bg-[#FAF6EB] px-8 py-4">
-        <h1 className="font-serif text-[20px] tracking-tight text-[#3A2A12]">Reports</h1>
+        <h1 className="font-serif text-[20px] tracking-tight text-[#3A2A12]">Reports — Decision Support</h1>
       </header>
 
       <main className="flex-1 px-8 py-7">
         {/* Generate report */}
         <div className="rounded-[8px] border border-[#DEDBD1] bg-white px-5 py-5">
-          <h2 className="font-serif text-[16px] text-[#3A2A12]">Management report</h2>
+          <h2 className="font-serif text-[16px] text-[#3A2A12] uppercase tracking-wider font-semibold text-[13px]">Generate Archaeological Management Report</h2>
           <p className="mt-1.5 max-w-xl text-[13px] leading-relaxed text-[#5B6472]">
-            Summarizes site prioritization, conservation recommendations, and monitoring status
-            from the decision support dashboard.
+            Generates the official Departmental Management Report compiling the decision support dashboard&apos;s active site prioritization indices, conservation recommendations, and active monitoring logs.
           </p>
 
           <button

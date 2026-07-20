@@ -18,8 +18,9 @@ const ROLE_CONFIGS = {
     deptTitle: "Department of Archaeology",
     navItems: [
       { href: "/field_officer/dashboard", label: "Dashboard", icon: "home" },
-      { href: "/field_officer/dashboard/new-site", label: "Register site", icon: "plus-circle" },
+      { href: "/field_officer/dashboard/new-site", label: "Submit report", icon: "plus-circle" },
       { href: "/field_officer/dashboard/records", label: "My sites", icon: "map-pin" },
+      { href: "/field_officer/dashboard/gis-map", label: "GIS map", icon: "map" },
       { href: "/field_officer/dashboard/reports", label: "Reports", icon: "doc" },
       { href: "/field_officer/dashboard/profile", label: "Settings", icon: "gear" },
     ],

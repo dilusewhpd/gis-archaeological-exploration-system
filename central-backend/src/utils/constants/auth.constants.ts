@@ -3,3 +3,5 @@ export const ROLES = {
   ANALYST: "ANALYST",
   FIELD_OFFICER: "FIELD_OFFICER",
 } as const;
+
+export type RoleName = (typeof ROLES)[keyof typeof ROLES];

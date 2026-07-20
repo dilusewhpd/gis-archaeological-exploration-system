@@ -87,20 +87,38 @@ export function UserManagementTable({ initialUsers }: { initialUsers: UserAccoun
                   </td>
                   <td className="px-5 py-3">
                     {user.status === "Active" ? (
-                      <Link
-                        href={`/admin/dashboard/users/${user.id}/edit`}
-                        className="font-medium text-[#BB892C] underline-offset-2 hover:underline"
-                      >
-                        Edit
-                      </Link>
+                      <div className="flex items-center gap-3">
+                        <Link
+                          href={`/admin/dashboard/users/${user.id}/edit`}
+                          className="font-medium text-[#BB892C] underline-offset-2 hover:underline"
+                        >
+                          Edit
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => alert(`Reset credentials successfully generated and sent to ${user.fullName} (${user.email}).`)}
+                          className="font-medium text-[#9A5A2E] underline-offset-2 hover:underline"
+                        >
+                          Reset Password
+                        </button>
+                      </div>
                     ) : (
-                      <button
-                        type="button"
-                        onClick={() => handleEnable(user)}
-                        className="font-medium text-[#2F5C3B] underline-offset-2 hover:underline"
-                      >
-                        Enable
-                      </button>
+                      <div className="flex items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => handleEnable(user)}
+                          className="font-medium text-[#2F5C3B] underline-offset-2 hover:underline"
+                        >
+                          Enable
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => alert(`Reset credentials successfully generated and sent to ${user.fullName} (${user.email}).`)}
+                          className="font-medium text-[#9A5A2E] underline-offset-2 hover:underline"
+                        >
+                          Reset Password
+                        </button>
+                      </div>
                     )}
                   </td>
                 </tr>

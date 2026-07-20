@@ -35,8 +35,8 @@ export default async function EditUserPage({
         <h1 className="font-serif text-[20px] tracking-tight text-[#3A2A12]">Edit user</h1>
       </header>
 
-      <main className="flex-1 px-8 py-7">
-        <div className="max-w-xl">
+      <main className="flex-1 px-8 py-7 bg-[#F0E6C8]/30">
+        <div className="max-w-5xl">
           <EditUserForm user={user} />
         </div>
       </main>

@@ -60,7 +60,7 @@ const ZOOM_MIN = 1;
 const ZOOM_MAX = 3;
 const ZOOM_STEP = 0.5;
 
-export default function GisMapView({ sites }: { sites: MapSite[] }) {
+export default function GisMapView({ sites, isFieldOfficer = false }: { sites: MapSite[]; isFieldOfficer?: boolean }) {
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<SiteStatus | "all">("all");
   const [layers, setLayers] = useState<Layers>({
@@ -146,6 +146,40 @@ export default function GisMapView({ sites }: { sites: MapSite[] }) {
             </button>
           )}
 
+          {/* Map Legend Overlay */}
+          <div className="absolute right-3 bottom-3 rounded-[6px] border border-[#DEDBD1] bg-white/95 p-3 text-[11px] shadow-[0_1px_2px_rgba(20,25,33,0.08)] max-w-[200px] z-10 backdrop-blur-xs">
+            <span className="block font-bold text-[#3A2A12] uppercase tracking-wider mb-2">
+              Map Legend
+            </span>
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-[#2C6B33]" />
+                <span className="text-[#5B6472]">Active Exploration</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-[#9A5A2E]" />
+                <span className="text-[#5B6472]">Monitoring Area</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-[#B03A2E]" />
+                <span className="text-[#5B6472]">High Risk / Threatened</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-[#8A8D86]" />
+                <span className="text-[#5B6472]">Archived Record</span>
+              </div>
+            </div>
+
+            <div className="mt-3 border-t border-[#DEDBD1] pt-2">
+              <span className="block font-semibold text-[#8A8478] mb-1">Data Provenance:</span>
+              <ul className="list-disc pl-3.5 text-[9.5px] text-[#8A8D86] space-y-0.5">
+                <li>Coordinates: Archaeology Dept SL</li>
+                <li>Boundaries: Survey Dept SL</li>
+                <li>Flooding Hazard: DMC Disaster Centre</li>
+              </ul>
+            </div>
+          </div>
+
           {/* Site detail card */}
           {selectedSite && (
             <SiteDetailCard site={selectedSite} onClose={() => setSelectedSiteId(null)} />
@@ -155,31 +189,33 @@ export default function GisMapView({ sites }: { sites: MapSite[] }) {
 
       {/* Layers & filters */}
       <div className="space-y-4">
-        <div className="rounded-[8px] border border-[#DEDBD1] bg-white px-5 py-4">
-          <h2 className="text-[13px] font-medium text-[#3A2A12]">Layers</h2>
-          <div className="mt-2.5 space-y-2">
-            <LayerCheckbox
-              label="Exploration sites"
-              checked={layers.explorationSites}
-              onChange={() => toggleLayer("explorationSites")}
-            />
-            <LayerCheckbox
-              label="Risk zones"
-              checked={layers.riskZones}
-              onChange={() => toggleLayer("riskZones")}
-            />
-            <LayerCheckbox
-              label="Site density"
-              checked={layers.siteDensity}
-              onChange={() => toggleLayer("siteDensity")}
-            />
-            <LayerCheckbox
-              label="Boundaries"
-              checked={layers.boundaries}
-              onChange={() => toggleLayer("boundaries")}
-            />
+        {!isFieldOfficer && (
+          <div className="rounded-[8px] border border-[#DEDBD1] bg-white px-5 py-4">
+            <h2 className="text-[13px] font-medium text-[#3A2A12]">Layers</h2>
+            <div className="mt-2.5 space-y-2">
+              <LayerCheckbox
+                label="Exploration sites"
+                checked={layers.explorationSites}
+                onChange={() => toggleLayer("explorationSites")}
+              />
+              <LayerCheckbox
+                label="Risk zones"
+                checked={layers.riskZones}
+                onChange={() => toggleLayer("riskZones")}
+              />
+              <LayerCheckbox
+                label="Site density"
+                checked={layers.siteDensity}
+                onChange={() => toggleLayer("siteDensity")}
+              />
+              <LayerCheckbox
+                label="Boundaries"
+                checked={layers.boundaries}
+                onChange={() => toggleLayer("boundaries")}
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="rounded-[8px] border border-[#DEDBD1] bg-white px-5 py-4">
           <h2 className="text-[13px] font-medium text-[#3A2A12]">Filter by status</h2>

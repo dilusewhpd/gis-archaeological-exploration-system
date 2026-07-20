@@ -61,14 +61,14 @@ export default function AdminReportsPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="flex items-center justify-between border-b border-[#DEDBD1] bg-white px-8 py-4">
-        <h1 className="font-serif text-[20px] tracking-tight text-[#16283F]">Reports</h1>
+      <header className="flex items-center justify-between border-b border-[#DEDBD1] bg-[#FAF6EB] px-8 py-4">
+        <h1 className="font-serif text-[20px] tracking-tight text-[#3A2A12]">Reports</h1>
       </header>
 
       <main className="flex-1 px-8 py-7">
         {/* Generate report */}
         <div className="rounded-[8px] border border-[#DEDBD1] bg-white px-5 py-5">
-          <h2 className="font-serif text-[16px] text-[#16283F]">Management report</h2>
+          <h2 className="font-serif text-[16px] text-[#3A2A12]">Management report</h2>
           <p className="mt-1.5 max-w-xl text-[13px] leading-relaxed text-[#5B6472]">
             Summarizes site prioritization, conservation recommendations, and monitoring status
             from the decision support dashboard.
@@ -78,7 +78,7 @@ export default function AdminReportsPage() {
             type="button"
             onClick={handleGenerate}
             disabled={isGenerating}
-            className="mt-4 rounded-[6px] bg-[#16283F] px-4 py-2.5 text-[13px] font-medium text-[#F4F2ED] transition hover:bg-[#1D3450] disabled:cursor-not-allowed disabled:bg-[#DEDBD1] disabled:text-[#8A8D86]"
+            className="mt-4 rounded-[6px] bg-[#BB892C] px-4 py-2.5 text-[13px] font-medium text-[#F4F2ED] transition hover:bg-[#8F6A21] disabled:cursor-not-allowed disabled:bg-[#DEDBD1] disabled:text-[#8A8D86]"
           >
             {isGenerating ? "Generating…" : "Generate report"}
           </button>
@@ -87,7 +87,7 @@ export default function AdminReportsPage() {
         {/* Report history */}
         <div className="mt-6 overflow-hidden rounded-[8px] border border-[#DEDBD1] bg-white">
           <div className="flex items-center justify-between border-b border-[#DEDBD1] px-5 py-4">
-            <h2 className="text-[14px] font-medium text-[#16283F]">Report history</h2>
+            <h2 className="text-[14px] font-medium text-[#3A2A12]">Report history</h2>
             <p className="text-[13px] text-[#8A8D86]">{reports.length} reports</p>
           </div>
 
@@ -98,7 +98,7 @@ export default function AdminReportsPage() {
           ) : (
             <table className="w-full text-left text-[13px]">
               <thead>
-                <tr className="bg-[#16283F] text-[12px] text-[#F4F2ED]">
+                <tr className="bg-[#3A2A12] text-[12px] text-[#F4F2ED]">
                   <th className="px-5 py-3 font-medium">Report</th>
                   <th className="px-5 py-3 font-medium">Generated</th>
                   <th className="px-5 py-3 font-medium">Status</th>
@@ -108,7 +108,7 @@ export default function AdminReportsPage() {
               <tbody>
                 {reports.map((report, i) => (
                   <tr key={report.id} className={i % 2 === 1 ? "bg-[#F8F7F4]" : undefined}>
-                    <td className="px-5 py-3 text-[#16283F]">{report.title}</td>
+                    <td className="px-5 py-3 text-[#3A2A12]">{report.title}</td>
                     <td className="px-5 py-3 text-[#3A4048]">{report.generatedAt}</td>
                     <td className="px-5 py-3">
                       <span
@@ -123,7 +123,7 @@ export default function AdminReportsPage() {
                       {report.status === "Ready" ? (
                         <Link
                           href={`/admin/dashboard/reports/${report.id}`}
-                          className="font-medium text-[#16283F] underline-offset-2 hover:underline"
+                          className="font-medium text-[#BB892C] underline-offset-2 hover:underline"
                         >
                           View
                         </Link>

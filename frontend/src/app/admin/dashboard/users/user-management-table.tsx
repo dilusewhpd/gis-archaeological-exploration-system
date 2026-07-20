@@ -34,7 +34,7 @@ export function UserManagementTable({ initialUsers }: { initialUsers: UserAccoun
       <div className="flex items-end justify-between gap-4">
         <Link
           href="/admin/dashboard/users/new"
-          className="flex items-center gap-1.5 rounded-[6px] bg-[#16283F] px-4 py-2.5 text-[13px] font-medium text-[#F4F2ED] transition hover:bg-[#1D3450]"
+          className="flex items-center gap-1.5 rounded-[6px] bg-[#BB892C] px-4 py-2.5 text-[13px] font-medium text-[#F4F2ED] transition hover:bg-[#8F6A21]"
         >
           <span className="text-[15px] leading-none">+</span> Add user
         </Link>
@@ -46,7 +46,7 @@ export function UserManagementTable({ initialUsers }: { initialUsers: UserAccoun
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Name or email"
-            className="w-full rounded-[6px] border border-[#DEDBD1] bg-white px-3 py-2 text-[13px] text-[#16283F] outline-none placeholder:text-[#8A8D86] focus:border-[#16283F]/40"
+            className="w-full rounded-[6px] border border-[#DEDBD1] bg-white px-3 py-2 text-[13px] text-[#3A2A12] outline-none placeholder:text-[#8A8D86] focus:border-[#BB892C]/40"
           />
         </label>
       </div>
@@ -62,7 +62,7 @@ export function UserManagementTable({ initialUsers }: { initialUsers: UserAccoun
         ) : (
           <table className="w-full text-left text-[13px]">
             <thead>
-              <tr className="bg-[#16283F] text-[12px] text-[#F4F2ED]">
+              <tr className="bg-[#3A2A12] text-[12px] text-[#F4F2ED]">
                 <th className="px-5 py-3 font-medium">Name</th>
                 <th className="px-5 py-3 font-medium">Email</th>
                 <th className="px-5 py-3 font-medium">Role</th>
@@ -73,7 +73,7 @@ export function UserManagementTable({ initialUsers }: { initialUsers: UserAccoun
             <tbody>
               {filteredUsers.map((user, i) => (
                 <tr key={user.id} className={i % 2 === 1 ? "bg-[#F8F7F4]" : undefined}>
-                  <td className="px-5 py-3 text-[#16283F]">{user.fullName}</td>
+                  <td className="px-5 py-3 text-[#3A2A12]">{user.fullName}</td>
                   <td className="px-5 py-3 text-[#3A4048]">{user.email}</td>
                   <td className="px-5 py-3 text-[#3A4048]">{user.role}</td>
                   <td className="px-5 py-3">
@@ -89,7 +89,7 @@ export function UserManagementTable({ initialUsers }: { initialUsers: UserAccoun
                     {user.status === "Active" ? (
                       <Link
                         href={`/admin/dashboard/users/${user.id}/edit`}
-                        className="font-medium text-[#16283F] underline-offset-2 hover:underline"
+                        className="font-medium text-[#BB892C] underline-offset-2 hover:underline"
                       >
                         Edit
                       </Link>

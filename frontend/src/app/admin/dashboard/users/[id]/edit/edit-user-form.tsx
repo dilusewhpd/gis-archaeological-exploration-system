@@ -51,7 +51,7 @@ export function EditUserForm({ user }: { user: UserAccount }) {
   return (
     <div className="space-y-5">
       <form onSubmit={handleSave} className="rounded-[8px] border border-[#DEDBD1] bg-white px-5 py-5">
-        <h2 className="text-[14px] font-medium text-[#16283F]">Account details</h2>
+        <h2 className="text-[14px] font-medium text-[#3A2A12]">Account details</h2>
 
         <div className="mt-4 space-y-4">
           <Field label="Full name">
@@ -62,7 +62,7 @@ export function EditUserForm({ user }: { user: UserAccount }) {
                 setFullName(e.target.value);
                 setSaved(false);
               }}
-              className="w-full rounded-[6px] border border-[#DEDBD1] px-3 py-2 text-[13px] text-[#16283F] outline-none focus:border-[#16283F]/40"
+              className="w-full rounded-[6px] border border-[#DEDBD1] px-3 py-2 text-[13px] text-[#3A2A12] outline-none focus:border-[#BB892C]/40"
             />
           </Field>
 
@@ -74,7 +74,7 @@ export function EditUserForm({ user }: { user: UserAccount }) {
                 setEmail(e.target.value);
                 setSaved(false);
               }}
-              className="w-full rounded-[6px] border border-[#DEDBD1] px-3 py-2 text-[13px] text-[#16283F] outline-none focus:border-[#16283F]/40"
+              className="w-full rounded-[6px] border border-[#DEDBD1] px-3 py-2 text-[13px] text-[#3A2A12] outline-none focus:border-[#BB892C]/40"
             />
           </Field>
 
@@ -85,7 +85,7 @@ export function EditUserForm({ user }: { user: UserAccount }) {
                 setRole(e.target.value as UserRole);
                 setSaved(false);
               }}
-              className="w-full rounded-[6px] border border-[#DEDBD1] bg-white px-3 py-2 text-[13px] text-[#16283F] outline-none focus:border-[#16283F]/40"
+              className="w-full rounded-[6px] border border-[#DEDBD1] bg-white px-3 py-2 text-[13px] text-[#3A2A12] outline-none focus:border-[#BB892C]/40"
             >
               {ROLE_OPTIONS.map((option) => (
                 <option key={option} value={option}>
@@ -111,14 +111,14 @@ export function EditUserForm({ user }: { user: UserAccount }) {
           <button
             type="submit"
             disabled={!isDirty}
-            className="rounded-[6px] bg-[#16283F] px-4 py-2.5 text-[13px] font-medium text-[#F4F2ED] transition hover:bg-[#1D3450] disabled:cursor-not-allowed disabled:bg-[#DEDBD1] disabled:text-[#8A8D86]"
+            className="rounded-[6px] bg-[#BB892C] px-4 py-2.5 text-[13px] font-medium text-[#F4F2ED] transition hover:bg-[#8F6A21] disabled:cursor-not-allowed disabled:bg-[#DEDBD1] disabled:text-[#8A8D86]"
           >
             Save changes
           </button>
 
           <Link
             href="/admin/dashboard/users"
-            className="text-[13px] font-medium text-[#5B6472] hover:text-[#16283F]"
+            className="text-[13px] font-medium text-[#5B6472] hover:text-[#BB892C]"
           >
             Cancel
           </Link>
@@ -128,12 +128,12 @@ export function EditUserForm({ user }: { user: UserAccount }) {
       </form>
 
       <div className="rounded-[8px] border border-[#DEDBD1] bg-white px-5 py-5">
-        <h2 className="text-[14px] font-medium text-[#16283F]">Account actions</h2>
+        <h2 className="text-[14px] font-medium text-[#3A2A12]">Account actions</h2>
         <div className="mt-3 flex flex-col gap-2.5 sm:flex-row">
           <button
             type="button"
             onClick={handleResetPassword}
-            className="flex items-center justify-center rounded-[6px] border border-[#DEDBD1] px-4 py-2.5 text-[13px] font-medium text-[#16283F] transition hover:border-[#16283F]/30"
+            className="flex items-center justify-center rounded-[6px] border border-[#DEDBD1] px-4 py-2.5 text-[13px] font-medium text-[#3A2A12] transition hover:border-[#BB892C]/30 hover:text-[#BB892C]"
           >
             Reset password
           </button>

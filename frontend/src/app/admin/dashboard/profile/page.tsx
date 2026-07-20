@@ -71,16 +71,16 @@ export default function AdminProfilePage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="flex items-center justify-between border-b border-[#DEDBD1] bg-white px-8 py-4">
-        <h1 className="font-serif text-[20px] tracking-tight text-[#16283F]">Profile</h1>
+      <header className="flex items-center justify-between border-b border-[#DEDBD1] bg-[#FAF6EB] px-8 py-4">
+        <h1 className="font-serif text-[20px] tracking-tight text-[#3A2A12]">Profile</h1>
         <div className="flex items-center gap-4">
           <Link
             href="/auth/logout"
-            className="text-[13px] font-medium text-[#5B6472] transition hover:text-[#16283F]"
+            className="text-[13px] font-medium text-[#5B6472] transition hover:text-[#BB892C]"
           >
             Log out
           </Link>
-          <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#DEDBD1] bg-[#F4F3EF] font-serif text-[12px] text-[#16283F]">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#DEDBD1] bg-[#F0E6C8] font-serif text-[12px] text-[#8F6A21]">
             {initials}
           </div>
         </div>
@@ -92,13 +92,13 @@ export default function AdminProfilePage() {
           <div className="rounded-[8px] border border-[#DEDBD1] bg-white px-5 py-6 text-center">
             <div className="flex flex-col items-center">
               <div
-                className="flex items-center justify-center rounded-full border border-[#DEDBD1] bg-[#F4F3EF] font-serif text-[#16283F]"
+                className="flex items-center justify-center rounded-full border border-[#DEDBD1] bg-[#F0E6C8] font-serif text-[#8F6A21]"
                 style={{ width: 88, height: 88, fontSize: 32 }}
               >
                 {initials}
               </div>
 
-              <label className="mt-3 cursor-pointer text-[12px] font-medium text-[#16283F] underline-offset-2 hover:underline">
+              <label className="mt-3 cursor-pointer text-[12px] font-medium text-[#BB892C] underline-offset-2 hover:underline">
                 {hasPhoto ? "Replace photo" : "Add profile photo"}
                 <input
                   type="file"
@@ -108,10 +108,10 @@ export default function AdminProfilePage() {
                 />
               </label>
 
-              <h2 className="mt-4 font-serif text-[17px] text-[#16283F]">{fullName}</h2>
+              <h2 className="mt-4 font-serif text-[17px] text-[#3A2A12]">{fullName}</h2>
               <p className="mt-0.5 text-[13px] text-[#5B6472]">Admin</p>
 
-              <span className="mt-3 rounded-full bg-[#F4F3EF] px-3 py-1 text-[12px] text-[#5B6472]">
+              <span className="mt-3 rounded-full bg-[#FAF6EB] px-3 py-1 text-[12px] text-[#8A8478]">
                 All regions
               </span>
             </div>
@@ -126,7 +126,7 @@ export default function AdminProfilePage() {
 
           {/* Editable profile info */}
           <div className="rounded-[8px] border border-[#DEDBD1] bg-white px-5 py-5">
-            <h2 className="text-[14px] font-medium text-[#16283F]">Profile information</h2>
+            <h2 className="text-[14px] font-medium text-[#3A2A12]">Profile information</h2>
             <p className="mt-1 text-[13px] text-[#8A8D86]">
               Keep your contact details up to date.
             </p>
@@ -140,7 +140,7 @@ export default function AdminProfilePage() {
                     setFullName(e.target.value);
                     setSaved(false);
                   }}
-                  className="w-full rounded-[6px] border border-[#DEDBD1] px-3 py-2 text-[13px] text-[#16283F] outline-none focus:border-[#16283F]/40"
+                  className="w-full rounded-[6px] border border-[#DEDBD1] px-3 py-2 text-[13px] text-[#3A2A12] outline-none focus:border-[#BB892C]/40"
                 />
               </Field>
 
@@ -152,7 +152,7 @@ export default function AdminProfilePage() {
                     setEmail(e.target.value);
                     setSaved(false);
                   }}
-                  className="w-full rounded-[6px] border border-[#DEDBD1] px-3 py-2 text-[13px] text-[#16283F] outline-none focus:border-[#16283F]/40"
+                  className="w-full rounded-[6px] border border-[#DEDBD1] px-3 py-2 text-[13px] text-[#3A2A12] outline-none focus:border-[#BB892C]/40"
                 />
               </Field>
 
@@ -165,7 +165,7 @@ export default function AdminProfilePage() {
                     setPhone(e.target.value);
                     setSaved(false);
                   }}
-                  className="w-full rounded-[6px] border border-[#DEDBD1] px-3 py-2 text-[13px] text-[#16283F] outline-none placeholder:text-[#8A8D86] focus:border-[#16283F]/40"
+                  className="w-full rounded-[6px] border border-[#DEDBD1] px-3 py-2 text-[13px] text-[#3A2A12] outline-none placeholder:text-[#8A8D86] focus:border-[#BB892C]/40"
                 />
               </Field>
 
@@ -174,7 +174,7 @@ export default function AdminProfilePage() {
                   type="text"
                   value="Admin"
                   disabled
-                  className="w-full rounded-[6px] border border-[#DEDBD1] bg-[#F4F3EF] px-3 py-2 text-[13px] text-[#8A8D86]"
+                  className="w-full rounded-[6px] border border-[#DEDBD1] bg-[#FAF6EB] px-3 py-2 text-[13px] text-[#8A8D86]"
                 />
               </Field>
 
@@ -182,7 +182,7 @@ export default function AdminProfilePage() {
                 <button
                   type="submit"
                   disabled={!isDirty}
-                  className="rounded-[6px] bg-[#16283F] px-4 py-2.5 text-[13px] font-medium text-[#F4F2ED] transition hover:bg-[#1D3450] disabled:cursor-not-allowed disabled:bg-[#DEDBD1] disabled:text-[#8A8D86]"
+                  className="rounded-[6px] bg-[#BB892C] px-4 py-2.5 text-[13px] font-medium text-[#F4F2ED] transition hover:bg-[#8F6A21] disabled:cursor-not-allowed disabled:bg-[#DEDBD1] disabled:text-[#8A8D86]"
                 >
                   Save changes
                 </button>
@@ -191,7 +191,7 @@ export default function AdminProfilePage() {
                   <button
                     type="button"
                     onClick={handleCancel}
-                    className="text-[13px] font-medium text-[#5B6472] hover:text-[#16283F]"
+                    className="text-[13px] font-medium text-[#5B6472] hover:text-[#BB892C]"
                   >
                     Cancel
                   </button>

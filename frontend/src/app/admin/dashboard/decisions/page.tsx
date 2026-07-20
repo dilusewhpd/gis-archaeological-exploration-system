@@ -76,8 +76,8 @@ export default function AdminDecisionsPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="flex items-center justify-between border-b border-[#DEDBD1] bg-white px-8 py-4">
-        <h1 className="font-serif text-[20px] tracking-tight text-[#16283F]">Decisions</h1>
+      <header className="flex items-center justify-between border-b border-[#DEDBD1] bg-[#FAF6EB] px-8 py-4">
+        <h1 className="font-serif text-[20px] tracking-tight text-[#3A2A12]">Decisions</h1>
       </header>
 
       <main className="flex-1 px-8 py-7">
@@ -91,7 +91,7 @@ export default function AdminDecisionsPage() {
               className={
                 "px-4 py-2.5 text-[13px] font-medium transition " +
                 (activeTab === tab
-                  ? "border-b-2 border-[#16283F] text-[#16283F]"
+                  ? "border-b-2 border-[#BB892C] text-[#BB892C]"
                   : "text-[#8A8D86] hover:text-[#5B6472]")
               }
             >
@@ -115,7 +115,7 @@ function PrioritizedSitesTable({ sites }: { sites: PrioritizedSite[] }) {
     <div className="overflow-hidden rounded-[8px] border border-[#DEDBD1] bg-white">
       <table className="w-full text-left text-[13px]">
         <thead>
-          <tr className="bg-[#16283F] text-[12px] text-[#F4F2ED]">
+          <tr className="bg-[#3A2A12] text-[12px] text-[#F4F2ED]">
             <th className="px-5 py-3 font-medium">Site name</th>
             <th className="px-5 py-3 font-medium">Region</th>
             <th className="px-5 py-3 font-medium">Risk level</th>
@@ -125,7 +125,7 @@ function PrioritizedSitesTable({ sites }: { sites: PrioritizedSite[] }) {
         <tbody>
           {sites.map((site, i) => (
             <tr key={site.id} className={i % 2 === 1 ? "bg-[#F8F7F4]" : undefined}>
-              <td className="px-5 py-3 text-[#16283F]">{site.name}</td>
+              <td className="px-5 py-3 text-[#3A2A12]">{site.name}</td>
               <td className="px-5 py-3 text-[#3A4048]">{site.region}</td>
               <td className="px-5 py-3">
                 <RiskBadge level={site.riskLevel} />
@@ -145,7 +145,7 @@ function RecommendationsList({ items }: { items: Recommendation[] }) {
       {items.map((item) => (
         <div key={item.id} className="rounded-[8px] border border-[#DEDBD1] bg-white px-5 py-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-[14px] font-medium text-[#16283F]">{item.site}</h3>
+            <h3 className="text-[14px] font-medium text-[#3A2A12]">{item.site}</h3>
             <RiskBadge level={item.urgency} />
           </div>
           <p className="mt-1.5 text-[13px] leading-relaxed text-[#5B6472]">
@@ -162,7 +162,7 @@ function MonitoringTable({ entries }: { entries: MonitoringEntry[] }) {
     <div className="overflow-hidden rounded-[8px] border border-[#DEDBD1] bg-white">
       <table className="w-full text-left text-[13px]">
         <thead>
-          <tr className="bg-[#16283F] text-[12px] text-[#F4F2ED]">
+          <tr className="bg-[#3A2A12] text-[12px] text-[#F4F2ED]">
             <th className="px-5 py-3 font-medium">Site name</th>
             <th className="px-5 py-3 font-medium">Condition</th>
             <th className="px-5 py-3 font-medium">Last checked</th>
@@ -171,7 +171,7 @@ function MonitoringTable({ entries }: { entries: MonitoringEntry[] }) {
         <tbody>
           {entries.map((entry, i) => (
             <tr key={entry.id} className={i % 2 === 1 ? "bg-[#F8F7F4]" : undefined}>
-              <td className="px-5 py-3 text-[#16283F]">{entry.site}</td>
+              <td className="px-5 py-3 text-[#3A2A12]">{entry.site}</td>
               <td className="px-5 py-3">
                 <ConditionBadge condition={entry.condition} />
               </td>
@@ -202,7 +202,7 @@ function ConditionBadge({ condition }: { condition: SiteCondition }) {
   const styles: Record<SiteCondition, string> = {
     Stable: "bg-[#EAF1EA] text-[#2F5C3B]",
     "At risk": "bg-[#F6E8E3] text-[#9A4B2E]",
-    "Under conservation": "bg-[#F4F3EF] text-[#5B6472]",
+    "Under conservation": "bg-[#FAF6EB] text-[#8A8478]",
   };
 
   return (

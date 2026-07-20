@@ -102,8 +102,8 @@ export default function NewSitePage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="border-b border-[#DEDBD1] bg-white px-8 py-4">
-        <h1 className="font-serif text-[20px] tracking-tight text-[#16283F]">
+      <header className="border-b border-[#DEDBD1] bg-[#FAF6EB] px-8 py-4">
+        <h1 className="font-serif text-[20px] tracking-tight text-[#3A2A12]">
           Register new exploration site
         </h1>
       </header>
@@ -122,7 +122,7 @@ export default function NewSitePage() {
                 placeholder="e.g. Sigiriya East ridge"
                 value={siteName}
                 onChange={(e) => setSiteName(e.target.value)}
-                className="mt-1.5 w-full rounded-[6px] border border-[#D4CFC3] bg-white px-3.5 py-2.5 text-[14px] text-[#23262B] placeholder:text-[#A6A199] outline-none transition focus:border-[#16283F] focus:ring-2 focus:ring-[#16283F]/10"
+                className="mt-1.5 w-full rounded-[6px] border border-[#D4CFC3] bg-white px-3.5 py-2.5 text-[14px] text-[#23262B] placeholder:text-[#A6A199] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
               />
             </div>
 
@@ -134,7 +134,7 @@ export default function NewSitePage() {
                 id="district"
                 value={district}
                 onChange={(e) => setDistrict(e.target.value)}
-                className="mt-1.5 w-full rounded-[6px] border border-[#D4CFC3] bg-white px-3.5 py-2.5 text-[14px] text-[#23262B] outline-none transition focus:border-[#16283F] focus:ring-2 focus:ring-[#16283F]/10"
+                className="mt-1.5 w-full rounded-[6px] border border-[#D4CFC3] bg-white px-3.5 py-2.5 text-[14px] text-[#23262B] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
               >
                 <option value="">Select district</option>
                 {DISTRICTS.map((d) => (
@@ -153,7 +153,7 @@ export default function NewSitePage() {
                 placeholder="Describe the site, visible features, condition…"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                className="mt-1.5 w-full resize-none rounded-[6px] border border-[#D4CFC3] bg-white px-3.5 py-2.5 text-[14px] text-[#23262B] placeholder:text-[#A6A199] outline-none transition focus:border-[#16283F] focus:ring-2 focus:ring-[#16283F]/10"
+                className="mt-1.5 w-full resize-none rounded-[6px] border border-[#D4CFC3] bg-white px-3.5 py-2.5 text-[14px] text-[#23262B] placeholder:text-[#A6A199] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
               />
             </div>
 
@@ -182,7 +182,7 @@ export default function NewSitePage() {
               ) : (
                 <label
                   htmlFor="photo"
-                  className="mt-2 flex h-20 w-20 cursor-pointer items-center justify-center rounded-[6px] border border-dashed border-[#D4CFC3] text-[#A6A199] transition hover:border-[#16283F]/40 hover:text-[#5B6472]"
+                  className="mt-2 flex h-20 w-20 cursor-pointer items-center justify-center rounded-[6px] border border-dashed border-[#D4CFC3] text-[#A6A199] transition hover:border-[#BB892C]/40 hover:text-[#5B6472]"
                 >
                   <PlusIcon />
                   <input
@@ -208,7 +208,7 @@ export default function NewSitePage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="mt-6 flex items-center justify-center gap-2 rounded-[6px] bg-[#16283F] px-5 py-2.5 text-[14px] font-medium text-[#F4F2ED] transition hover:bg-[#1D3450] disabled:cursor-not-allowed disabled:opacity-60"
+              className="mt-6 flex items-center justify-center gap-2 rounded-[6px] bg-[#BB892C] px-5 py-2.5 text-[14px] font-medium text-[#F4F2ED] transition hover:bg-[#8F6A21] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting && <Spinner />}
               {isSubmitting ? "Submitting…" : "Submit for review"}
@@ -299,7 +299,7 @@ function CoordinatePicker({
           });
         }
       }}
-      className="relative mt-3 aspect-[3/4] w-full cursor-crosshair overflow-hidden rounded-[6px] border border-[#DEDBD1] bg-[#F4F3EF]"
+      className="relative mt-3 aspect-[3/4] w-full cursor-crosshair overflow-hidden rounded-[6px] border border-[#DEDBD1] bg-[#FAF6EB]"
     >
       {/* grid */}
       <svg className="absolute inset-0 h-full w-full" aria-hidden="true">
@@ -370,7 +370,7 @@ function ManualCoordField({
           if (!Number.isNaN(v)) onChange(v);
         }}
         placeholder="—"
-        className="mt-1 w-full rounded-[6px] border border-[#D4CFC3] bg-white px-2.5 py-1.5 text-[13px] text-[#23262B] outline-none transition focus:border-[#16283F] focus:ring-2 focus:ring-[#16283F]/10"
+        className="mt-1 w-full rounded-[6px] border border-[#D4CFC3] bg-white px-2.5 py-1.5 text-[13px] text-[#23262B] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
       />
     </div>
   );

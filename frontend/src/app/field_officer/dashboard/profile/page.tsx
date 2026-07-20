@@ -1,4 +1,5 @@
 import ProfileForm from "./ProfileForm";
+import Link from "next/link";
 
 /**
  * My profile — /field_officer/dashboard/profile
@@ -59,52 +60,33 @@ const ROLE_LABELS: Record<UserProfile["role"], string> = {
 
 export default async function ProfilePage() {
   const profile = await getProfile();
+  const initials = profile.fullName
+    .split(" ")
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="border-b border-[#DEDBD1] bg-white px-8 py-4">
-        <h1 className="font-serif text-[20px] tracking-tight text-[#16283F]">My profile</h1>
+      <header className="flex items-center justify-between border-b border-[#DEDBD1] bg-[#FAF6EB] px-8 py-4">
+        <h1 className="font-serif text-[20px] tracking-tight text-[#3A2A12]">Profile</h1>
+        <div className="flex items-center gap-4">
+          <Link
+            href="/auth/logout"
+            className="text-[13px] font-medium text-[#5B6472] transition hover:text-[#BB892C]"
+          >
+            Log out
+          </Link>
+          <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#DEDBD1] bg-[#F0E6C8] font-serif text-[12px] text-[#8F6A21]">
+            {initials}
+          </div>
+        </div>
       </header>
 
       <main className="flex-1 px-8 py-7">
-        <div className="max-w-[640px]">
-          {/* Account summary */}
-          <div className="rounded-[8px] border border-[#DEDBD1] bg-white px-6 py-5">
-            <div className="flex items-center justify-between text-[13px] text-[#5B6472]">
-              <span>
-                Role:{" "}
-                <span className="font-medium text-[#16283F]">{ROLE_LABELS[profile.role]}</span>
-              </span>
-              <span
-                className="inline-flex items-center gap-1.5 rounded-[4px] px-2 py-0.5 text-[12px] font-medium"
-                style={
-                  profile.isActive
-                    ? { backgroundColor: "#EAF3EA", color: "#2C6B33" }
-                    : { backgroundColor: "#FBEBEA", color: "#B03A2E" }
-                }
-              >
-                {profile.isActive ? "Active" : "Disabled"}
-              </span>
-            </div>
-            <div className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2 text-[13px] text-[#5B6472]">
-              <p>
-                Member since{" "}
-                <span className="text-[#23262B]">{formatDate(profile.createdAt)}</span>
-              </p>
-              <p>
-                Last login{" "}
-                <span className="text-[#23262B]">
-                  {profile.lastLoginAt ? formatDateTime(profile.lastLoginAt) : "—"}
-                </span>
-              </p>
-            </div>
-          </div>
-
-          {/* Editable profile */}
-          <div className="mt-5 rounded-[8px] border border-[#DEDBD1] bg-white px-6 py-6">
-            <ProfileForm initialProfile={profile} />
-          </div>
-
+        <div className="max-w-[800px]">
+          <ProfileForm initialProfile={profile} />
           <p className="mt-4 text-[12px] text-[#8A8D86]">
             To change your email or role, or to reset your password, contact your
             administrator.
@@ -113,22 +95,4 @@ export default async function ProfilePage() {
       </main>
     </div>
   );
-}
-
-function formatDate(iso: string) {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleDateString("en-GB", { year: "numeric", month: "short", day: "numeric" });
-}
-
-function formatDateTime(iso: string) {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  return d.toLocaleString("en-GB", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
 }

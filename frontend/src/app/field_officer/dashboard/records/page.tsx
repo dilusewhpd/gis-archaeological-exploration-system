@@ -136,11 +136,11 @@ export default async function MyRecordsPage({
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="flex items-center justify-between border-b border-[#DEDBD1] bg-white px-8 py-4">
-        <h1 className="font-serif text-[20px] tracking-tight text-[#16283F]">My records</h1>
+      <header className="flex items-center justify-between border-b border-[#DEDBD1] bg-[#FAF6EB] px-8 py-4">
+        <h1 className="font-serif text-[20px] tracking-tight text-[#3A2A12]">My records</h1>
         <Link
           href="/field_officer/dashboard/new-site"
-          className="inline-flex items-center gap-2 rounded-[6px] bg-[#16283F] px-3.5 py-2 text-[13px] font-medium text-[#F4F2ED] transition hover:bg-[#1D3450]"
+          className="inline-flex items-center gap-2 rounded-[6px] bg-[#BB892C] px-3.5 py-2 text-[13px] font-medium text-[#F4F2ED] transition hover:bg-[#8F6A21]"
         >
           <PlusIcon />
           Register new site
@@ -156,7 +156,7 @@ export default async function MyRecordsPage({
             name="q"
             defaultValue={query}
             placeholder="Search by site name…"
-            className="w-full max-w-[320px] rounded-[6px] border border-[#D4CFC3] bg-white px-3.5 py-2 text-[13px] text-[#23262B] placeholder:text-[#A6A199] outline-none transition focus:border-[#16283F] focus:ring-2 focus:ring-[#16283F]/10"
+            className="w-full max-w-[320px] rounded-[6px] border border-[#D4CFC3] bg-white px-3.5 py-2 text-[13px] text-[#23262B] placeholder:text-[#A6A199] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
           />
         </form>
 
@@ -173,8 +173,8 @@ export default async function MyRecordsPage({
                 className={
                   "rounded-full px-3 py-1.5 text-[12.5px] font-medium transition " +
                   (isActive
-                    ? "bg-[#16283F] text-[#F4F2ED]"
-                    : "border border-[#DEDBD1] bg-white text-[#5B6472] hover:border-[#16283F]/30 hover:text-[#16283F]")
+                    ? "bg-[#BB892C] text-[#F4F2ED]"
+                    : "border border-[#DEDBD1] bg-white text-[#5B6472] hover:border-[#BB892C]/40 hover:text-[#BB892C]")
                 }
               >
                 {f.label}
@@ -187,7 +187,7 @@ export default async function MyRecordsPage({
         <div className="overflow-hidden rounded-[8px] border border-[#DEDBD1] bg-white">
           <table className="w-full text-left text-[13px]">
             <thead>
-              <tr className="bg-[#16283F] text-[#F4F2ED]">
+              <tr className="bg-[#3A2A12] text-[#F4F2ED]">
                 <th className="px-4 py-2.5 font-medium">Site name</th>
                 <th className="px-4 py-2.5 font-medium">District</th>
                 <th className="px-4 py-2.5 font-medium">Visit date</th>
@@ -245,7 +245,7 @@ function RecordAction({ record }: { record: ExplorationRecord }) {
     return (
       <Link
         href={`/field_officer/dashboard/records/${record.id}/edit`}
-        className="text-[13px] font-medium text-[#16283F] hover:underline"
+        className="text-[13px] font-medium text-[#BB892C] hover:underline"
       >
         Continue editing
       </Link>
@@ -254,7 +254,7 @@ function RecordAction({ record }: { record: ExplorationRecord }) {
   return (
     <Link
       href={`/field_officer/dashboard/records/${record.id}`}
-      className="text-[13px] font-medium text-[#16283F] hover:underline"
+      className="text-[13px] font-medium text-[#BB892C] hover:underline"
     >
       View
     </Link>

@@ -88,6 +88,35 @@ export default function LoginPage() {
 
     setIsSubmitting(true);
     try {
+      // Mock bypass for development/wireframing
+      const lowerUser = username.trim().toLowerCase();
+      let mockRole: "admin" | "analyst" | "field_officer" | null = null;
+      
+      if (lowerUser === "admin" || lowerUser === "n.fernando") {
+        mockRole = "admin";
+      } else if (lowerUser === "analyst" || lowerUser === "k.silva") {
+        mockRole = "analyst";
+      } else if (lowerUser === "officer" || lowerUser === "j.perera" || lowerUser === "r.bandara") {
+        mockRole = "field_officer";
+      }
+
+      if (mockRole) {
+        // Simulate network delay for realistic feel
+        await new Promise((resolve) => setTimeout(resolve, 800));
+        
+        if (typeof window !== "undefined") {
+          if (rememberUsername) {
+            window.localStorage.setItem("doa_remember_username", username.trim());
+          } else {
+            window.localStorage.removeItem("doa_remember_username");
+          }
+        }
+        
+        router.push(`/${mockRole}/dashboard`);
+        router.refresh();
+        return;
+      }
+
       const res = await fetch(ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

@@ -37,3 +37,21 @@ export const login = async (
     next(error);
   }
 };
+
+export const me = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const user = await authService.getCurrentUser(req.user!.userId);
+
+    res.status(200).json({
+      success: true,
+      message: "Current user retrieved successfully.",
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

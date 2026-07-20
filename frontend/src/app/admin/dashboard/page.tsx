@@ -114,13 +114,13 @@ export default async function AdminDashboardPage() {
         </div>
 
         <div className="flex items-center gap-4">
-          <button
-            type="button"
+          <Link
+            href="/admin/dashboard/notifications"
             aria-label="Notifications"
             className="grid h-9 w-9 place-items-center rounded-full border border-[#DEDBD1] bg-white text-[#8A8478] transition hover:border-[#BB892C]/40 hover:text-[#BB892C]"
           >
             <BellIcon />
-          </button>
+          </Link>
           <Link
             href="/admin/dashboard/profile"
             aria-label="View profile"

@@ -122,13 +122,13 @@ export default async function FieldOfficerDashboardPage() {
               className="w-56 rounded-[20px] border border-[#D4CFC3] bg-white py-2 pl-9 pr-3.5 text-[13px] text-[#23262B] placeholder:text-[#A6A199] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
             />
           </div>
-          <button
-            type="button"
+          <Link
+            href="/field_officer/dashboard/notifications"
             aria-label="Notifications"
             className="grid h-9 w-9 place-items-center rounded-full border border-[#DEDBD1] bg-white text-[#8A8478] transition hover:border-[#BB892C]/40 hover:text-[#BB892C]"
           >
             <BellIcon />
-          </button>
+          </Link>
           <Link
             href="/field_officer/dashboard/profile"
             aria-label="View profile"

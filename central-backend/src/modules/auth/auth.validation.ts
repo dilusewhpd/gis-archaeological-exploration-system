@@ -30,8 +30,6 @@ export const registerSchema = z.object({
       /[!@#$%^&*(),.?":{}|<>]/,
       "Password must contain at least one special character."
     ),
-
-  role: z.enum(["ADMIN", "ANALYST", "FIELD_OFFICER"]).optional(),
 });
 
 export const loginSchema = z.object({
@@ -45,3 +43,7 @@ export const loginSchema = z.object({
     .string()
     .min(1, "Password is required."),
 });
+
+export type RegisterInput = z.infer<typeof registerSchema>;
+
+export type LoginInput = z.infer<typeof loginSchema>;

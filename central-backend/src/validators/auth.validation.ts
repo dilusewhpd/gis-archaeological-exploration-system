@@ -47,3 +47,32 @@ export const loginSchema = z.object({
 export type RegisterInput = z.infer<typeof registerSchema>;
 
 export type LoginInput = z.infer<typeof loginSchema>;
+
+export const changePasswordSchema = z
+  .object({
+    currentPassword: z
+      .string()
+      .trim()
+      .min(8, "Current password is required."),
+
+    newPassword: z
+      .string()
+      .trim()
+      .min(8, "Password must be at least 8 characters."),
+
+    confirmPassword: z
+      .string()
+      .trim()
+      .min(8, "Confirm password is required."),
+  })
+  .refine(
+    (data) => data.newPassword === data.confirmPassword,
+    {
+      message: "Passwords do not match.",
+      path: ["confirmPassword"],
+    }
+  );
+
+export type ChangePasswordInput = z.infer<
+  typeof changePasswordSchema
+>;

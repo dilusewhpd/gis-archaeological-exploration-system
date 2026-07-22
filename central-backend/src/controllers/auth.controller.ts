@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import * as authService from "../services/auth.service.js";
+import { ChangePasswordInput } from "../validators/auth.validation.js";
 
 export const register = async (
   req: Request,
@@ -50,6 +51,26 @@ export const me = async (
       success: true,
       message: "Current user retrieved successfully.",
       data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const changePassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    await authService.changePassword(
+      req.user?.userId as string,
+      req.body as ChangePasswordInput
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Password changed successfully.",
     });
   } catch (error) {
     next(error);

@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import { prisma } from "../config/prismaDb.js";
-import { LoginInput, RegisterInput } from "../validators/auth.validation.js";
+import { ChangePasswordInput, LoginInput, RegisterInput } from "../validators/auth.validation.js";
 import { ROLES } from "../utils/constants/auth.constants.js";
 import { generateAccessToken } from "../config/jwt.js";
 
@@ -137,4 +137,58 @@ export const getCurrentUser = async (userId: string) => {
     }
 
     return user;
+};
+
+export const changePassword = async (
+  currentUserId: string,
+  data: ChangePasswordInput
+) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: currentUserId,
+    },
+  });
+
+  if (!user) {
+    throw new Error("User not found.");
+  }
+
+  if (!user.isActive) {
+    throw new Error("Your account has been deactivated.");
+  }
+
+  const isPasswordValid = await bcrypt.compare(
+    data.currentPassword,
+    user.passwordHash
+  );
+
+  if (!isPasswordValid) {
+    throw new Error("Current password is incorrect.");
+  }
+
+  const isSamePassword = await bcrypt.compare(
+    data.newPassword,
+    user.passwordHash
+  );
+
+  if (isSamePassword) {
+    throw new Error(
+      "New password must be different from the current password."
+    );
+  }
+
+  const passwordHash = await bcrypt.hash(
+    data.newPassword,
+    Number(process.env.BCRYPT_SALT_ROUNDS)
+  );
+
+  await prisma.user.update({
+    where: {
+      id: currentUserId,
+    },
+    data: {
+      passwordHash,
+      mustChangePassword: false,
+    },
+  });
 };

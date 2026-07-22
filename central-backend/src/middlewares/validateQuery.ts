@@ -1,15 +1,13 @@
-import { NextFunction, Request, Response } from "express";
+import { RequestHandler } from "express";
 import { ZodSchema } from "zod";
 
 export const validateQuery =
-  (schema: ZodSchema) =>
-  (req: Request, res: Response, next: NextFunction): void => {
+  <T>(schema: ZodSchema<T>): RequestHandler =>
+  (req, res, next) => {
     try {
-      const parsedQuery = schema.parse(req.query) as Request["query"];
-      req.query = parsedQuery;
-
+      req.validatedQuery = schema.parse(req.query);
       next();
-    } catch (error) {
-      next(error);
+    } catch (err) {
+      next(err);
     }
   };

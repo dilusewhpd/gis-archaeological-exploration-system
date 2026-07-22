@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import * as userService from "../services/user.service.js";
-import { GetUsersQuery, UserIdParam } from "../validators/user.validation.js";
+import { GetUsersQuery, UpdateUserInput, UserIdParam } from "../validators/user.validation.js";
 
 export const createUser = async (
   req: Request,
@@ -59,6 +59,27 @@ export const getUserById = async (
     res.status(200).json({
       success: true,
       message: "User retrieved successfully.",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const result = await userService.updateUser(
+      req.params as UserIdParam,
+      req.body as UpdateUserInput
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "User updated successfully.",
       data: result,
     });
   } catch (error) {

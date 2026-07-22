@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { CreateUserInput, GetUsersQuery, UserIdParam } from "../validators/user.validation.js";
+import { CreateUserInput, GetUsersQuery, UpdateUserInput, UserIdParam } from "../validators/user.validation.js";
 import { generateTemporaryPassword } from "../utils/tempPasswordGen.js";
 import { prisma } from "../config/prismaDb.js";
 import { Prisma } from "@prisma/client";
@@ -195,4 +195,111 @@ export const getUserById = async (
   }
 
   return user;
+};
+
+export const updateUser = async (
+  params: UserIdParam,
+  data: UpdateUserInput
+) => {
+  const { id } = params;
+
+  return await prisma.$transaction(async (tx) => {
+    // Check whether the user exists
+    const existingUser = await tx.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!existingUser) {
+      throw new Error("User not found.");
+    }
+
+    // Check email uniqueness
+    if (data.email && data.email !== existingUser.email) {
+      const emailExists = await tx.user.findUnique({
+        where: {
+          email: data.email,
+        },
+      });
+
+      if (emailExists) {
+        throw new Error("Email already exists.");
+      }
+    }
+
+    let roleId: string | undefined;
+
+    // Validate role
+    if (data.role) {
+      const role = await tx.role.findUnique({
+        where: {
+          name: data.role,
+        },
+      });
+
+      if (!role) {
+        throw new Error("Role not found.");
+      }
+
+      roleId = role.id;
+    }
+
+    const updateData: Prisma.UserUpdateInput = {};
+
+    if (data.firstName !== undefined) {
+      updateData.firstName = data.firstName;
+    }
+
+    if (data.lastName !== undefined) {
+      updateData.lastName = data.lastName;
+    }
+
+    if (data.email !== undefined) {
+      updateData.email = data.email;
+    }
+
+    if (data.isActive !== undefined) {
+      updateData.isActive = data.isActive;
+    }
+
+    if (roleId) {
+      updateData.role = {
+        connect: {
+          id: roleId,
+        },
+      };
+    }
+
+    const updatedUser = await tx.user.update({
+      where: {
+        id,
+      },
+
+      data: updateData,
+
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        isActive: true,
+        mustChangePassword: true,
+        createdAt: true,
+        updatedAt: true,
+
+        role: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    return updatedUser;
+  },
+  {
+    timeout: 300000, // 5 minutes
+  });
 };

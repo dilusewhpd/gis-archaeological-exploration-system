@@ -57,3 +57,42 @@ export const userIdParamSchema = z.object({
 });
 
 export type UserIdParam = z.infer<typeof userIdParamSchema>;
+
+export const updateUserSchema = z.object({
+  firstName: z
+    .string()
+    .trim()
+    .min(2)
+    .max(100)
+    .optional(),
+
+  lastName: z
+    .string()
+    .trim()
+    .min(2)
+    .max(100)
+    .optional(),
+
+  email: z
+    .email()
+    .trim()
+    .toLowerCase()
+    .optional(),
+
+  role: z.enum([
+    ROLES.ADMIN,
+    ROLES.ANALYST,
+    ROLES.FIELD_OFFICER,
+  ]).optional(),
+
+  isActive: z.boolean().optional(),
+})
+.refine(
+  (data) => Object.keys(data).length > 0,
+  {
+    message: "At least one field must be provided.",
+  }
+);
+
+export type UpdateUserInput =
+  z.infer<typeof updateUserSchema>;

@@ -51,3 +51,9 @@ export type CreateUserInput =
 
 export type GetUsersQuery =
   z.infer<typeof getUsersQuerySchema>;
+
+export const userIdParamSchema = z.object({
+  id: z.uuid("Invalid user ID."),
+});
+
+export type UserIdParam = z.infer<typeof userIdParamSchema>;

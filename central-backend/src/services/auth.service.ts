@@ -80,6 +80,10 @@ export const login = async (data: LoginInput) => {
         throw new Error("Invalid email or password.");
     }
 
+    if (!user.isActive) {
+        throw new Error("Your account has been deactivated. Please contact an administrator.");
+    }
+
     const passwordMatches = await bcrypt.compare(
         data.password,
         user.passwordHash,

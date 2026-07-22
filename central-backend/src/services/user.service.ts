@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { CreateUserInput, GetUsersQuery } from "../validators/user.validation.js";
+import { CreateUserInput, GetUsersQuery, UserIdParam } from "../validators/user.validation.js";
 import { generateTemporaryPassword } from "../utils/tempPasswordGen.js";
 import { prisma } from "../config/prismaDb.js";
 import { Prisma } from "@prisma/client";
@@ -159,4 +159,40 @@ export const getUsers = async (
       totalPages: Math.ceil(totalItems / limit),
     },
   };
+};
+
+export const getUserById = async (
+  params: UserIdParam
+) => {
+  const { id } = params;
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      isActive: true,
+      mustChangePassword: true,
+      createdAt: true,
+      updatedAt: true,
+
+      role: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+
+  if (!user) {
+    throw new Error("User not found.");
+  }
+
+  return user;
 };

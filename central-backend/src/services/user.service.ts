@@ -335,3 +335,44 @@ export const deleteUser = async (
 
   return {"message": "User deactivated successfully." };
 };
+
+export const resetUserPassword = async (
+  params: UserIdParam
+) => {
+  const { id } = params;
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!user) {
+    throw new Error("User not found.");
+  }
+
+  if (!user.isActive) {
+    throw new Error("Cannot reset password for a deactivated user.");
+  }
+
+  const temporaryPassword = generateTemporaryPassword();
+
+  const passwordHash = await bcrypt.hash(
+    temporaryPassword,
+    Number(process.env.BCRYPT_SALT_ROUNDS)
+  );
+
+  await prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      passwordHash,
+      mustChangePassword: true,
+    },
+  });
+
+  return {
+    temporaryPassword,
+  };
+};

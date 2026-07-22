@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUser, deleteUser, getUserById, getUsers, updateUser } from "../controllers/user.controller.js";
+import { createUser, deleteUser, getUserById, getUsers, resetUserPassword, updateUser } from "../controllers/user.controller.js";
 import { authenticate } from "../middlewares/authenticate.js";
 import { authorize } from "../middlewares/authorize.js";
 import { validate } from "../middlewares/validate.js";
@@ -49,6 +49,14 @@ router.delete(
   authorize(ROLES.ADMIN),
   validateParams(userIdParamSchema),
   deleteUser
+);
+
+router.post(
+  "/:id/reset-password",
+  authenticate,
+  authorize(ROLES.ADMIN),
+  validateParams(userIdParamSchema),
+  resetUserPassword
 );
 
 export default router;

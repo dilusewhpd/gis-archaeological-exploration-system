@@ -106,3 +106,23 @@ export const deleteUser = async (
     next(error);
   }
 };
+
+export const resetUserPassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const result = await userService.resetUserPassword(
+      req.params as UserIdParam
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Password reset successfully.",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

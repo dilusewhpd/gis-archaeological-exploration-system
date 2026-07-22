@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { CreateUserInput } from "../validators/user.validation.js";
-import { prisma } from "../config/prismaDb.js";
 import { generateTemporaryPassword } from "../utils/tempPasswordGen.js";
+import { prisma } from "../config/prismaDb.js";
 
 export const createUser = async (
   data: CreateUserInput

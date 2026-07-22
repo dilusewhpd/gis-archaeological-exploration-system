@@ -86,3 +86,23 @@ export const updateUser = async (
     next(error);
   }
 };
+
+export const deleteUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    await userService.deleteUser(
+      req.params as UserIdParam,
+      req.user?.userId as string
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "User deactivated successfully.",
+    });
+  } catch (error) {
+    next(error);
+  }
+};

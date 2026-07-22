@@ -303,3 +303,35 @@ export const updateUser = async (
     timeout: 300000, // 5 minutes
   });
 };
+
+export const deleteUser = async (
+  params: UserIdParam,
+  currentUserId: string
+) => {
+  const { id } = params;
+
+  if (id === currentUserId) {
+    throw new Error("You cannot deactivate your own account.");
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id },
+  });
+
+  if (!user) {
+    throw new Error("User not found.");
+  }
+
+  if (!user.isActive) {
+    throw new Error("User is already deactivated.");
+  }
+
+  await prisma.user.update({
+    where: { id },
+    data: {
+      isActive: false,
+    },
+  });
+
+  return {"message": "User deactivated successfully." };
+};

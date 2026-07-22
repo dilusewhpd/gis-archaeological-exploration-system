@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUser, getUserById, getUsers, updateUser } from "../controllers/user.controller.js";
+import { createUser, deleteUser, getUserById, getUsers, updateUser } from "../controllers/user.controller.js";
 import { authenticate } from "../middlewares/authenticate.js";
 import { authorize } from "../middlewares/authorize.js";
 import { validate } from "../middlewares/validate.js";
@@ -41,6 +41,14 @@ router.patch(
   validateParams(userIdParamSchema),
   validate(updateUserSchema),
   updateUser
+);
+
+router.delete(
+  "/:id",
+  authenticate,
+  authorize(ROLES.ADMIN),
+  validateParams(userIdParamSchema),
+  deleteUser
 );
 
 export default router;

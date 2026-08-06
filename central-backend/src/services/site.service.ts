@@ -4,6 +4,7 @@ import { BusinessRuleError, ConflictError, ForbiddenError, NotFoundError } from 
 import { CreateSiteData, GetSitesQuery, UpdateSiteData } from "../moduleTypes/sites/sites.types.js";
 import { ROLES } from "../utils/constants/auth.constants.js";
 import { siteDetailsSelect } from "../utils/constants/site.constant.js";
+import { ensureSiteStatus } from "../utils/siteStatus.js";
 
 export const createSite = async (
   data: CreateSiteData,
@@ -237,4 +238,63 @@ export const updateSite = async (
   });
 
   return updatedSite;
+};
+
+export const submitSite = async (
+  id: string,
+  currentUserId: string,
+  currentUserRole: string
+) => {
+  const site = await prisma.site.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      status: true,
+      createdById: true,
+    },
+  });
+
+  if (!site) {
+    throw new NotFoundError("Site not found.");
+  }
+
+  // Field Officers can only submit their own sites
+  if (
+    currentUserRole === ROLES.FIELD_OFFICER &&
+    site.createdById !== currentUserId
+  ) {
+    throw new ForbiddenError(
+      "You can only submit sites you created."
+    );
+  }
+
+  // Analysts cannot submit sites
+  if (currentUserRole === ROLES.ANALYST) {
+    throw new ForbiddenError(
+      "You are not authorized to submit sites."
+    );
+  }
+
+  // Only DRAFT sites can be submitted
+  ensureSiteStatus(
+    site.status,
+    [SiteStatus.DRAFT],
+    "Only draft sites can be submitted."
+  );
+
+  const submittedSite = await prisma.site.update({
+    where: {
+      id,
+    },
+
+    data: {
+      status: SiteStatus.PENDING,
+      submittedAt: new Date(),
+      updatedById: currentUserId,
+    },
+
+    select: siteDetailsSelect,
+  });
+
+  return submittedSite;
 };

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { CreateSiteData, GetSitesQuery, SiteIdParam, UpdateSiteData } from "../moduleTypes/sites/sites.types.js";
-import { createSite, getSiteById, getSites, updateSite } from "../services/site.service.js";
+import { createSite, getSiteById, getSites, submitSite, updateSite } from "../services/site.service.js";
 
 export const createSiteController = async (
   req: Request,
@@ -86,6 +86,30 @@ export const updateSiteController = async (
     return res.status(200).json({
       success: true,
       message: "Site updated successfully.",
+      data: site,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const submitSiteController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.validatedParams as SiteIdParam;
+
+    const site = await submitSite(
+      id,
+      req.user!.userId,
+      req.user!.role
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Site submitted successfully.",
       data: site,
     });
   } catch (error) {

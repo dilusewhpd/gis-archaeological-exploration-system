@@ -3,7 +3,7 @@ import { authenticate } from "../middlewares/authenticate.js";
 import { authorize } from "../middlewares/authorize.js";
 import { validate } from "../middlewares/validate.js";
 import { createSiteSchema } from "../validators/sites/create-site.validation.js";
-import { createSiteController, getSiteByIdController, getSitesController, updateSiteController } from "../controllers/site.controller.js";
+import { createSiteController, getSiteByIdController, getSitesController, submitSiteController, updateSiteController } from "../controllers/site.controller.js";
 import { ROLES } from "../utils/constants/auth.constants.js";
 import { getSitesQuerySchema } from "../validators/sites/get-sites.validation.js";
 import { validateQuery } from "../middlewares/validateQuery.js";
@@ -56,6 +56,18 @@ router.put(
   validateParams(siteIdParamSchema),
   validate(updateSiteSchema),
   updateSiteController
+);
+
+router.post(
+  "/:id/submit",
+  authenticate,
+  authorize(
+    ROLES.ADMIN,
+    ROLES.SENIOR_OFFICER,
+    ROLES.FIELD_OFFICER
+  ),
+  validateParams(siteIdParamSchema),
+  submitSiteController
 );
 
 export default router;

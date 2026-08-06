@@ -5,7 +5,6 @@ import {
 } from "@prisma/client";
 
 export const createSiteSchema = z.object({
-  body: z.object({
     siteCode: z
       .string()
       .trim()
@@ -82,5 +81,4 @@ export const createSiteSchema = z.object({
       .number()
       .nonnegative()
       .optional(),
-  }),
-});
+})

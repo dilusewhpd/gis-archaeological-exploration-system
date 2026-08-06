@@ -23,6 +23,7 @@ export const createUserSchema = z.object({
     ROLES.ADMIN,
     ROLES.ANALYST,
     ROLES.FIELD_OFFICER,
+    ROLES.SENIOR_OFFICER
   ]),
 });
 

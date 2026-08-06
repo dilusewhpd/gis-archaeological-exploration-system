@@ -10,6 +10,7 @@ declare global {
 
       validatedQuery?: unknown;
       validatedParams?: unknown;
+      // validatedBody?: unknown;
     }
   }
 }

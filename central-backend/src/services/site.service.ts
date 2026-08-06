@@ -22,24 +22,38 @@ export const createSite = async (
     );
   }
 
-  const site = await prisma.site.create({
-    data: {
-      ...data,
+  const site = await prisma.$transaction(async (tx) => {
+    const createdSite = await tx.site.create({
+      data: {
+        ...data,
 
-      createdById: currentUserId,
-      updatedById: currentUserId,
-    },
+        createdById: currentUserId,
+        updatedById: currentUserId,
+      },
 
-    include: {
-      createdBy: {
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          email: true,
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
         },
       },
-    },
+    });
+
+    await tx.siteWorkflowHistory.create({
+      data: {
+        siteId: createdSite.id,
+        action: SiteWorkflowAction.CREATED,
+        performedById: currentUserId,
+      },
+    });
+
+    return createdSite;
+  },{
+    timeout: 300000, // timeout in 5 minutes
   });
 
   return site;
@@ -220,26 +234,35 @@ export const updateSite = async (
     );
   }
 
-  if (
-    site.status !== SiteStatus.DRAFT &&
-    site.status !== SiteStatus.REJECTED
-  ) {
-    throw new BusinessRuleError(
-      "Only draft or rejected sites can be updated."
-    );
-  }
+  ensureSiteStatus(
+    site.status,
+    [SiteStatus.DRAFT, SiteStatus.REJECTED],
+    "Only draft or rejected sites can be updated."
+  );
 
-  const updatedSite = await prisma.site.update({
-    where: {
-      id,
-    },
+  const updatedSite = await prisma.$transaction(async (tx) => {
+    const site = await tx.site.update({
+      where: {
+        id,
+      },
 
-    data: {
-      ...data,
-      updatedById: currentUserId,
-    },
+      data: {
+        ...data,
+        updatedById: currentUserId,
+      },
 
-    select: siteDetailsSelect,
+      select: siteDetailsSelect,
+    });
+
+    await tx.siteWorkflowHistory.create({
+      data: {
+        siteId: id,
+        action: SiteWorkflowAction.UPDATED,
+        performedById: currentUserId,
+      },
+    });
+
+    return site;
   });
 
   return updatedSite;

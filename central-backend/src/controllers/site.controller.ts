@@ -165,3 +165,24 @@ export const rejectSiteController = async (
     next(error);
   }
 };
+
+export const getMySitesController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const result = await getSites(
+      req.query as GetSitesQuery,
+      req.user!.userId
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "My sites retrieved successfully.",
+      ...result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

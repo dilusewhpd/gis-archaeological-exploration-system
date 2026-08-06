@@ -46,7 +46,8 @@ export const createSite = async (
 };
 
 export const getSites = async (
-  query: GetSitesQuery
+  query: GetSitesQuery,
+  createdById?: string
 ) => {
   const page = query.page ?? 1;
   const limit = query.limit ?? 10;
@@ -65,6 +66,10 @@ export const getSites = async (
   const skip = (page - 1) * limit;
 
   const where: Prisma.SiteWhereInput = {
+    ...(createdById && {
+      createdById,
+    }),
+    
     ...(search && {
       OR: [
         {

@@ -3,7 +3,7 @@ import { authenticate } from "../middlewares/authenticate.js";
 import { authorize } from "../middlewares/authorize.js";
 import { validate } from "../middlewares/validate.js";
 import { createSiteSchema } from "../validators/sites/create-site.validation.js";
-import { approveSiteController, createSiteController, getSiteByIdController, getSitesController, rejectSiteController, submitSiteController, updateSiteController } from "../controllers/site.controller.js";
+import { approveSiteController, createSiteController, getMySitesController, getSiteByIdController, getSitesController, rejectSiteController, submitSiteController, updateSiteController } from "../controllers/site.controller.js";
 import { ROLES } from "../utils/constants/auth.constants.js";
 import { getSitesQuerySchema } from "../validators/sites/get-sites.validation.js";
 import { validateQuery } from "../middlewares/validateQuery.js";
@@ -30,6 +30,14 @@ router.get(
   ),
   validateQuery(getSitesQuerySchema),
   getSitesController
+);
+
+router.get(
+  "/my-sites",
+  authenticate,
+  authorize(ROLES.FIELD_OFFICER, ROLES.SENIOR_OFFICER),
+  validateQuery(getSitesQuerySchema),
+  getMySitesController
 );
 
 router.get(

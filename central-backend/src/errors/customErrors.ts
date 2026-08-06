@@ -35,3 +35,9 @@ export class ValidationError extends AppError {
     super(message, 422);
   }
 }
+
+export class BusinessRuleError extends AppError {
+  constructor(message = "Business rule violation.") {
+    super(message, 422);
+  } 
+}

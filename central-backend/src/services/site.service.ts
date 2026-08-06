@@ -1,7 +1,9 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, SiteStatus } from "@prisma/client";
 import { prisma } from "../config/prismaDb.js";
-import { ConflictError, NotFoundError } from "../errors/customErrors.js";
-import { CreateSiteData, GetSitesQuery } from "../moduleTypes/sites/sites.types.js";
+import { BusinessRuleError, ConflictError, ForbiddenError, NotFoundError } from "../errors/customErrors.js";
+import { CreateSiteData, GetSitesQuery, UpdateSiteData } from "../moduleTypes/sites/sites.types.js";
+import { ROLES } from "../utils/constants/auth.constants.js";
+import { siteDetailsSelect } from "../utils/constants/site.constant.js";
 
 export const createSite = async (
   data: CreateSiteData,
@@ -168,66 +170,7 @@ export const getSiteById = async (
       id,
     },
 
-    select: {
-      id: true,
-      siteCode: true,
-      name: true,
-      description: true,
-
-      province: true,
-      district: true,
-      divisionalSecretariat: true,
-
-      latitude: true,
-      longitude: true,
-
-      historicalPeriod: true,
-      siteType: true,
-
-      landUse: true,
-      terrain: true,
-
-      distanceToRiver: true,
-      rainfall: true,
-      proximityToDevelopment: true,
-
-      status: true,
-
-      submittedAt: true,
-      approvedAt: true,
-      rejectedAt: true,
-      rejectionReason: true,
-
-      createdAt: true,
-      updatedAt: true,
-
-      createdBy: {
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          email: true,
-        },
-      },
-
-      approvedBy: {
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          email: true,
-        },
-      },
-
-      updatedBy: {
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          email: true,
-        },
-      },
-    },
+    select: siteDetailsSelect
   });
 
   if (!site) {
@@ -235,4 +178,63 @@ export const getSiteById = async (
   }
 
   return site;
+};
+
+export const updateSite = async (
+  id: string,
+  data: UpdateSiteData,
+  currentUserId: string,
+  currentUserRole: string
+) => {
+  const site = await prisma.site.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      status: true,
+      createdById: true,
+    },
+  });
+
+  if (!site) {
+    throw new NotFoundError("Site not found.");
+  }
+
+  if (
+    currentUserRole === ROLES.FIELD_OFFICER &&
+    site.createdById !== currentUserId
+  ) {
+    throw new ForbiddenError(
+      "You can only update sites you created."
+    );
+  }
+
+  if (currentUserRole === ROLES.ANALYST) {
+    throw new ForbiddenError(
+      "You are not authorized to update sites."
+    );
+  }
+
+  if (
+    site.status !== SiteStatus.DRAFT &&
+    site.status !== SiteStatus.REJECTED
+  ) {
+    throw new BusinessRuleError(
+      "Only draft or rejected sites can be updated."
+    );
+  }
+
+  const updatedSite = await prisma.site.update({
+    where: {
+      id,
+    },
+
+    data: {
+      ...data,
+      updatedById: currentUserId,
+    },
+
+    select: siteDetailsSelect,
+  });
+
+  return updatedSite;
 };

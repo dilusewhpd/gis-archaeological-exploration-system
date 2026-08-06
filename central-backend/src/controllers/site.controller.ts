@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { CreateSiteData, GetSitesQuery, SiteIdParam } from "../moduleTypes/sites/sites.types.js";
-import { createSite, getSiteById, getSites } from "../services/site.service.js";
+import { CreateSiteData, GetSitesQuery, SiteIdParam, UpdateSiteData } from "../moduleTypes/sites/sites.types.js";
+import { createSite, getSiteById, getSites, updateSite } from "../services/site.service.js";
 
 export const createSiteController = async (
   req: Request,
@@ -52,13 +52,40 @@ export const getSiteByIdController = async (
   next: NextFunction
 ) => {
   try {
-    const { id } = req.params as unknown as SiteIdParam;
+    const { id } = req.validatedParams as SiteIdParam;
 
     const site = await getSiteById(id);
 
     return res.status(200).json({
       success: true,
       message: "Site retrieved successfully.",
+      data: site,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateSiteController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.validatedParams as SiteIdParam;
+
+    const data = req.body as UpdateSiteData;
+
+    const site = await updateSite(
+      id,
+      data,
+      req.user!.userId,
+      req.user!.role
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Site updated successfully.",
       data: site,
     });
   } catch (error) {

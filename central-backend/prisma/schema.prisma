@@ -104,3 +104,30 @@ model SitePhoto {
 
   @@index([siteId])
 }
+
+model SiteReport {
+  id            String @id @default(uuid()) @db.Uuid
+  siteId        String @db.Uuid
+  title         String
+  description   String? @db.Text
+  fileUrl       String
+  uploadedById  String @db.Uuid
+  site          Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  uploadedBy    User @relation(fields: [uploadedById], references: [id])
+  createdAt     DateTime @default(now())
+
+  @@index([siteId])
+}
+
+model SiteApprovalHistory {
+  id             String @id @default(uuid()) @db.Uuid
+  siteId         String @db.Uuid
+  action         ApprovalAction
+  remarks        String? @db.Text
+  performedById  String @db.Uuid
+  site           Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  performedBy    User @relation(fields: [performedById], references: [id])
+  createdAt      DateTime @default(now())
+
+  @@index([siteId])
+}

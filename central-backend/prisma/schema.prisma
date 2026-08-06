@@ -131,3 +131,47 @@ model SiteApprovalHistory {
 
   @@index([siteId])
 }
+
+enum SiteStatus {
+  DRAFT
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ApprovalAction {
+  SUBMITTED
+  APPROVED
+  REJECTED
+  RESUBMITTED
+}
+
+enum HistoricalPeriod {
+  PREHISTORIC
+  PROTOHISTORIC
+  ANURADHAPURA
+  POLONNARUWA
+  DAMBADENIYA
+  YAPAHUWA
+  KURUNEGALA
+  GAMPOLA
+  KOTTE
+  KANDYAN
+  COLONIAL
+  MODERN
+}
+
+enum SiteType {
+  TEMPLE
+  STUPA
+  MONASTERY
+  FORTRESS
+  PALACE
+  CAVE
+  CEMETERY
+  INSCRIPTION
+  RESERVOIR
+  MONUMENT
+  SETTLEMENT
+  OTHER
+}

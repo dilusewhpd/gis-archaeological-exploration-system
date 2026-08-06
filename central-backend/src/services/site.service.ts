@@ -1,6 +1,7 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "../config/prismaDb.js";
 import { ConflictError } from "../errors/customErrors.js";
-import { CreateSiteData } from "../moduleTypes/sites/sites.types.js";
+import { CreateSiteData, GetSitesQuery } from "../moduleTypes/sites/sites.types.js";
 
 export const createSite = async (
   data: CreateSiteData,
@@ -39,4 +40,122 @@ export const createSite = async (
   });
 
   return site;
+};
+
+export const getSites = async (
+  query: GetSitesQuery
+) => {
+  const page = query.page ?? 1;
+  const limit = query.limit ?? 10;
+  const sortBy = ("sortBy" in query && query.sortBy) ? query.sortBy : "createdAt";
+  const sortOrder = ("sortOrder" in query && query.sortOrder) ? query.sortOrder : "desc";
+
+  const {
+    search,
+    status,
+    historicalPeriod,
+    siteType,
+    province,
+    district,
+  } = query;
+
+  const skip = (page - 1) * limit;
+
+  const where: Prisma.SiteWhereInput = {
+    ...(search && {
+      OR: [
+        {
+          name: {
+            contains: search,
+            mode: Prisma.QueryMode.insensitive,
+          },
+        },
+        {
+          siteCode: {
+            contains: search,
+            mode: Prisma.QueryMode.insensitive,
+          },
+        },
+      ],
+    }),
+
+    ...(status && { status }),
+
+    ...(historicalPeriod && { historicalPeriod }),
+
+    ...(siteType && { siteType }),
+
+    ...(province && {
+      province: {
+        contains: province,
+        mode: Prisma.QueryMode.insensitive,
+      },
+    }),
+
+    ...(district && {
+      district: {
+        contains: district,
+        mode: Prisma.QueryMode.insensitive,
+      },
+    }),
+  };
+
+  const sites = await prisma.site.findMany({
+      where,
+      skip,
+      take: Number(limit),
+
+      orderBy: {
+        [sortBy as string]: sortOrder,
+      },
+
+      select: {
+        id: true,
+        siteCode: true,
+        name: true,
+
+        province: true,
+        district: true,
+        divisionalSecretariat: true,
+
+        historicalPeriod: true,
+        siteType: true,
+
+        status: true,
+
+        createdAt: true,
+        updatedAt: true,
+
+        createdBy: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+
+        approvedBy: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+    })
+
+    const total = await prisma.site.count({
+      where,
+    });
+
+  return {
+    data: sites,
+
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 };

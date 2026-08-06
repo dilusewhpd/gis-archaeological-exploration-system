@@ -1,4 +1,4 @@
-import { Prisma, SiteStatus } from "@prisma/client";
+import { Prisma, SiteStatus, SiteWorkflowAction } from "@prisma/client";
 import { prisma } from "../config/prismaDb.js";
 import { BusinessRuleError, ConflictError, ForbiddenError, NotFoundError } from "../errors/customErrors.js";
 import { CreateSiteData, GetSitesQuery, UpdateSiteData } from "../moduleTypes/sites/sites.types.js";
@@ -282,19 +282,89 @@ export const submitSite = async (
     "Only draft sites can be submitted."
   );
 
-  const submittedSite = await prisma.site.update({
-    where: {
-      id,
-    },
+  const submittedSite = await prisma.$transaction(
+    async (tx) => {
+      const updatedSite = await tx.site.update({
+        where: {
+          id,
+        },
+        data: {
+          status: SiteStatus.PENDING,
+          submittedAt: new Date(),
+          updatedById: currentUserId,
+        },
+        select: siteDetailsSelect,
+      });
 
-    data: {
-      status: SiteStatus.PENDING,
-      submittedAt: new Date(),
-      updatedById: currentUserId,
-    },
+      await tx.siteWorkflowHistory.create({
+        data: {
+          siteId: id,
+          action: SiteWorkflowAction.SUBMITTED,
+          performedById: currentUserId,
+        },
+      });
 
-    select: siteDetailsSelect,
-  });
+      return updatedSite;
+    },{
+      timeout: 300000, // timeout in 5 minutes
+    }
+  );
 
   return submittedSite;
+};
+
+export const approveSite = async (
+  id: string,
+  currentUserId: string
+) => {
+  const site = await prisma.site.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      status: true,
+    },
+  });
+
+  if (!site) {
+    throw new NotFoundError("Site not found.");
+  }
+
+  ensureSiteStatus(
+    site.status,
+    [SiteStatus.PENDING],
+    "Only pending sites can be approved."
+  );
+
+  const approvedSite = await prisma.$transaction(
+    async (tx) => {
+      const updatedSite = await tx.site.update({
+        where: {
+          id,
+        },
+
+        data: {
+          status: SiteStatus.APPROVED,
+          approvedAt: new Date(),
+          approvedById: currentUserId,
+          updatedById: currentUserId,
+        },
+
+        select: siteDetailsSelect,
+      });
+
+      await tx.siteWorkflowHistory.create({
+        data: {
+          siteId: id,
+          action: SiteWorkflowAction.APPROVED,
+          performedById: currentUserId,
+        },
+      });
+
+      return updatedSite;
+    },{
+      timeout: 300000, // timeout in 5 minutes
+    }
+  );
+
+  return approvedSite;
 };

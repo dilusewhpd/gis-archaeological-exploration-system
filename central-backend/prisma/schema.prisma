@@ -27,6 +27,7 @@ model User {
   role                Role     @relation(fields: [roleId], references: [id])
   @@index([roleId])
 }
+
 model Role {
   id          String   @id @default(uuid()) @db.Uuid
   name        String   @unique
@@ -35,4 +36,58 @@ model Role {
   updatedAt   DateTime @updatedAt
 
   users       User[]
+}
+
+model Site {
+  id                     String   @id @default(uuid()) @db.Uuid
+  siteCode               String   @unique
+
+  name                   String
+  description            String?  @db.Text
+
+  province               String
+  district               String
+  divisionalSecretariat  String
+
+  latitude               Decimal  @db.Decimal(10, 7)
+  longitude              Decimal  @db.Decimal(10, 7)
+
+  historicalPeriod       HistoricalPeriod
+  siteType               SiteType
+
+  landUse                String
+  terrain                String
+
+  distanceToRiver        Float?
+  rainfall               Float?
+  proximityToDevelopment Float?
+
+  status                 SiteStatus @default(DRAFT)
+
+  submittedAt            DateTime?
+
+  approvedAt             DateTime?
+  rejectedAt             DateTime?
+
+  rejectionReason        String? @db.Text
+
+  createdById            String @db.Uuid
+  approvedById           String? @db.Uuid
+
+  createdBy             User @relation("CreatedSites", fields: [createdById], references: [id])
+  approvedBy            User? @relation("ApprovedSites", fields: [approvedById], references: [id])
+
+  photos                SitePhoto[]
+  reports               SiteReport[]
+  approvalHistory       SiteApprovalHistory[]
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  deletedAt             DateTime?
+
+  @@index([status])
+  @@index([province])
+  @@index([district])
+  @@index([createdById])
+  @@index([approvedById])
 }

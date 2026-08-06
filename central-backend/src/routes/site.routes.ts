@@ -3,12 +3,12 @@ import { authenticate } from "../middlewares/authenticate.js";
 import { authorize } from "../middlewares/authorize.js";
 import { validate } from "../middlewares/validate.js";
 import { createSiteSchema } from "../validators/sites/create-site.validation.js";
-import { approveSiteController, createSiteController, getSiteByIdController, getSitesController, submitSiteController, updateSiteController } from "../controllers/site.controller.js";
+import { approveSiteController, createSiteController, getSiteByIdController, getSitesController, rejectSiteController, submitSiteController, updateSiteController } from "../controllers/site.controller.js";
 import { ROLES } from "../utils/constants/auth.constants.js";
 import { getSitesQuerySchema } from "../validators/sites/get-sites.validation.js";
 import { validateQuery } from "../middlewares/validateQuery.js";
 import { validateParams } from "../middlewares/validateParams.js";
-import { siteIdParamSchema, updateSiteSchema } from "../validators/sites/index.js";
+import { rejectSiteSchema, siteIdParamSchema, updateSiteSchema } from "../validators/sites/index.js";
 
 const router: ReturnType<typeof Router> = Router();
 
@@ -79,6 +79,18 @@ router.post(
   ),
   validateParams(siteIdParamSchema),
   approveSiteController
+);
+
+router.post(
+  "/:id/reject",
+  authenticate,
+  authorize(
+    ROLES.ADMIN,
+    ROLES.SENIOR_OFFICER
+  ),
+  validateParams(siteIdParamSchema),
+  validate(rejectSiteSchema),
+  rejectSiteController
 );
 
 export default router;

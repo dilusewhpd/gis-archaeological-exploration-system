@@ -1,7 +1,7 @@
 import { Prisma, SiteStatus, SiteWorkflowAction } from "@prisma/client";
 import { prisma } from "../config/prismaDb.js";
 import { BusinessRuleError, ConflictError, ForbiddenError, NotFoundError } from "../errors/customErrors.js";
-import { CreateSiteData, GetSitesQuery, UpdateSiteData } from "../moduleTypes/sites/sites.types.js";
+import { CreateSiteData, GetSitesQuery, RejectSiteData, UpdateSiteData } from "../moduleTypes/sites/sites.types.js";
 import { ROLES } from "../utils/constants/auth.constants.js";
 import { siteDetailsSelect } from "../utils/constants/site.constant.js";
 import { ensureSiteStatus } from "../utils/siteStatus.js";
@@ -367,4 +367,60 @@ export const approveSite = async (
   );
 
   return approvedSite;
+};
+
+export const rejectSite = async (
+  id: string,
+  data: RejectSiteData,
+  currentUserId: string
+) => {
+  const site = await prisma.site.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      status: true,
+    },
+  });
+
+  if (!site) {
+    throw new NotFoundError("Site not found.");
+  }
+
+  ensureSiteStatus(
+    site.status,
+    [SiteStatus.PENDING],
+    "Only pending sites can be rejected."
+  );
+
+  const rejectedSite = await prisma.$transaction(async (tx) => {
+    const updatedSite = await tx.site.update({
+      where: {
+        id,
+      },
+
+      data: {
+        status: SiteStatus.REJECTED,
+        rejectedAt: new Date(),
+        rejectionReason: data.rejectionReason,
+        updatedById: currentUserId,
+      },
+
+      select: siteDetailsSelect,
+    });
+
+    await tx.siteWorkflowHistory.create({
+      data: {
+        siteId: id,
+        action: SiteWorkflowAction.REJECTED,
+        remarks: data.rejectionReason,
+        performedById: currentUserId,
+      },
+    });
+
+    return updatedSite;
+  },{
+      timeout: 300000, // timeout in 5 minutes
+  });
+
+  return rejectedSite;
 };

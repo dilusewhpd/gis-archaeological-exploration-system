@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { CreateSiteData, GetSitesQuery, RejectSiteData, SiteIdParam, UpdateSiteData } from "../moduleTypes/sites/sites.types.js";
-import { approveSite, createSite, getSiteById, getSites, rejectSite, submitSite, updateSite } from "../services/site.service.js";
+import { approveSite, createSite, getSiteById, getSiteDashboard, getSites, rejectSite, submitSite, updateSite } from "../services/site.service.js";
+import { ROLES } from "../utils/constants/auth.constants.js";
 
 export const createSiteController = async (
   req: Request,
@@ -181,6 +182,29 @@ export const getMySitesController = async (
       success: true,
       message: "My sites retrieved successfully.",
       ...result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getSiteDashboardController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const isFieldOfficer =
+      req.user!.role === ROLES.FIELD_OFFICER;
+
+    const dashboard = await getSiteDashboard(
+      isFieldOfficer ? req.user!.userId : undefined
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Dashboard retrieved successfully.",
+      data: dashboard,
     });
   } catch (error) {
     next(error);

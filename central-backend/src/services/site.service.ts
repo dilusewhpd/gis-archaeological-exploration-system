@@ -69,7 +69,7 @@ export const getSites = async (
     ...(createdById && {
       createdById,
     }),
-    
+
     ...(search && {
       OR: [
         {
@@ -428,4 +428,62 @@ export const rejectSite = async (
   });
 
   return rejectedSite;
+};
+
+export const getSiteDashboard = async (
+  currentUserId?: string
+) => {
+  const where = currentUserId
+    ? {
+        createdById: currentUserId,
+      }
+    : {};
+
+  const [
+    draft,
+    pending,
+    approved,
+    rejected,
+    total,
+  ] = await Promise.all([
+    prisma.site.count({
+      where: {
+        ...where,
+        status: SiteStatus.DRAFT,
+      },
+    }),
+
+    prisma.site.count({
+      where: {
+        ...where,
+        status: SiteStatus.PENDING,
+      },
+    }),
+
+    prisma.site.count({
+      where: {
+        ...where,
+        status: SiteStatus.APPROVED,
+      },
+    }),
+
+    prisma.site.count({
+      where: {
+        ...where,
+        status: SiteStatus.REJECTED,
+      },
+    }),
+
+    prisma.site.count({
+      where,
+    }),
+  ]);
+
+  return {
+    draft,
+    pending,
+    approved,
+    rejected,
+    total,
+  };
 };

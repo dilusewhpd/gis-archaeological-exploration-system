@@ -31,7 +31,7 @@ model User {
   updatedSites       Site[] @relation("UpdatedSites")
   uploadedPhotos     SitePhoto[]
   uploadedReports    SiteReport[]
-  siteApprovalLogs   SiteApprovalHistory[]
+  siteApprovalLogs   SiteWorkflowHistory[]
 
   @@index([roleId])
 }
@@ -87,7 +87,7 @@ model Site {
 
   photos                SitePhoto[]
   reports               SiteReport[]
-  approvalHistory       SiteApprovalHistory[]
+  approvalHistory       SiteWorkflowHistory[]
 
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
@@ -105,14 +105,14 @@ model Site {
 }
 
 model SitePhoto {
-  id          String @id @default(uuid()) @db.Uuid
-  siteId      String @db.Uuid
-  imageUrl    String
-  caption     String?
-  uploadedById String @db.Uuid
-  site         Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  uploadedBy   User @relation(fields: [uploadedById], references: [id])
-  createdAt    DateTime @default(now())
+  id              String @id @default(uuid()) @db.Uuid
+  siteId          String @db.Uuid
+  imageUrl        String
+  caption         String?
+  uploadedById    String @db.Uuid
+  site            Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  uploadedBy      User @relation(fields: [uploadedById], references: [id])
+  createdAt       DateTime @default(now())
 
   @@index([siteId])
 }
@@ -131,17 +131,18 @@ model SiteReport {
   @@index([siteId])
 }
 
-model SiteApprovalHistory {
-  id             String @id @default(uuid()) @db.Uuid
-  siteId         String @db.Uuid
-  action         ApprovalAction
-  remarks        String? @db.Text
-  performedById  String @db.Uuid
-  site           Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
-  performedBy    User @relation(fields: [performedById], references: [id])
-  createdAt      DateTime @default(now())
+model SiteWorkflowHistory {
+  id              String   @id @default(uuid()) @db.Uuid
+  siteId          String   @db.Uuid
+  site            Site     @relation(fields: [siteId], references: [id])
+  action          SiteWorkflowAction
+  remarks         String?
+  performedById   String @db.Uuid
+  performedBy     User   @relation(fields: [performedById], references: [id])
+  createdAt       DateTime @default(now())
 
   @@index([siteId])
+  @@index([performedById])
 }
 
 enum SiteStatus {
@@ -151,11 +152,13 @@ enum SiteStatus {
   REJECTED
 }
 
-enum ApprovalAction {
+enum SiteWorkflowAction {
+  CREATED
+  UPDATED
   SUBMITTED
   APPROVED
   REJECTED
-  RESUBMITTED
+  ARCHIVED
 }
 
 enum HistoricalPeriod {

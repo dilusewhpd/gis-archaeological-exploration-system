@@ -3,10 +3,12 @@ import { authenticate } from "../middlewares/authenticate.js";
 import { authorize } from "../middlewares/authorize.js";
 import { validate } from "../middlewares/validate.js";
 import { createSiteSchema } from "../validators/sites/create-site.validation.js";
-import { createSiteController, getSitesController } from "../controllers/site.controller.js";
+import { createSiteController, getSiteByIdController, getSitesController } from "../controllers/site.controller.js";
 import { ROLES } from "../utils/constants/auth.constants.js";
 import { getSitesQuerySchema } from "../validators/sites/get-sites.validation.js";
 import { validateQuery } from "../middlewares/validateQuery.js";
+import { validateParams } from "../middlewares/validateParams.js";
+import { siteIdParamSchema } from "../validators/sites/index.js";
 
 const router: ReturnType<typeof Router> = Router();
 
@@ -28,6 +30,19 @@ router.get(
   ),
   validateQuery(getSitesQuerySchema),
   getSitesController
+);
+
+router.get(
+  "/:id",
+  authenticate,
+  authorize(
+    ROLES.ADMIN,
+    ROLES.SENIOR_OFFICER,
+    ROLES.FIELD_OFFICER,
+    ROLES.ANALYST,
+  ),
+  validateParams(siteIdParamSchema),
+  getSiteByIdController
 );
 
 export default router;

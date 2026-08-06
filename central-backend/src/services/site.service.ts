@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "../config/prismaDb.js";
-import { ConflictError } from "../errors/customErrors.js";
+import { ConflictError, NotFoundError } from "../errors/customErrors.js";
 import { CreateSiteData, GetSitesQuery } from "../moduleTypes/sites/sites.types.js";
 
 export const createSite = async (
@@ -158,4 +158,81 @@ export const getSites = async (
       totalPages: Math.ceil(total / limit),
     },
   };
+};
+
+export const getSiteById = async (
+  id: string
+) => {
+  const site = await prisma.site.findUnique({
+    where: {
+      id,
+    },
+
+    select: {
+      id: true,
+      siteCode: true,
+      name: true,
+      description: true,
+
+      province: true,
+      district: true,
+      divisionalSecretariat: true,
+
+      latitude: true,
+      longitude: true,
+
+      historicalPeriod: true,
+      siteType: true,
+
+      landUse: true,
+      terrain: true,
+
+      distanceToRiver: true,
+      rainfall: true,
+      proximityToDevelopment: true,
+
+      status: true,
+
+      submittedAt: true,
+      approvedAt: true,
+      rejectedAt: true,
+      rejectionReason: true,
+
+      createdAt: true,
+      updatedAt: true,
+
+      createdBy: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+        },
+      },
+
+      approvedBy: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+        },
+      },
+
+      updatedBy: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  if (!site) {
+    throw new NotFoundError("Site not found.");
+  }
+
+  return site;
 };

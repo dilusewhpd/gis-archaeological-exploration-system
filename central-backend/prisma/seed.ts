@@ -27,6 +27,10 @@ async function main() {
       name: "FIELD_OFFICER",
       description: "Field Archaeological Officer",
     },
+    {
+      name: "SENIOR_OFFICER",
+      description: "Senior Archaeological Officer",
+    }
   ];
 
   for (const role of roles) {

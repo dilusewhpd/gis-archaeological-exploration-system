@@ -487,3 +487,62 @@ export const getSiteDashboard = async (
     total,
   };
 };
+
+export const getSiteWorkflowHistory = async (
+  id: string,
+  currentUserId: string,
+  currentUserRole: string
+) => {
+  const site = await prisma.site.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      createdById: true,
+    },
+  });
+
+  if (!site) {
+    throw new NotFoundError("Site not found.");
+  }
+
+  if (
+    currentUserRole === ROLES.FIELD_OFFICER &&
+    site.createdById !== currentUserId
+  ) {
+    throw new ForbiddenError(
+      "You are not allowed to view this site's workflow history."
+    );
+  }
+
+  const history = await prisma.siteWorkflowHistory.findMany({
+    where: {
+      siteId: id,
+    },
+
+    orderBy: {
+      createdAt: "asc",
+    },
+
+    select: {
+      id: true,
+
+      action: true,
+
+      remarks: true,
+
+      createdAt: true,
+
+      performedBy: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+        },
+      },
+    },
+  });
+
+  return history;
+};

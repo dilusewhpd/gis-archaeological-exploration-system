@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { CreateSiteData, GetSitesQuery, RejectSiteData, SiteIdParam, UpdateSiteData } from "../moduleTypes/sites/sites.types.js";
-import { approveSite, createSite, getSiteById, getSiteDashboard, getSites, rejectSite, submitSite, updateSite } from "../services/site.service.js";
+import { approveSite, createSite, getSiteById, getSiteDashboard, getSites, getSiteWorkflowHistory, rejectSite, submitSite, updateSite } from "../services/site.service.js";
 import { ROLES } from "../utils/constants/auth.constants.js";
 
 export const createSiteController = async (
@@ -205,6 +205,30 @@ export const getSiteDashboardController = async (
       success: true,
       message: "Dashboard retrieved successfully.",
       data: dashboard,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getSiteWorkflowHistoryController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.validatedParams as SiteIdParam;
+
+    const history = await getSiteWorkflowHistory(
+      id,
+      req.user!.userId,
+      req.user!.role
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Workflow history retrieved successfully.",
+      data: history,
     });
   } catch (error) {
     next(error);

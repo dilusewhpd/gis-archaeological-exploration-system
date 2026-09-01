@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 /**
  * Login page — Exploration Data Management System
@@ -15,8 +16,6 @@ import { useRouter } from "next/navigation";
  * - "Forgot password" does not email a reset link; it routes to an
  *   admin-mediated request queue (see /auth/forgot-password).
  */
-
-const ENDPOINT = "/auth/login";
 
 // ---------------------------------------------------------------------
 // CAROUSEL SLIDES — put your files in /public/images/ and list them here.
@@ -55,10 +54,11 @@ const AUTOPLAY_MS = 5500;
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login } = useAuth();
 
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberUsername, setRememberUsername] = useState(false);
+  const [rememberEmail, setRememberEmail] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -66,6 +66,16 @@ export default function LoginPage() {
   const [slide, setSlide] = useState(0);
   const [paused, setPaused] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("doa_remember_email");
+    if (saved) {
+      setTimeout(() => {
+        setEmail(saved);
+        setRememberEmail(true);
+      }, 0);
+    }
+  }, []);
 
   useEffect(() => {
     if (paused) return;
@@ -81,43 +91,42 @@ export default function LoginPage() {
     event.preventDefault();
     setError(null);
 
-    if (!username.trim() || !password) {
-      setError("Enter your username and password to continue.");
+    const cleanEmail = email.trim();
+    if (!cleanEmail || !password) {
+      setError("Enter your email and password to continue.");
       return;
     }
 
     setIsSubmitting(true);
     try {
-      const res = await fetch(ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: username.trim(), password }),
-      });
-
-      if (!res.ok) {
-        const body = await res.json().catch(() => null);
-        if (res.status === 423) {
-          setError("This account has been disabled. Contact your administrator.");
-        } else if (res.status === 401) {
-          setError("Incorrect username or password.");
-        } else {
-          setError(body?.message ?? "Something went wrong. Please try again.");
-        }
-        return;
-      }
+      const user = await login(cleanEmail, password);
 
       if (typeof window !== "undefined") {
-        if (rememberUsername) {
-          window.localStorage.setItem("doa_remember_username", username.trim());
+        if (rememberEmail) {
+          window.localStorage.setItem("doa_remember_email", cleanEmail);
         } else {
-          window.localStorage.removeItem("doa_remember_username");
+          window.localStorage.removeItem("doa_remember_email");
         }
       }
 
-      router.push("/field_officer/dashboard");
-      router.refresh();
-    } catch {
-      setError("Couldn't reach the server. Check your connection and try again.");
+      const roleName = user.role?.name;
+      if (roleName === "FIELD_OFFICER") {
+        router.push("/field_officer/dashboard");
+      } else if (roleName === "ANALYST") {
+        router.push("/analyst/dashboard");
+      } else if (roleName === "ADMIN" || roleName === "SENIOR_OFFICER") {
+        router.push("/admin/dashboard");
+      } else {
+        setError(
+          `Unrecognized user role: "${roleName || "UNKNOWN"}". Please contact your administrator.`
+        );
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Invalid email or password.");
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -228,19 +237,19 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} noValidate className="mt-7 space-y-4">
             <div>
               <label
-                htmlFor="username"
+                htmlFor="email"
                 className="block text-[13px] font-medium text-[#3A4048]"
               >
-                Username
+                Email
               </label>
               <input
-                id="username"
-                name="username"
-                type="text"
-                autoComplete="username"
-                placeholder="j.perera"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                placeholder="admin@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="mt-1.5 w-full rounded-[6px] border border-[#D4CFC3] bg-white px-3.5 py-2.5 text-[14px] text-[#23262B] placeholder:text-[#A6A199] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
               />
             </div>
@@ -278,11 +287,11 @@ export default function LoginPage() {
               <label className="flex cursor-pointer items-center gap-2 text-[13px] text-[#3A4048]">
                 <input
                   type="checkbox"
-                  checked={rememberUsername}
-                  onChange={(e) => setRememberUsername(e.target.checked)}
+                  checked={rememberEmail}
+                  onChange={(e) => setRememberEmail(e.target.checked)}
                   className="h-4 w-4 rounded border-[#D4CFC3] accent-[#BB892C] text-[#BB892C] focus:ring-[#BB892C]/20 "
                 />
-                Remember username
+                Remember email
               </label>
               <a
                 href="/auth/forgot-password"

@@ -3,6 +3,12 @@ import { CreateUserInput, GetUsersQuery, UpdateUserInput, UserIdParam } from "..
 import { generateTemporaryPassword } from "../utils/tempPasswordGen.js";
 import { prisma } from "../config/prismaDb.js";
 import { Prisma } from "@prisma/client";
+import {
+  BadRequestError,
+  ConflictError,
+  ForbiddenError,
+  NotFoundError,
+} from "../errors/customErrors.js";
 
 export const createUser = async (
   data: CreateUserInput
@@ -15,7 +21,7 @@ export const createUser = async (
   });
 
   if (existingUser) {
-    throw new Error("Email already exists.");
+    throw new ConflictError("Email already exists.");
   }
 
   const role = await prisma.role.findUnique({
@@ -25,7 +31,7 @@ export const createUser = async (
   });
 
   if (!role) {
-    throw new Error("Role not found.");
+    throw new NotFoundError("Role not found.");
   }
 
   const temporaryPassword =
@@ -191,7 +197,7 @@ export const getUserById = async (
   });
 
   if (!user) {
-    throw new Error("User not found.");
+    throw new NotFoundError("User not found.");
   }
 
   return user;
@@ -212,7 +218,7 @@ export const updateUser = async (
     });
 
     if (!existingUser) {
-      throw new Error("User not found.");
+      throw new NotFoundError("User not found.");
     }
 
     // Check email uniqueness
@@ -224,7 +230,7 @@ export const updateUser = async (
       });
 
       if (emailExists) {
-        throw new Error("Email already exists.");
+        throw new ConflictError("Email already exists.");
       }
     }
 
@@ -239,7 +245,7 @@ export const updateUser = async (
       });
 
       if (!role) {
-        throw new Error("Role not found.");
+        throw new NotFoundError("Role not found.");
       }
 
       roleId = role.id;
@@ -311,7 +317,7 @@ export const deleteUser = async (
   const { id } = params;
 
   if (id === currentUserId) {
-    throw new Error("You cannot deactivate your own account.");
+    throw new BadRequestError("You cannot deactivate your own account.");
   }
 
   const user = await prisma.user.findUnique({
@@ -319,11 +325,11 @@ export const deleteUser = async (
   });
 
   if (!user) {
-    throw new Error("User not found.");
+    throw new NotFoundError("User not found.");
   }
 
   if (!user.isActive) {
-    throw new Error("User is already deactivated.");
+    throw new BadRequestError("User is already deactivated.");
   }
 
   await prisma.user.update({
@@ -348,11 +354,11 @@ export const resetUserPassword = async (
   });
 
   if (!user) {
-    throw new Error("User not found.");
+    throw new NotFoundError("User not found.");
   }
 
   if (!user.isActive) {
-    throw new Error("Cannot reset password for a deactivated user.");
+    throw new BadRequestError("Cannot reset password for a deactivated user.");
   }
 
   const temporaryPassword = generateTemporaryPassword();

@@ -20,9 +20,9 @@ export function removeStoredToken(): void {
 
 export class ApiError extends Error {
   status: number;
-  data: any;
+  data: unknown;
 
-  constructor(message: string, status: number, data?: any) {
+  constructor(message: string, status: number, data?: unknown) {
     super(message);
     this.name = "ApiError";
     this.status = status;
@@ -30,13 +30,13 @@ export class ApiError extends Error {
   }
 }
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   message?: string;
   data: T;
 }
 
-export async function apiRequest<T = any>(
+export async function apiRequest<T = unknown>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
@@ -60,11 +60,11 @@ export async function apiRequest<T = any>(
     headers,
   });
 
-  let data: any = null;
+  let data: Record<string, unknown> | null = null;
   const contentType = response.headers.get("content-type");
   if (contentType && contentType.includes("application/json")) {
     try {
-      data = await response.json();
+      data = (await response.json()) as Record<string, unknown>;
     } catch {
       data = null;
     }
@@ -72,10 +72,11 @@ export async function apiRequest<T = any>(
 
   if (!response.ok) {
     let errorMessage = "An unexpected error occurred.";
-    if (data?.message) {
+    if (typeof data?.message === "string") {
       errorMessage = data.message;
     } else if (data?.errors && Array.isArray(data.errors) && data.errors.length > 0) {
-      errorMessage = data.errors[0]?.message || errorMessage;
+      const firstError = data.errors[0] as { message?: string };
+      errorMessage = firstError?.message || errorMessage;
     } else if (response.statusText) {
       errorMessage = response.statusText;
     }
@@ -83,34 +84,34 @@ export async function apiRequest<T = any>(
     throw new ApiError(errorMessage, response.status, data);
   }
 
-  return data as T;
+  return data as unknown as T;
 }
 
 export const api = {
-  get: <T = any>(endpoint: string, options?: RequestInit) =>
+  get: <T = unknown>(endpoint: string, options?: RequestInit) =>
     apiRequest<T>(endpoint, { ...options, method: "GET" }),
 
-  post: <T = any>(endpoint: string, body?: any, options?: RequestInit) =>
+  post: <T = unknown>(endpoint: string, body?: unknown, options?: RequestInit) =>
     apiRequest<T>(endpoint, {
       ...options,
       method: "POST",
-      body: body ? JSON.stringify(body) : undefined,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
     }),
 
-  put: <T = any>(endpoint: string, body?: any, options?: RequestInit) =>
+  put: <T = unknown>(endpoint: string, body?: unknown, options?: RequestInit) =>
     apiRequest<T>(endpoint, {
       ...options,
       method: "PUT",
-      body: body ? JSON.stringify(body) : undefined,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
     }),
 
-  patch: <T = any>(endpoint: string, body?: any, options?: RequestInit) =>
+  patch: <T = unknown>(endpoint: string, body?: unknown, options?: RequestInit) =>
     apiRequest<T>(endpoint, {
       ...options,
       method: "PATCH",
-      body: body ? JSON.stringify(body) : undefined,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
     }),
 
-  delete: <T = any>(endpoint: string, options?: RequestInit) =>
+  delete: <T = unknown>(endpoint: string, options?: RequestInit) =>
     apiRequest<T>(endpoint, { ...options, method: "DELETE" }),
 };

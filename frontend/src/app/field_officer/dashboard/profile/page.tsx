@@ -1,4 +1,5 @@
 import ProfileForm from "./ProfileForm";
+import LogoutButton from "@/components/LogoutButton";
 
 /**
  * My profile — /field_officer/dashboard/profile
@@ -62,8 +63,9 @@ export default async function ProfilePage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="border-b border-[#DEDBD1] bg-white px-8 py-4">
+      <header className="flex items-center justify-between border-b border-[#DEDBD1] bg-white px-8 py-4">
         <h1 className="font-serif text-[20px] tracking-tight text-[#16283F]">My profile</h1>
+        <LogoutButton />
       </header>
 
       <main className="flex-1 px-8 py-7">

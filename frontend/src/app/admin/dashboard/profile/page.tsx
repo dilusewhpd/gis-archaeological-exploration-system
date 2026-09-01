@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
+import LogoutButton from "@/components/LogoutButton";
 
 /**
  * Admin profile — /admin/dashboard/profile
@@ -74,12 +74,7 @@ export default function AdminProfilePage() {
       <header className="flex items-center justify-between border-b border-[#DEDBD1] bg-white px-8 py-4">
         <h1 className="font-serif text-[20px] tracking-tight text-[#16283F]">Profile</h1>
         <div className="flex items-center gap-4">
-          <Link
-            href="/auth/logout"
-            className="text-[13px] font-medium text-[#5B6472] transition hover:text-[#16283F]"
-          >
-            Log out
-          </Link>
+          <LogoutButton />
           <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#DEDBD1] bg-[#F4F3EF] font-serif text-[12px] text-[#16283F]">
             {initials}
           </div>

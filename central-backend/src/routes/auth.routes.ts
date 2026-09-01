@@ -10,7 +10,7 @@ const router: ReturnType<typeof Router> = Router();
 
 router.post("/register", validate(registerSchema), register);
 router.post("/login", validate(loginSchema), login);
-router.get("/me", authenticate, authorize(ROLES.ADMIN), me);
+router.get("/me", authenticate, me);
 
 router.post(
   "/change-password",

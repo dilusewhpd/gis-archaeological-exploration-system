@@ -1,40 +1,26 @@
 "use client";
 
-import { useMemo, useState, type ChangeEvent, type FormEvent, type MouseEvent } from "react";
-import { useRouter } from "next/navigation";
+import { useMemo, useState, useEffect, type ChangeEvent, type MouseEvent } from "react";
+import { useRouter, useParams } from "next/navigation";
+import Link from "next/link";
+import { getSiteById, saveSite, type ExplorationSite, type RecordStatus } from "@/src/services/siteService";
 
-/**
- * New site registration — /field_officer/dashboard/new-site
- *
- * Covers the "Register new exploration site" use case:
- *  - <<include>> Record GPS location  -> the coordinate picker below
- *  - <<extends>> Upload site photograph -> optional single photo
- *
- * MAP NOTE: this uses a lightweight, dependency-free coordinate picker
- * scaled to Sri Lanka's real bounding box, NOT a real tiled map. When the
- * GIS Visualization module is built (Leaflet/Mapbox + PostGIS), swap the
- * <CoordinatePicker /> below for a real map component — the rest of this
- * page (state, submit handler, validation) doesn't need to change, since
- * both only need to produce a { lat, lng } pair.
- */
-
-// Sri Lanka's approximate onshore bounding box (WGS84)
 const SL_BOUNDS = { latMin: 5.9, latMax: 9.9, lngMin: 79.5, lngMax: 81.9 };
 
 const SRI_LANKA_POLYGON = [
-  { lat: 9.80, lng: 80.20 }, // Jaffna
-  { lat: 9.30, lng: 80.40 }, // Northeast (Mullaitivu)
-  { lat: 8.50, lng: 81.20 }, // Trincomalee
-  { lat: 7.70, lng: 81.80 }, // Batticaloa
-  { lat: 7.00, lng: 81.80 }, // East coast
-  { lat: 6.30, lng: 81.70 }, // Southeast (Yala)
-  { lat: 5.92, lng: 80.60 }, // Dondra (South)
-  { lat: 6.20, lng: 80.10 }, // Galle
-  { lat: 6.90, lng: 79.82 }, // Colombo
-  { lat: 8.00, lng: 79.70 }, // Kalpitiya
-  { lat: 9.00, lng: 79.80 }, // Mannar
-  { lat: 9.50, lng: 80.00 }, // Pooneryn
-  { lat: 9.80, lng: 80.20 }, // Close loop
+  { lat: 9.80, lng: 80.20 },
+  { lat: 9.30, lng: 80.40 },
+  { lat: 8.50, lng: 81.20 },
+  { lat: 7.70, lng: 81.80 },
+  { lat: 7.00, lng: 81.80 },
+  { lat: 6.30, lng: 81.70 },
+  { lat: 5.92, lng: 80.60 },
+  { lat: 6.20, lng: 80.10 },
+  { lat: 6.90, lng: 79.82 },
+  { lat: 8.00, lng: 79.70 },
+  { lat: 9.00, lng: 79.80 },
+  { lat: 9.50, lng: 80.00 },
+  { lat: 9.80, lng: 80.20 },
 ];
 
 function isPointInPolygon(lat: number, lng: number, polygon: { lat: number; lng: number }[]) {
@@ -58,38 +44,50 @@ const DISTRICTS = [
   "Trincomalee", "Vavuniya",
 ];
 
-const ENDPOINT = "/api/exploration-sites";
-
 type Coordinates = { lat: number; lng: number };
 
-import { saveSite, type ExplorationSite, type RecordStatus } from "@/src/services/siteService";
-
-export default function NewSitePage() {
+export default function EditDraftSitePage() {
   const router = useRouter();
+  const params = useParams();
+  const siteId = params.id as string;
 
+  const [site, setSite] = useState<ExplorationSite | null>(null);
   const [siteName, setSiteName] = useState("");
   const [district, setDistrict] = useState("");
   const [notes, setNotes] = useState("");
   const [coords, setCoords] = useState<Coordinates | null>(null);
-  const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
-  const [docFile, setDocFile] = useState<File | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [docFileName, setDocFileName] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const data = getSiteById(siteId);
+    if (data) {
+      if (data.status !== "DRAFT" && data.status !== "NEEDS_CORRECTION") {
+        router.push(`/field_officer/dashboard/records/${siteId}`);
+        return;
+      }
+      setSite(data);
+      setSiteName(data.name);
+      setDistrict(data.district);
+      setNotes(data.notes);
+      setCoords({ lat: data.lat, lng: data.lng });
+      setPhotoPreview(data.photoUrl);
+      setDocFileName(data.supportingDoc);
+    } else {
+      setError("Site record not found.");
+    }
+  }, [siteId, router]);
 
   function handlePhotoChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0] ?? null;
-    setPhoto(file);
-    setPhotoPreview((prev) => {
-      if (prev) URL.revokeObjectURL(prev);
-      return file ? URL.createObjectURL(file) : null;
-    });
+    setPhotoPreview(file ? URL.createObjectURL(file) : null);
   }
 
-  function removePhoto() {
-    if (photoPreview) URL.revokeObjectURL(photoPreview);
-    setPhoto(null);
-    setPhotoPreview(null);
+  function handleDocChange(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0] ?? null;
+    setDocFileName(file ? file.name : null);
   }
 
   async function handleFormAction(event: MouseEvent<HTMLButtonElement>, actionStatus: RecordStatus) {
@@ -101,71 +99,80 @@ export default function NewSitePage() {
       return;
     }
     if (!coords) {
-      setError("Pick a GPS location on the map, or enter coordinates manually.");
+      setError("Pick a GPS location on the map.");
       return;
     }
     if (!isPointInPolygon(coords.lat, coords.lng, SRI_LANKA_POLYGON)) {
-      setError("The selected coordinate is outside Sri Lanka's land mass (in the ocean). Please select a valid onshore point.");
+      setError("The selected coordinate is outside Sri Lanka's land mass. Please select a valid onshore point.");
       return;
     }
 
-    setIsSubmitting(true);
-    
-    // Simulate short network delay
+    setIsSaving(true);
     setTimeout(() => {
       try {
-        const newSite: ExplorationSite = {
-          id: `site-${Date.now()}`,
-          name: siteName.trim(),
-          district,
-          visitDate: new Date().toISOString().split("T")[0],
-          status: actionStatus,
-          notes,
-          lat: coords.lat,
-          lng: coords.lng,
-          photoUrl: photoPreview,
-          supportingDoc: docFile ? docFile.name : null,
-          reviewComments: null,
-          riskScore: null,
-          riskBand: null,
-          
-          // Generate realistic/simulated environmental attributes for the site:
-          elevation: coords.lat < 6.8 ? 15 : 120, // rough elevation
-          floodZone: coords.lat < 6.8 || Math.random() > 0.6 ? "High" : "Low",
-          erosionIndex: Math.random() > 0.5 ? "High" : "Medium",
-          encroachment: Math.random() > 0.5 ? "High" : "Low",
-          lootingHistory: Math.random() > 0.75 ? "Yes" : "No",
-          significance: Math.floor(Math.random() * 5) + 6, // 6-10
-          distanceToRiver: `${(Math.random() * 2 + 0.1).toFixed(2)} km`,
-          rainfall: `${Math.floor(Math.random() * 1000 + 1200)} mm/year`,
-          landUse: Math.random() > 0.6 ? "UNESCO Buffer Zone" : "Agricultural / Rural",
-          proximityDevelopment: `${(Math.random() * 5 + 0.2).toFixed(2)} km`,
-        };
-
-        saveSite(newSite);
-        
-        router.push("/field_officer/dashboard/records");
-        router.refresh();
+        if (site) {
+          const updatedSite: ExplorationSite = {
+            ...site,
+            name: siteName.trim(),
+            district,
+            notes,
+            lat: coords.lat,
+            lng: coords.lng,
+            photoUrl: photoPreview,
+            supportingDoc: docFileName,
+            status: actionStatus,
+            reviewComments: actionStatus === "SUBMITTED" ? null : site.reviewComments,
+          };
+          saveSite(updatedSite);
+          router.push("/field_officer/dashboard/records");
+          router.refresh();
+        }
       } catch (err) {
-        setError("Couldn't save the site. Please try again.");
+        setError("Couldn't save the site changes. Please try again.");
       } finally {
-        setIsSubmitting(false);
+        setIsSaving(false);
       }
     }, 600);
+  }
+
+  if (error && !site) {
+    return (
+      <div className="flex flex-1 flex-col p-8 text-center">
+        <p className="text-[#B03A2E] font-medium">{error}</p>
+        <Link href="/field_officer/dashboard/records" className="mt-4 text-[#BB892C] underline">
+          Back to records
+        </Link>
+      </div>
+    );
+  }
+
+  if (!site) {
+    return (
+      <div className="flex h-64 items-center justify-center text-[#8A8D86]">
+        Loading draft records…
+      </div>
+    );
   }
 
   return (
     <div className="flex flex-1 flex-col">
       <header className="border-b border-[#DEDBD1] bg-[#FAF6EB] px-8 py-4">
         <h1 className="font-serif text-[20px] tracking-tight text-[#3A2A12]">
-          Submit exploration report
+          Edit Draft exploration report
         </h1>
       </header>
 
-      <main className="flex-1 px-8 py-7">
+      <main className="flex-1 px-8 py-7 bg-[#F0E6C8]/30">
         <form noValidate className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
           {/* Left: form fields */}
-          <div className="rounded-[8px] border border-[#DEDBD1] bg-white px-6 py-6">
+          <div className="rounded-[8px] border border-[#DEDBD1] bg-white px-6 py-6 shadow-xs">
+            {site.status === "NEEDS_CORRECTION" && site.reviewComments && (
+              <div className="mb-6 rounded-[6px] border border-[#E3B9A8] bg-[#FBF0EB] p-4 text-[13px] text-[#8A3A20]">
+                <h3 className="font-bold">Correction Requested by Senior Officer:</h3>
+                <p className="mt-1 italic leading-relaxed">&ldquo;{site.reviewComments}&rdquo;</p>
+              </div>
+            )}
+
             <div>
               <label htmlFor="siteName" className="block text-[13px] font-medium text-[#3A4048]">
                 Site name
@@ -227,7 +234,7 @@ export default function NewSitePage() {
                   />
                   <button
                     type="button"
-                    onClick={removePhoto}
+                    onClick={() => setPhotoPreview(null)}
                     className="text-[13px] font-medium text-[#B03A2E] hover:underline"
                   >
                     Remove
@@ -258,14 +265,11 @@ export default function NewSitePage() {
                 id="supportingDoc"
                 type="file"
                 accept=".pdf,.doc,.docx"
-                onChange={(e) => {
-                  const file = e.target.files?.[0] ?? null;
-                  setDocFile(file);
-                }}
+                onChange={handleDocChange}
                 className="mt-1.5 w-full rounded-[6px] border border-[#D4CFC3] bg-white px-3.5 py-2 text-[13px] outline-none"
               />
-              {docFile && (
-                <p className="mt-1 text-[12px] text-[#2C6B33]">Selected: {docFile.name}</p>
+              {docFileName && (
+                <p className="mt-1.5 text-[12.5px] text-[#2C6B33] font-medium">Selected: {docFileName}</p>
               )}
             </div>
 
@@ -282,16 +286,16 @@ export default function NewSitePage() {
               <button
                 type="button"
                 onClick={(e) => handleFormAction(e, "SUBMITTED")}
-                disabled={isSubmitting}
+                disabled={isSaving}
                 className="flex-grow flex items-center justify-center gap-2 rounded-[6px] bg-[#BB892C] px-5 py-2.5 text-[14px] font-medium text-[#F4F2ED] transition hover:bg-[#8F6A21] disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isSubmitting && <Spinner />}
+                {isSaving && <Spinner />}
                 Submit for Approval
               </button>
               <button
                 type="button"
                 onClick={(e) => handleFormAction(e, "DRAFT")}
-                disabled={isSubmitting}
+                disabled={isSaving}
                 className="flex-grow flex items-center justify-center gap-2 rounded-[6px] border border-[#D4CFC3] bg-white px-5 py-2.5 text-[14px] font-medium text-[#5B6472] transition hover:bg-[#FAF6EB] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Save as Draft
@@ -300,24 +304,13 @@ export default function NewSitePage() {
           </div>
 
           {/* Right: GPS location picker */}
-          <div className="rounded-[8px] border border-[#DEDBD1] bg-white px-5 py-5">
+          <div className="rounded-[8px] border border-[#DEDBD1] bg-white px-5 py-5 shadow-xs">
             <p className="text-[13px] font-medium text-[#3A4048]">GPS location</p>
             <p className="mt-0.5 text-[12px] text-[#8A8D86]">
               Click on the map to set the site&apos;s coordinates.
             </p>
 
             <CoordinatePicker value={coords} onChange={setCoords} />
-
-            {coords && (
-              <div className="mt-3 rounded-[6px] bg-[#FAF6EB] p-2.5 text-[11px] text-[#8F6A21]">
-                <span className="font-semibold">GPS Quality/Confidence (simulated):</span>{" "}
-                {isPointInPolygon(coords.lat, coords.lng, SRI_LANKA_POLYGON) ? (
-                  <span className="text-[#2C6B33]">Excellent Accuracy (±3.2m simulated) • HDOP 1.1 (9 Satellites)</span>
-                ) : (
-                  <span className="text-[#B03A2E]">Outside Land Territory (Ocean detected)</span>
-                )}
-              </div>
-            )}
 
             <div className="mt-4 grid grid-cols-2 gap-3">
               <ManualCoordField
@@ -369,7 +362,6 @@ function CoordinatePicker({
     const yRatio = (e.clientY - rect.top) / rect.height;
 
     const lng = SL_BOUNDS.lngMin + xRatio * (SL_BOUNDS.lngMax - SL_BOUNDS.lngMin);
-    // y grows downward on screen, latitude grows upward — invert.
     const lat = SL_BOUNDS.latMax - yRatio * (SL_BOUNDS.latMax - SL_BOUNDS.latMin);
 
     onChange({
@@ -387,21 +379,10 @@ function CoordinatePicker({
     <div
       role="button"
       tabIndex={0}
-      aria-label="Click to set the site's GPS coordinates"
       onClick={handleClick}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          onChange({
-            lat: (SL_BOUNDS.latMin + SL_BOUNDS.latMax) / 2,
-            lng: (SL_BOUNDS.lngMin + SL_BOUNDS.lngMax) / 2,
-          });
-        }
-      }}
       className="relative mt-3 aspect-[3/4] w-full cursor-crosshair overflow-hidden rounded-[6px] border border-[#DEDBD1] bg-[#FAF6EB]"
     >
-      {/* grid */}
       <svg className="absolute inset-0 h-full w-full" aria-hidden="true">
-        {/* Sri Lanka landmass outline */}
         <polygon
           points={polygonPointsString}
           fill="#F3E9CD"
@@ -435,15 +416,9 @@ function CoordinatePicker({
         ))}
       </svg>
 
-      {!markerPos && (
-        <p className="absolute inset-0 flex items-center justify-center px-6 text-center text-[12px] text-[#A6A199]">
-          Click anywhere to drop a pin
-        </p>
-      )}
-
       {markerPos && (
         <div
-          className="absolute h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-[#9A4B2E] shadow-[0_0_0_1px_rgba(154,75,46,0.4)]"
+          className="absolute h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-[#9A4B2E]"
           style={{ left: `${markerPos.xPct}%`, top: `${markerPos.yPct}%` }}
         />
       )}
@@ -477,8 +452,7 @@ function ManualCoordField({
           const v = parseFloat(e.target.value);
           if (!Number.isNaN(v)) onChange(v);
         }}
-        placeholder="—"
-        className="mt-1 w-full rounded-[6px] border border-[#D4CFC3] bg-white px-2.5 py-1.5 text-[13px] text-[#23262B] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
+        className="mt-1 w-full rounded-[6px] border border-[#D4CFC3] bg-white px-2.5 py-1.5 text-[13px] text-[#23262B] outline-none"
       />
     </div>
   );

@@ -1,138 +1,34 @@
+"use client";
+
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import { getSites, type ExplorationSite, type RecordStatus } from "@/src/services/siteService";
 
-/**
- * My records — /field_officer/dashboard/records
- *
- * Lists every exploration_record submitted by the signed-in field officer,
- * across the full lifecycle (draft -> submitted -> under_review ->
- * approved | correction_requested -> archived). Filtering and search are
- * done via URL search params so the page stays a server component — no
- * client-side state needed.
- *
- * NOTE: Next.js 15+ makes `searchParams` a Promise in Server Components,
- * so it's awaited below. If you're on an older Next version, drop the
- * `Promise<...>` wrapper and the `await`.
- */
+type FilterKey = "all" | "DRAFT" | "SUBMITTED" | "APPROVED" | "REJECTED" | "NEEDS_CORRECTION";
 
-const RECORDS_ENDPOINT = `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/field-officer/records`;
-
-type RecordStatus =
-  | "draft"
-  | "submitted"
-  | "under_review"
-  | "approved"
-  | "correction_requested"
-  | "archived";
-
-type ExplorationRecord = {
-  id: string;
-  siteName: string;
-  district: string | null;
-  visitDate: string;
-  status: RecordStatus;
-  updatedAt: string;
-  reviewComments: string | null;
-};
-
-const FALLBACK_RECORDS: ExplorationRecord[] = [
-  {
-    id: "r1",
-    siteName: "Anuradhapura North",
-    district: "Anuradhapura",
-    visitDate: "2026-07-01",
-    status: "approved",
-    updatedAt: "2026-07-03",
-    reviewComments: null,
-  },
-  {
-    id: "r2",
-    siteName: "Sigiriya East ridge",
-    district: "Matale",
-    visitDate: "2026-07-05",
-    status: "submitted",
-    updatedAt: "2026-07-05",
-    reviewComments: null,
-  },
-  {
-    id: "r3",
-    siteName: "Polonnaruwa canal site",
-    district: "Polonnaruwa",
-    visitDate: "2026-07-09",
-    status: "correction_requested",
-    updatedAt: "2026-07-10",
-    reviewComments: "Please add GPS coordinates for the secondary excavation trench.",
-  },
-  {
-    id: "r4",
-    siteName: "Yapahuwa terrace",
-    district: "Kurunegala",
-    visitDate: "2026-06-20",
-    status: "draft",
-    updatedAt: "2026-06-20",
-    reviewComments: null,
-  },
-  {
-    id: "r5",
-    siteName: "Ritigala west slope",
-    district: "Anuradhapura",
-    visitDate: "2026-05-14",
-    status: "archived",
-    updatedAt: "2026-06-01",
-    reviewComments: null,
-  },
+const FILTERS: { key: FilterKey; label: string }[] = [
+  { key: "all", label: "All" },
+  { key: "DRAFT", label: "Drafts" },
+  { key: "SUBMITTED", label: "Pending review" },
+  { key: "APPROVED", label: "Approved" },
+  { key: "REJECTED", label: "Rejected" },
+  { key: "NEEDS_CORRECTION", label: "Needs correction" },
 ];
 
-type FilterKey = "all" | "draft" | "in_review" | "approved" | "correction_requested" | "archived";
+export default function MyRecordsPage() {
+  const [sites, setSites] = useState<ExplorationSite[]>([]);
+  const [activeFilter, setActiveFilter] = useState<FilterKey>("all");
+  const [query, setQuery] = useState("");
 
-const FILTERS: { key: FilterKey; label: string; statuses: RecordStatus[] | null }[] = [
-  { key: "all", label: "All", statuses: null },
-  { key: "draft", label: "Drafts", statuses: ["draft"] },
-  { key: "in_review", label: "Pending review", statuses: ["submitted", "under_review"] },
-  { key: "approved", label: "Approved", statuses: ["approved"] },
-  { key: "correction_requested", label: "Needs correction", statuses: ["correction_requested"] },
-  { key: "archived", label: "Archived", statuses: ["archived"] },
-];
+  useEffect(() => {
+    setSites(getSites());
+  }, []);
 
-async function getRecords(status: FilterKey, q: string): Promise<ExplorationRecord[]> {
-  try {
-    const qs = new URLSearchParams();
-    if (status !== "all") qs.set("status", status);
-    if (q) qs.set("q", q);
-    const suffix = qs.toString() ? `?${qs.toString()}` : "";
-
-    const res = await fetch(`${RECORDS_ENDPOINT}${suffix}`, { cache: "no-store" });
-    if (!res.ok) throw new Error("request failed");
-    return (await res.json()) as ExplorationRecord[];
-  } catch {
-    return filterFallback(status, q);
-  }
-}
-
-function filterFallback(status: FilterKey, q: string): ExplorationRecord[] {
-  const filter = FILTERS.find((f) => f.key === status);
-  let records = FALLBACK_RECORDS;
-  if (filter?.statuses) {
-    records = records.filter((r) => filter.statuses!.includes(r.status));
-  }
-  if (q.trim()) {
-    const needle = q.trim().toLowerCase();
-    records = records.filter((r) => r.siteName.toLowerCase().includes(needle));
-  }
-  return records;
-}
-
-export default async function MyRecordsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ status?: string; q?: string }>;
-}) {
-  const params = await searchParams;
-  const activeFilter: FilterKey = (FILTERS.some((f) => f.key === params.status)
-    ? params.status
-    : "all") as FilterKey;
-  const query = params.q ?? "";
-
-  const records = await getRecords(activeFilter, query);
+  const filteredRecords = sites.filter((r) => {
+    if (activeFilter !== "all" && r.status !== activeFilter) return false;
+    if (query.trim() && !r.name.toLowerCase().includes(query.toLowerCase().trim())) return false;
+    return true;
+  });
 
   return (
     <div className="flex flex-1 flex-col">
@@ -147,29 +43,27 @@ export default async function MyRecordsPage({
         </Link>
       </header>
 
-      <main className="flex-1 px-8 py-7">
+      <main className="flex-1 px-8 py-7 bg-[#F0E6C8]/30">
         {/* Search */}
-        <form method="GET" className="mb-4">
-          {activeFilter !== "all" && <input type="hidden" name="status" value={activeFilter} />}
+        <div className="mb-4">
           <input
             type="search"
-            name="q"
-            defaultValue={query}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
             placeholder="Search by site name…"
             className="w-full max-w-[320px] rounded-[6px] border border-[#D4CFC3] bg-white px-3.5 py-2 text-[13px] text-[#23262B] placeholder:text-[#A6A199] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
           />
-        </form>
+        </div>
 
         {/* Filter tabs */}
         <nav className="mb-5 flex flex-wrap gap-1.5" aria-label="Filter records by status">
           {FILTERS.map((f) => {
-            const href = buildFilterHref(f.key, query);
             const isActive = f.key === activeFilter;
             return (
-              <Link
+              <button
                 key={f.key}
-                href={href}
-                aria-current={isActive ? "page" : undefined}
+                type="button"
+                onClick={() => setActiveFilter(f.key)}
                 className={
                   "rounded-full px-3 py-1.5 text-[12.5px] font-medium transition " +
                   (isActive
@@ -178,7 +72,7 @@ export default async function MyRecordsPage({
                 }
               >
                 {f.label}
-              </Link>
+              </button>
             );
           })}
         </nav>
@@ -192,32 +86,41 @@ export default async function MyRecordsPage({
                 <th className="px-4 py-2.5 font-medium">District</th>
                 <th className="px-4 py-2.5 font-medium">Visit date</th>
                 <th className="px-4 py-2.5 font-medium">Status</th>
-                <th className="px-4 py-2.5 font-medium">Last updated</th>
+                <th className="px-4 py-2.5 font-medium">Risk Score / Band</th>
                 <th className="px-4 py-2.5 font-medium text-right">Action</th>
               </tr>
             </thead>
             <tbody>
-              {records.length === 0 ? (
+              {filteredRecords.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-4 py-8 text-center text-[#8A8D86]">
                     No records match this filter.
                   </td>
                 </tr>
               ) : (
-                records.map((r, i) => (
+                filteredRecords.map((r, i) => (
                   <tr key={r.id} className={i % 2 === 1 ? "bg-[#FAF9F6]" : undefined}>
-                    <td className="px-4 py-2.5 text-[#23262B]">{r.siteName}</td>
+                    <td className="px-4 py-2.5 text-[#23262B] font-semibold">{r.name}</td>
                     <td className="px-4 py-2.5 text-[#5B6472]">{r.district ?? "—"}</td>
                     <td className="px-4 py-2.5 text-[#5B6472]">{formatDate(r.visitDate)}</td>
                     <td className="px-4 py-2.5">
                       <StatusBadge status={r.status} />
-                      {r.status === "correction_requested" && r.reviewComments && (
+                      {r.status === "NEEDS_CORRECTION" && r.reviewComments && (
                         <p className="mt-1 max-w-[220px] text-[11.5px] leading-snug text-[#B03A2E]">
-                          {r.reviewComments}
+                          Comment: {r.reviewComments}
                         </p>
                       )}
                     </td>
-                    <td className="px-4 py-2.5 text-[#5B6472]">{formatDate(r.updatedAt)}</td>
+                    <td className="px-4 py-2.5">
+                      {r.status === "APPROVED" && r.riskScore !== null ? (
+                        <span className="flex items-center gap-1.5 font-medium">
+                          <span className="text-[13px] font-bold text-[#BB892C]">{r.riskScore}%</span>
+                          <span className="text-[11px] text-[#8A8D86] font-normal">({r.riskBand})</span>
+                        </span>
+                      ) : (
+                        <span className="text-[#8A8D86] italic text-[12px]">Pending approval</span>
+                      )}
+                    </td>
                     <td className="px-4 py-2.5 text-right">
                       <RecordAction record={r} />
                     </td>
@@ -232,16 +135,8 @@ export default async function MyRecordsPage({
   );
 }
 
-function buildFilterHref(key: FilterKey, q: string) {
-  const params = new URLSearchParams();
-  if (key !== "all") params.set("status", key);
-  if (q.trim()) params.set("q", q.trim());
-  const qs = params.toString();
-  return `/field_officer/dashboard/records${qs ? `?${qs}` : ""}`;
-}
-
-function RecordAction({ record }: { record: ExplorationRecord }) {
-  if (record.status === "draft") {
+function RecordAction({ record }: { record: ExplorationSite }) {
+  if (record.status === "DRAFT" || record.status === "NEEDS_CORRECTION") {
     return (
       <Link
         href={`/field_officer/dashboard/records/${record.id}/edit`}
@@ -256,25 +151,24 @@ function RecordAction({ record }: { record: ExplorationRecord }) {
       href={`/field_officer/dashboard/records/${record.id}`}
       className="text-[13px] font-medium text-[#BB892C] hover:underline"
     >
-      View
+      View details
     </Link>
   );
 }
 
 function StatusBadge({ status }: { status: RecordStatus }) {
   const config: Record<RecordStatus, { label: string; bg: string; text: string }> = {
-    draft: { label: "Draft", bg: "#EFEEEA", text: "#5B6472" },
-    submitted: { label: "Submitted", bg: "#FBF0EB", text: "#9A5A2E" },
-    under_review: { label: "Under review", bg: "#FBF0EB", text: "#9A5A2E" },
-    approved: { label: "Approved", bg: "#EAF3EA", text: "#2C6B33" },
-    correction_requested: { label: "Correction requested", bg: "#FBEBEA", text: "#B03A2E" },
-    archived: { label: "Archived", bg: "#EFEEEA", text: "#767A72" },
+    DRAFT: { label: "Draft", bg: "#EFEEEA", text: "#5B6472" },
+    SUBMITTED: { label: "Submitted", bg: "#FBF0EB", text: "#9A5A2E" },
+    APPROVED: { label: "Approved", bg: "#EAF3EA", text: "#2C6B33" },
+    REJECTED: { label: "Rejected", bg: "#FBEBEA", text: "#B03A2E" },
+    NEEDS_CORRECTION: { label: "Correction requested", bg: "#FBEBEA", text: "#B03A2E" },
   };
   const { label, bg, text } = config[status];
 
   return (
     <span
-      className="inline-block rounded-[4px] px-2 py-0.5 text-[12px] font-medium"
+      className="inline-block rounded-[4px] px-2 py-0.5 text-[12px] font-medium border border-black/5"
       style={{ backgroundColor: bg, color: text }}
     >
       {label}

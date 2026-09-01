@@ -134,7 +134,7 @@ export default function AnalystReportsPage() {
             <div>
               <h2 className="font-serif text-[16px] text-[#3A2A12]">Risk Assessment Report</h2>
               <p className="mt-1.5 text-[13px] leading-relaxed text-[#5B6472]">
-                Summarizes density calculations, algorithm run outcomes (K-Means/DBSCAN), and color-coded risk zone boundaries.
+                Summarizes AI prediction models, supervised classification metrics, and color-coded risk level zone boundaries.
               </p>
             </div>
             <div>

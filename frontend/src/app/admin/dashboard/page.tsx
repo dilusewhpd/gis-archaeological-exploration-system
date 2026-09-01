@@ -187,7 +187,7 @@ export default async function AdminDashboardPage() {
                   theme="warm"
                 />
                 <QuickLinkCard
-                  href="/admin/dashboard/decisions"
+                  href="/senior_officer/dashboard"
                   title="Exploration Review & Approval"
                   description="Review pending survey records and issue approvals or corrections."
                   icon={<StampIcon />}
@@ -207,13 +207,6 @@ export default async function AdminDashboardPage() {
                   icon={<MapIcon />}
                   theme="warm"
                 />
-                <QuickLinkCard
-                  href="/admin/dashboard/reports"
-                  title="Monitor High-Risk Areas"
-                  description="Review threat analytics, flooding risk indicators, and mitigation plans."
-                  icon={<ShieldIcon />}
-                  theme="warm"
-                />
               </div>
             </div>
 
@@ -224,7 +217,7 @@ export default async function AdminDashboardPage() {
                   Pending Approvals Queue
                 </h2>
                 <Link
-                  href="/admin/dashboard/decisions"
+                  href="/senior_officer/dashboard"
                   className="text-[13px] font-medium text-[#BB892C] hover:underline"
                 >
                   Manage queue ({pendingApprovalsCount})
@@ -257,7 +250,7 @@ export default async function AdminDashboardPage() {
                           <td className="px-5 py-3 text-[#5B6472]">{formatDate(approval.date)}</td>
                           <td className="px-5 py-3 text-right">
                             <Link
-                              href={`/admin/dashboard/decisions/${approval.id}`}
+                              href={`/senior_officer/dashboard/records/${approval.id}`}
                               className="inline-flex items-center rounded bg-[#3A2A12]/5 px-2.5 py-1 text-[12px] font-medium text-[#3A2A12] hover:bg-[#3A2A12]/10 transition"
                             >
                               Review

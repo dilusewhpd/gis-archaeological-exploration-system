@@ -17,20 +17,20 @@ export type SiteDetails = {
 };
 
 export type PredictionResult = {
-  riskLevel: "Critical" | "High" | "Medium" | "Low";
+  riskScore: number;
+  riskLevel: "Low" | "Moderate" | "High" | "Very High";
   confidence: number;
   modelVersion: string;
   featureImportance: { feature: string; weight: number }[];
 };
 
 /**
- * Supervised classifier simulation (synthetic model)
+ * Supervised classifier simulation (synthetic AI model predicting 0-100% score)
  */
 export function predictRisk(features: HazardFeatures, site: SiteDetails): PredictionResult {
   let score = 0;
   let activeIndicatorsCount = 0;
 
-  // Track triggered hazards
   const triggered: Record<string, number> = {};
 
   if (features.elevation) {
@@ -40,6 +40,7 @@ export function predictRisk(features: HazardFeatures, site: SiteDetails): Predic
       score += 25;
     } else {
       triggered["Elevation"] = 5;
+      score += 5;
     }
   }
 
@@ -53,6 +54,7 @@ export function predictRisk(features: HazardFeatures, site: SiteDetails): Predic
       score += 20;
     } else {
       triggered["Flood Vulnerability"] = 5;
+      score += 5;
     }
   }
 
@@ -66,6 +68,7 @@ export function predictRisk(features: HazardFeatures, site: SiteDetails): Predic
       score += 10;
     } else {
       triggered["Soil Erosion"] = 2;
+      score += 2;
     }
   }
 
@@ -79,6 +82,7 @@ export function predictRisk(features: HazardFeatures, site: SiteDetails): Predic
       score += 10;
     } else {
       triggered["Urban Encroachment"] = 2;
+      score += 2;
     }
   }
 
@@ -89,6 +93,7 @@ export function predictRisk(features: HazardFeatures, site: SiteDetails): Predic
       score += 30;
     } else {
       triggered["Looting Risk"] = 5;
+      score += 5;
     }
   }
 
@@ -99,13 +104,16 @@ export function predictRisk(features: HazardFeatures, site: SiteDetails): Predic
   }
 
   // Calculate prediction risk level classification
-  let riskLevel: "Critical" | "High" | "Medium" | "Low" = "Low";
-  if (score >= 70) {
-    riskLevel = "Critical";
-  } else if (score >= 45) {
+  // Low (0–25%), Moderate (26–50%), High (51–75%), Very High (76–100%)
+  const finalScore = Math.min(100, Math.max(0, score));
+  
+  let riskLevel: "Low" | "Moderate" | "High" | "Very High" = "Low";
+  if (finalScore >= 76) {
+    riskLevel = "Very High";
+  } else if (finalScore >= 51) {
     riskLevel = "High";
-  } else if (score >= 20) {
-    riskLevel = "Medium";
+  } else if (finalScore >= 26) {
+    riskLevel = "Moderate";
   } else {
     riskLevel = "Low";
   }
@@ -113,11 +121,11 @@ export function predictRisk(features: HazardFeatures, site: SiteDetails): Predic
   // Calculate simulated model confidence based on matching features count and severity
   let confidence = 65;
   if (activeIndicatorsCount > 0) {
-    const rawConf = 60 + (score / (activeIndicatorsCount * 30)) * 37;
+    const rawConf = 60 + (finalScore / (activeIndicatorsCount * 30)) * 37;
     confidence = Math.min(97, Math.max(60, Math.round(rawConf)));
   }
 
-  // Compute percentage contributions for feature importance mini graph
+  // Compute percentage contributions for feature importance graph
   const totalImportancePoints = Object.values(triggered).reduce((a, b) => a + b, 0) || 1;
   const featureImportance = Object.entries(triggered).map(([key, val]) => ({
     feature: key,
@@ -128,9 +136,10 @@ export function predictRisk(features: HazardFeatures, site: SiteDetails): Predic
   featureImportance.sort((a, b) => b.weight - a.weight);
 
   return {
+    riskScore: finalScore,
     riskLevel,
     confidence,
-    modelVersion: "synthetic-v1",
+    modelVersion: "supervised-ai-v2",
     featureImportance,
   };
 }

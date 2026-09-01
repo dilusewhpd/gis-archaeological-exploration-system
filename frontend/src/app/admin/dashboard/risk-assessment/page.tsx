@@ -1,10 +1,9 @@
-import RiskAssessmentForm from "./RiskAssessmentForm";
+import RiskAssessmentForm from "../../../analyst/dashboard/risk-assessment/RiskAssessmentForm";
 
 /**
- * Risk assessment — /analyst/dashboard/risk-assessment
+ * Admin AI Risk assessment — /admin/dashboard/risk-assessment
  */
-
-export default async function RiskAssessmentPage() {
+export default function AdminRiskAssessmentPage() {
   return (
     <div className="flex flex-1 flex-col">
       <header className="border-b border-[#DEDBD1] bg-[#FAF6EB] px-8 py-4">

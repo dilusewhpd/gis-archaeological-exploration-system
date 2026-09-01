@@ -1,17 +1,11 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import StatCard from "@/src/components/dashboard/StatCard";
 import QuickLinkCard from "@/src/components/dashboard/QuickLinkCard";
 import ActivityTimeline from "@/src/components/dashboard/ActivityTimeline";
-
-/**
- * Analyst dashboard — /analyst/dashboard
- * Department of Archaeology, Sri Lanka
- *
- * Renders the primary dashboard view for archaeological analysts.
- * Uses fallback mock data if local API endpoint isn't active.
- */
-
-const DASHBOARD_ENDPOINT = `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/analyst/dashboard-summary`;
+import { getSites, type ExplorationSite } from "@/src/services/siteService";
 
 type ActivityItem = {
   id: string;
@@ -23,90 +17,50 @@ type ActivityItem = {
 
 type PreviewMarker = { x: number; y: number };
 
-type ClusteringRun = {
-  id: string;
-  region: string;
-  clusterCount: number;
-};
+export default function AnalystDashboardPage() {
+  const [sites, setSites] = useState<ExplorationSite[]>([]);
 
-type AnalystDashboardData = {
-  totalSitesAnalyzed: number;
-  activeRiskZones: number;
-  pendingReports: number;
-  riskModelsConfigured: number;
-  previewMarkers: PreviewMarker[];
-  recentRuns: ClusteringRun[];
-  recentActivities: ActivityItem[];
-};
+  useEffect(() => {
+    setSites(getSites());
+  }, []);
 
-const FALLBACK_DATA: AnalystDashboardData = {
-  totalSitesAnalyzed: 184,
-  activeRiskZones: 8,
-  pendingReports: 3,
-  riskModelsConfigured: 6,
-  previewMarkers: [
-    { x: 55, y: 32 },
-    { x: 28, y: 48 },
-    { x: 82, y: 24 },
-    { x: 42, y: 66 },
-  ],
-  recentRuns: [
-    { id: "run1", region: "Central Province", clusterCount: 5 },
-    { id: "run2", region: "Southern Province", clusterCount: 3 },
-    { id: "run3", region: "Northern Province", clusterCount: 4 },
-  ],
-  recentActivities: [
+  const approvedSites = sites.filter(s => s.status === "APPROVED");
+  const pendingSites = sites.filter(s => s.status === "SUBMITTED");
+  
+  const highRiskCount = approvedSites.filter(
+    s => s.riskBand === "HIGH" || s.riskBand === "VERY_HIGH"
+  ).length;
+
+  const previewMarkers: PreviewMarker[] = approvedSites.map(s => {
+    // Project simple lat/lng to percentage bounds
+    const x = ((s.lng - 79.5) / (81.9 - 79.5)) * 100;
+    const y = ((9.9 - s.lat) / (9.9 - 5.9)) * 100;
+    return { x, y };
+  });
+
+  const recentActivities: ActivityItem[] = [
     {
       id: "act1",
-      title: "Clustering Run Completed",
-      detail: "Configured K-Means spatial clustering for Central Province. Identified 5 high-risk nodes.",
-      timestamp: "2 hours ago",
+      title: "AI Pipeline Executed",
+      detail: "Completed automatic risk assessment for newly approved sites. Threat indexes updated.",
+      timestamp: "Just now",
       status: "completed",
     },
     {
       id: "act2",
       title: "Analytical Report Generated",
-      detail: "Generated report #RA-882 summarizing priority risks for Sigiriya East Ridge buffer zone.",
+      detail: "Generated report summaries prioritizing high threat zones.",
       timestamp: "Yesterday",
       status: "completed",
     },
     {
       id: "act3",
       title: "New Survey Site Submitted",
-      detail: "Field Officer logged new exploration records for 'Anuradhapura North' site.",
+      detail: `${pendingSites.length} exploration records awaiting senior officer authorization.`,
       timestamp: "2 days ago",
       status: "pending",
     },
-    {
-      id: "act4",
-      title: "Risk Parameters Configured",
-      detail: "Updated proximity hazard buffers for flood risk mapping models.",
-      timestamp: "3 days ago",
-      status: "completed",
-    },
-  ],
-};
-
-async function getDashboardData(): Promise<AnalystDashboardData> {
-  try {
-    const res = await fetch(DASHBOARD_ENDPOINT, { cache: "no-store" });
-    if (!res.ok) return FALLBACK_DATA;
-    return (await res.json()) as AnalystDashboardData;
-  } catch {
-    return FALLBACK_DATA;
-  }
-}
-
-export default async function AnalystDashboardPage() {
-  const {
-    totalSitesAnalyzed,
-    activeRiskZones,
-    pendingReports,
-    riskModelsConfigured,
-    previewMarkers,
-    recentRuns,
-    recentActivities,
-  } = await getDashboardData();
+  ];
 
   return (
     <div className="flex flex-1 flex-col">
@@ -142,34 +96,34 @@ export default async function AnalystDashboardPage() {
       </header>
 
       {/* Main content */}
-      <main className="flex-1 px-6 py-7 lg:px-9 bg-[#F0E6C8]">
+      <main className="flex-1 px-6 py-7 lg:px-9 bg-[#F0E6C8]/30">
         {/* Summary Cards */}
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard
             label="Total Sites Analyzed"
-            value={totalSitesAnalyzed}
-            detail="Sites processed by models"
+            value={approvedSites.length}
+            detail="Approved sites processed by AI"
             colorClass="text-[#3A2A12]"
             icon={<MapPinIcon />}
           />
           <StatCard
-            label="Active Risk Zones"
-            value={activeRiskZones}
-            detail="Requires active monitoring"
+            label="High Threat Zones"
+            value={highRiskCount}
+            detail="High / Very High AI Risk level"
             colorClass="text-[#B03A2E]"
             icon={<AlertIcon />}
           />
           <StatCard
-            label="Pending Reports"
-            value={pendingReports}
-            detail="Awaiting analyst review"
+            label="Awaiting Approval"
+            value={pendingSites.length}
+            detail="Explorations in review queue"
             colorClass="text-[#9A5A2E]"
             icon={<DocIcon />}
           />
           <StatCard
-            label="Risk Models Configured"
-            value={riskModelsConfigured}
-            detail="Active predictive schemas"
+            label="AI Risk Schema"
+            value={2}
+            detail="Supervised Predictive Models"
             colorClass="text-[#2C6B33]"
             icon={<GearIcon />}
           />
@@ -179,8 +133,8 @@ export default async function AnalystDashboardPage() {
         <div className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-3">
           {/* Left Column: Quick Links & Activity */}
           <div className="space-y-5 lg:col-span-2">
-            {/* Quick Links */}
-            <div className="rounded-[10px] border border-[#DEDBD1] bg-white px-5 py-5">
+            {/* Quick Actions */}
+            <div className="rounded-[10px] border border-[#DEDBD1] bg-white px-5 py-5 shadow-xs">
               <h2 className="text-[14px] font-semibold text-[#3A2A12] uppercase tracking-wider">
                 Quick Actions
               </h2>
@@ -190,20 +144,6 @@ export default async function AnalystDashboardPage() {
                   title="Risk Assessment"
                   description="Configure and run archaeological threat and hazard model variables."
                   icon={<ShieldIcon />}
-                  theme="warm"
-                />
-                <QuickLinkCard
-                  href="/analyst/dashboard/reports"
-                  title="Risk Analysis Results"
-                  description="Access generated analytical and risk mitigation report logs."
-                  icon={<AnalyticsIcon />}
-                  theme="warm"
-                />
-                <QuickLinkCard
-                  href="/analyst/dashboard/reports"
-                  title="Decision Support"
-                  description="View prioritized site classifications and conservation priorities."
-                  icon={<BalanceIcon />}
                   theme="warm"
                 />
                 <QuickLinkCard
@@ -217,7 +157,7 @@ export default async function AnalystDashboardPage() {
             </div>
 
             {/* Recent Activity List */}
-            <div className="rounded-[10px] border border-[#DEDBD1] bg-white px-5 py-5">
+            <div className="rounded-[10px] border border-[#DEDBD1] bg-white px-5 py-5 shadow-xs">
               <h2 className="mb-5 text-[14px] font-semibold text-[#3A2A12] uppercase tracking-wider">
                 Recent Analytical Activity
               </h2>
@@ -228,7 +168,7 @@ export default async function AnalystDashboardPage() {
           {/* Right Column: GIS Preview & Status */}
           <div className="space-y-5 lg:col-span-1">
             {/* Map Preview card */}
-            <div className="overflow-hidden rounded-[10px] border border-[#DEDBD1] bg-white">
+            <div className="overflow-hidden rounded-[10px] border border-[#DEDBD1] bg-white shadow-xs">
               <div className="border-b border-[#DEDBD1] bg-[#FAF6EB]/40 px-5 py-3">
                 <h2 className="text-[13px] font-medium text-[#3A2A12]">
                   Risk Zone Map Preview
@@ -242,26 +182,26 @@ export default async function AnalystDashboardPage() {
               </Link>
             </div>
 
-            {/* Clustering Runs list */}
-            <div className="rounded-[10px] border border-[#DEDBD1] bg-white px-5 py-5">
-              <h2 className="text-[13px] font-medium text-[#3A2A12]">
-                Active Clustering Surveys
+            {/* AI Risk Predictions List */}
+            <div className="rounded-[10px] border border-[#DEDBD1] bg-white px-5 py-5 shadow-xs">
+              <h2 className="text-[13px] font-medium text-[#3A2A12] border-b border-[#DEDBD1]/60 pb-2 mb-3">
+                AI Site Predictions
               </h2>
-              <div className="mt-4 divide-y divide-[#DEDBD1]/60">
-                {recentRuns.length === 0 ? (
-                  <p className="py-3 text-[13px] text-[#8A8D86]">No active clustering runs.</p>
+              <div className="divide-y divide-[#DEDBD1]/60">
+                {approvedSites.length === 0 ? (
+                  <p className="py-3 text-[13px] text-[#8A8D86]">No approved predictions.</p>
                 ) : (
-                  recentRuns.map((run) => (
-                    <div key={run.id} className="flex items-center justify-between py-3">
+                  approvedSites.slice(0, 5).map((site) => (
+                    <div key={site.id} className="flex items-center justify-between py-2.5">
                       <div>
-                        <p className="text-[13px] font-medium text-[#3A2A12]">{run.region}</p>
-                        <p className="text-[11px] text-[#8A8478]">{run.clusterCount} risk clusters active</p>
+                        <p className="text-[13px] font-semibold text-[#3A2A12]">{site.name}</p>
+                        <p className="text-[11px] text-[#BB892C] font-semibold">{site.riskScore}% ({site.riskBand} risk)</p>
                       </div>
                       <Link
                         href="/analyst/dashboard/gis-map"
                         className="text-[12px] font-medium text-[#BB892C] hover:underline"
                       >
-                        Inspect
+                        Map
                       </Link>
                     </div>
                   ))
@@ -274,8 +214,6 @@ export default async function AnalystDashboardPage() {
     </div>
   );
 }
-
-/* ---------------- helper component ---------------- */
 
 function RiskZonePreview({ markers }: { markers: PreviewMarker[] }) {
   const gridLines = [0, 1, 2, 3, 4, 5];
@@ -309,7 +247,7 @@ function RiskZonePreview({ markers }: { markers: PreviewMarker[] }) {
       </svg>
 
       {/* Mock risk clusters */}
-      {markers.map((m, i) => (
+      {markers.slice(0, 8).map((m, i) => (
         <div
           key={i}
           className="absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#B03A2E] ring-4 ring-[#B03A2E]/20 animate-pulse"
@@ -379,26 +317,6 @@ function ShieldIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-    </svg>
-  );
-}
-
-function AnalyticsIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="18" y1="20" x2="18" y2="10" />
-      <line x1="12" y1="20" x2="12" y2="4" />
-      <line x1="6" y1="20" x2="6" y2="14" />
-    </svg>
-  );
-}
-
-function BalanceIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="12" y1="2" x2="12" y2="22" />
-      <line x1="5" y1="9" x2="19" y2="9" />
-      <line x1="5" y1="15" x2="19" y2="15" />
     </svg>
   );
 }

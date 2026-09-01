@@ -90,7 +90,7 @@ export default function LoginPage() {
     try {
       // Mock bypass for development/wireframing
       const lowerUser = username.trim().toLowerCase();
-      let mockRole: "admin" | "analyst" | "field_officer" | null = null;
+      let mockRole: "admin" | "analyst" | "field_officer" | "senior_officer" | null = null;
       
       if (lowerUser === "admin" || lowerUser === "n.fernando") {
         mockRole = "admin";
@@ -98,6 +98,8 @@ export default function LoginPage() {
         mockRole = "analyst";
       } else if (lowerUser === "officer" || lowerUser === "j.perera" || lowerUser === "r.bandara") {
         mockRole = "field_officer";
+      } else if (lowerUser === "senior" || lowerUser === "d.jayawardena") {
+        mockRole = "senior_officer";
       }
 
       if (mockRole) {
@@ -105,6 +107,7 @@ export default function LoginPage() {
         await new Promise((resolve) => setTimeout(resolve, 800));
         
         if (typeof window !== "undefined") {
+          window.localStorage.setItem("user_role", mockRole);
           if (rememberUsername) {
             window.localStorage.setItem("doa_remember_username", username.trim());
           } else {

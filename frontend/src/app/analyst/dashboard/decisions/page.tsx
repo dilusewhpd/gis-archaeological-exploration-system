@@ -2,6 +2,6 @@
 
 import SeniorDecisionsPage from "../../../senior_officer/dashboard/decisions/page";
 
-export default function AdminDecisionsPage() {
+export default function AnalystDecisionsPage() {
   return <SeniorDecisionsPage />;
 }

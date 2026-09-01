@@ -1,17 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import type { UserAccount } from "./mock-users";
+import { useEffect, useMemo, useState } from "react";
+import { getUsers, saveUsers, type UserAccount } from "./mock-users";
 
-/**
- * FRONTEND-ONLY: Enable updates local state directly — no fetch calls.
- * When the backend exists, swap the handler below to call your API
- * (PATCH .../status) and update local state from the response.
- */
-export function UserManagementTable({ initialUsers }: { initialUsers: UserAccount[] }) {
+export function UserManagementTable() {
   const [query, setQuery] = useState("");
-  const [users, setUsers] = useState(initialUsers);
+  const [users, setUsers] = useState<UserAccount[]>([]);
+
+  useEffect(() => {
+    setUsers(getUsers());
+  }, []);
 
   const filteredUsers = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -23,9 +22,32 @@ export function UserManagementTable({ initialUsers }: { initialUsers: UserAccoun
   }, [users, query]);
 
   function handleEnable(user: UserAccount) {
-    setUsers((prev) =>
-      prev.map((u) => (u.id === user.id ? { ...u, status: "Active" } : u))
-    );
+    const updated = users.map((u) => (u.id === user.id ? { ...u, status: "Active" as const } : u));
+    setUsers(updated);
+    saveUsers(updated);
+  }
+
+  function handleDisable(user: UserAccount) {
+    const confirmed = window.confirm(`Deactivate account for ${user.fullName}? They will lose dashboard access immediately.`);
+    if (!confirmed) return;
+    const updated = users.map((u) => (u.id === user.id ? { ...u, status: "Disabled" as const } : u));
+    setUsers(updated);
+    saveUsers(updated);
+  }
+
+  function handleDelete(user: UserAccount) {
+    const confirmed = window.confirm(`Are you sure you want to permanently delete user account for ${user.fullName}? This action cannot be undone.`);
+    if (!confirmed) return;
+    const updated = users.filter((u) => u.id !== user.id);
+    setUsers(updated);
+    saveUsers(updated);
+  }
+
+  function handleResetPassword(user: UserAccount) {
+    const randomWord = ["Heritage", "Ancient", "Explore", "Ruins"][Math.floor(Math.random() * 4)];
+    const randomNum = Math.floor(100 + Math.random() * 900);
+    const tempPass = `${randomWord}@${randomNum}!`;
+    alert(`Reset credentials successfully generated for ${user.fullName}.\nTemporary password: ${tempPass}\nCopy and share securely.`);
   }
 
   return (
@@ -52,7 +74,7 @@ export function UserManagementTable({ initialUsers }: { initialUsers: UserAccoun
       </div>
 
       {/* Table */}
-      <div className="mt-4 overflow-hidden rounded-[8px] border border-[#DEDBD1] bg-white">
+      <div className="mt-4 overflow-hidden rounded-[8px] border border-[#DEDBD1] bg-white shadow-xs">
         {filteredUsers.length === 0 ? (
           <p className="px-5 py-8 text-center text-[13px] text-[#8A8D86]">
             {users.length === 0
@@ -67,59 +89,70 @@ export function UserManagementTable({ initialUsers }: { initialUsers: UserAccoun
                 <th className="px-5 py-3 font-medium">Email</th>
                 <th className="px-5 py-3 font-medium">Role</th>
                 <th className="px-5 py-3 font-medium">Status</th>
-                <th className="px-5 py-3 font-medium">Action</th>
+                <th className="px-5 py-3 font-medium text-right">Action</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-[#DEDBD1]/60">
               {filteredUsers.map((user, i) => (
-                <tr key={user.id} className={i % 2 === 1 ? "bg-[#F8F7F4]" : undefined}>
-                  <td className="px-5 py-3 text-[#3A2A12]">{user.fullName}</td>
+                <tr key={user.id} className={i % 2 === 1 ? "bg-[#FAF9F6]" : undefined}>
+                  <td className="px-5 py-3 text-[#3A2A12] font-semibold">{user.fullName}</td>
                   <td className="px-5 py-3 text-[#3A4048]">{user.email}</td>
                   <td className="px-5 py-3 text-[#3A4048]">{user.role}</td>
                   <td className="px-5 py-3">
                     <span
                       className={
-                        user.status === "Active" ? "text-[#2F5C3B]" : "text-[#9A4B2E]"
+                        "inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold " +
+                        (user.status === "Active"
+                          ? "bg-[#EAF1EA] text-[#2F5C3B]"
+                          : "bg-[#F6E8E3] text-[#9A4B2E]")
                       }
                     >
                       {user.status}
                     </span>
                   </td>
-                  <td className="px-5 py-3">
-                    {user.status === "Active" ? (
-                      <div className="flex items-center gap-3">
-                        <Link
-                          href={`/admin/dashboard/users/${user.id}/edit`}
-                          className="font-medium text-[#BB892C] underline-offset-2 hover:underline"
-                        >
-                          Edit
-                        </Link>
+                  <td className="px-5 py-3 text-right">
+                    <div className="flex items-center justify-end gap-3.5">
+                      <Link
+                        href={`/admin/dashboard/users/${user.id}/edit`}
+                        className="font-semibold text-[#BB892C] hover:underline"
+                      >
+                        Edit
+                      </Link>
+                      
+                      {user.status === "Active" ? (
                         <button
                           type="button"
-                          onClick={() => alert(`Reset credentials successfully generated and sent to ${user.fullName} (${user.email}).`)}
-                          className="font-medium text-[#9A5A2E] underline-offset-2 hover:underline"
+                          onClick={() => handleDisable(user)}
+                          className="font-semibold text-[#9A5A2E] hover:underline"
                         >
-                          Reset Password
+                          Disable
                         </button>
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-3">
+                      ) : (
                         <button
                           type="button"
                           onClick={() => handleEnable(user)}
-                          className="font-medium text-[#2F5C3B] underline-offset-2 hover:underline"
+                          className="font-semibold text-[#2C6B33] hover:underline"
                         >
                           Enable
                         </button>
-                        <button
-                          type="button"
-                          onClick={() => alert(`Reset credentials successfully generated and sent to ${user.fullName} (${user.email}).`)}
-                          className="font-medium text-[#9A5A2E] underline-offset-2 hover:underline"
-                        >
-                          Reset Password
-                        </button>
-                      </div>
-                    )}
+                      )}
+
+                      <button
+                        type="button"
+                        onClick={() => handleResetPassword(user)}
+                        className="font-semibold text-[#BB892C] hover:underline"
+                      >
+                        Reset Pass
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(user)}
+                        className="font-semibold text-[#B03A2E] hover:underline"
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

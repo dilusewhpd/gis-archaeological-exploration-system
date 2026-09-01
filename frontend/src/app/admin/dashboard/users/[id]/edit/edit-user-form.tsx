@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import type { UserAccount, UserRole } from "../../mock-users";
+import { getUsers, saveUsers, type UserAccount, type UserRole } from "../../mock-users";
 
-const ROLE_OPTIONS: UserRole[] = ["Admin", "Analyst", "Field Officer"];
+const ROLE_OPTIONS: UserRole[] = ["Admin", "Analyst", "Field Officer", "Senior Officer"];
 
 export function EditUserForm({ user }: { user: UserAccount }) {
   const [fullName, setFullName] = useState(user.fullName);
@@ -18,10 +18,15 @@ export function EditUserForm({ user }: { user: UserAccount }) {
   const [isResetting, setIsResetting] = useState(false);
 
   const isDirty =
-    fullName !== user.fullName || email !== user.email || role !== user.role;
+    fullName !== user.fullName || email !== user.email || role !== user.role || status !== user.status;
 
   function handleSave(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const users = getUsers();
+    const updated = users.map((u) => 
+      u.id === user.id ? { ...u, fullName: fullName.trim(), email: email.trim(), role, status } : u
+    );
+    saveUsers(updated);
     setSaved(true);
     setTimeout(() => setSaved(false), 3000);
   }
@@ -47,7 +52,15 @@ export function EditUserForm({ user }: { user: UserAccount }) {
         : `Reactivate account for ${fullName}?`
     );
     if (!confirmed) return;
-    setStatus(willDeactivate ? "Disabled" : "Active");
+    const newStatus = willDeactivate ? "Disabled" as const : "Active" as const;
+    setStatus(newStatus);
+
+    // Save changes to localStorage immediately
+    const users = getUsers();
+    const updated = users.map((u) => 
+      u.id === user.id ? { ...u, status: newStatus } : u
+    );
+    saveUsers(updated);
   }
 
   // Generate initials for avatar badge

@@ -2,56 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-
-type RoleType = "field_officer" | "analyst" | "admin";
+import { useState, useEffect } from "react";
+import { ROLE_CONFIGS, type RoleType } from "@/src/services/roles.config";
 
 interface SidebarProps {
   role: RoleType;
 }
-
-const ROLE_CONFIGS = {
-  field_officer: {
-    theme: "warm" as const,
-    brandTitle: "Exploration Data",
-    brandSubtitle: "Management System",
-    deptTitle: "Department of Archaeology",
-    navItems: [
-      { href: "/field_officer/dashboard", label: "Dashboard", icon: "home" },
-      { href: "/field_officer/dashboard/new-site", label: "Submit report", icon: "plus-circle" },
-      { href: "/field_officer/dashboard/records", label: "My sites", icon: "map-pin" },
-      { href: "/field_officer/dashboard/gis-map", label: "GIS map", icon: "map" },
-      { href: "/field_officer/dashboard/reports", label: "Reports", icon: "doc" },
-      { href: "/field_officer/dashboard/profile", label: "Settings", icon: "gear" },
-    ],
-  },
-  analyst: {
-    theme: "warm" as const,
-    brandTitle: "GIS Archaeology",
-    brandSubtitle: "Analysis Portal",
-    deptTitle: "Department of Archaeology",
-    navItems: [
-      { href: "/analyst/dashboard", label: "Dashboard", icon: "home" },
-      { href: "/analyst/dashboard/gis-map", label: "GIS map", icon: "map" },
-      { href: "/analyst/dashboard/risk-assessment", label: "Risk assessment", icon: "shield-check" },
-      { href: "/analyst/dashboard/reports", label: "Reports", icon: "doc" },
-      { href: "/analyst/dashboard/profile", label: "Profile", icon: "gear" },
-    ],
-  },
-  admin: {
-    theme: "warm" as const,
-    brandTitle: "GIS Archaeology",
-    brandSubtitle: "Admin Control",
-    deptTitle: "Department of Archaeology",
-    navItems: [
-      { href: "/admin/dashboard", label: "Dashboard", icon: "home" },
-      { href: "/admin/dashboard/users", label: "Users", icon: "users" },
-      { href: "/admin/dashboard/reports", label: "Reports", icon: "doc" },
-      { href: "/admin/dashboard/decisions", label: "Decisions", icon: "shield-check" },
-      { href: "/admin/dashboard/profile", label: "Profile", icon: "gear" },
-    ],
-  },
-};
 
 const THEMES = {
   warm: {
@@ -89,8 +45,18 @@ export default function Sidebar({ role }: SidebarProps) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeRole, setActiveRole] = useState<RoleType>(role);
 
-  const config = ROLE_CONFIGS[role];
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedRole = window.localStorage.getItem("user_role") as RoleType;
+      if (savedRole && ["field_officer", "senior_officer", "analyst", "admin"].includes(savedRole)) {
+        setActiveRole(savedRole);
+      }
+    }
+  }, [role]);
+
+  const config = ROLE_CONFIGS[activeRole] || ROLE_CONFIGS.field_officer;
   const theme = THEMES[config.theme];
   const mobileHeaderClass = MOBILE_HEADER_THEMES[config.theme];
 

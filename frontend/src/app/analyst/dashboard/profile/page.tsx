@@ -1,6 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
 import { ProfileForm } from "./profile-form";
+import LogoutButton from "@/components/LogoutButton";
 
 /**
  * Analyst profile — /analyst/dashboard/profile
@@ -64,12 +64,7 @@ export default async function AnalystProfilePage() {
       <header className="flex items-center justify-between border-b border-[#DEDBD1] bg-white px-8 py-4">
         <h1 className="font-serif text-[20px] tracking-tight text-[#16283F]">Profile</h1>
         <div className="flex items-center gap-4">
-          <Link
-            href="/auth/logout"
-            className="text-[13px] font-medium text-[#5B6472] transition hover:text-[#16283F]"
-          >
-            Log out
-          </Link>
+          <LogoutButton />
           <Avatar photoUrl={profile.photoUrl} name={profile.fullName} size={32} />
         </div>
       </header>

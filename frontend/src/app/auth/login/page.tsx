@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 
 /**
  * Login page — Exploration Data Management System
@@ -11,12 +12,10 @@ import { useRouter } from "next/navigation";
  * overlay caption; right panel is the sign-in form.
  *
  * - No self-service registration: accounts are provisioned by an admin
- *   (see /auth/admin/users/new).
+ *   (see /admin/dashboard/users/new).
  * - "Forgot password" does not email a reset link; it routes to an
  *   admin-mediated request queue (see /auth/forgot-password).
  */
-
-const ENDPOINT = "/auth/login";
 
 // ---------------------------------------------------------------------
 // CAROUSEL SLIDES — put your files in /public/images/ and list them here.
@@ -55,6 +54,7 @@ const AUTOPLAY_MS = 5500;
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login, user, isAuthenticated, isLoading } = useAuth();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -66,6 +66,31 @@ export default function LoginPage() {
   const [slide, setSlide] = useState(0);
   const [paused, setPaused] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("doa_remember_username");
+      if (saved) {
+        setUsername(saved);
+        setRememberUsername(true);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isLoading && isAuthenticated && user) {
+      const userRole = user.role?.name?.toUpperCase().replace(/\s+/g, "_");
+      if (userRole === "FIELD_OFFICER") {
+        router.replace("/field_officer/dashboard");
+      } else if (userRole === "SENIOR_OFFICER") {
+        router.replace("/senior_officer/dashboard");
+      } else if (userRole === "ANALYST") {
+        router.replace("/analyst/dashboard");
+      } else if (userRole === "ADMIN") {
+        router.replace("/admin/dashboard");
+      }
+    }
+  }, [user, isAuthenticated, isLoading, router]);
 
   useEffect(() => {
     if (paused) return;
@@ -81,75 +106,45 @@ export default function LoginPage() {
     event.preventDefault();
     setError(null);
 
-    if (!username.trim() || !password) {
-      setError("Enter your username and password to continue.");
+    const trimmedUser = username.trim();
+    if (!trimmedUser || !password) {
+      setError("Enter your username or email and password to continue.");
       return;
     }
 
     setIsSubmitting(true);
     try {
-      // Mock bypass for development/wireframing
-      const lowerUser = username.trim().toLowerCase();
-      let mockRole: "admin" | "analyst" | "field_officer" | "senior_officer" | null = null;
-      
-      if (lowerUser === "admin" || lowerUser === "n.fernando") {
-        mockRole = "admin";
-      } else if (lowerUser === "analyst" || lowerUser === "k.silva") {
-        mockRole = "analyst";
-      } else if (lowerUser === "officer" || lowerUser === "j.perera" || lowerUser === "r.bandara") {
-        mockRole = "field_officer";
-      } else if (lowerUser === "senior" || lowerUser === "d.jayawardena") {
-        mockRole = "senior_officer";
-      }
+      // Normalize email (if username without domain entered, append @doa.lk)
+      const email = trimmedUser.includes("@") ? trimmedUser : `${trimmedUser}@doa.lk`;
 
-      if (mockRole) {
-        // Simulate network delay for realistic feel
-        await new Promise((resolve) => setTimeout(resolve, 800));
-        
-        if (typeof window !== "undefined") {
-          window.localStorage.setItem("user_role", mockRole);
-          if (rememberUsername) {
-            window.localStorage.setItem("doa_remember_username", username.trim());
-          } else {
-            window.localStorage.removeItem("doa_remember_username");
-          }
-        }
-        
-        router.push(`/${mockRole}/dashboard`);
-        router.refresh();
-        return;
-      }
-
-      const res = await fetch(ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: username.trim(), password }),
-      });
-
-      if (!res.ok) {
-        const body = await res.json().catch(() => null);
-        if (res.status === 423) {
-          setError("This account has been disabled. Contact your administrator.");
-        } else if (res.status === 401) {
-          setError("Incorrect username or password.");
-        } else {
-          setError(body?.message ?? "Something went wrong. Please try again.");
-        }
-        return;
-      }
+      const loggedInUser = await login(email, password);
 
       if (typeof window !== "undefined") {
         if (rememberUsername) {
-          window.localStorage.setItem("doa_remember_username", username.trim());
+          localStorage.setItem("doa_remember_username", trimmedUser);
         } else {
-          window.localStorage.removeItem("doa_remember_username");
+          localStorage.removeItem("doa_remember_username");
         }
       }
 
-      router.push("/field_officer/dashboard");
-      router.refresh();
-    } catch {
-      setError("Couldn't reach the server. Check your connection and try again.");
+      const roleName = loggedInUser.role?.name?.toUpperCase().replace(/\s+/g, "_");
+      if (roleName === "FIELD_OFFICER") {
+        router.push("/field_officer/dashboard");
+      } else if (roleName === "SENIOR_OFFICER") {
+        router.push("/senior_officer/dashboard");
+      } else if (roleName === "ANALYST") {
+        router.push("/analyst/dashboard");
+      } else if (roleName === "ADMIN") {
+        router.push("/admin/dashboard");
+      } else {
+        router.push("/field_officer/dashboard");
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Invalid username or password. Please try again.");
+      }
     } finally {
       setIsSubmitting(false);
     }

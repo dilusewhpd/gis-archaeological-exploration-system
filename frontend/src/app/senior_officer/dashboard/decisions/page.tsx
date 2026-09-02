@@ -3,10 +3,12 @@
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { getSites, type ExplorationSite, type RiskBand } from "@/src/services/siteService";
+import { useAuth } from "@/hooks/useAuth";
 
 type PriorityListStatus = "DRAFT" | "SUBMITTED_FOR_REVIEW" | "APPROVED" | "REJECTED";
 
 export default function SeniorDecisionsPage() {
+  const { user } = useAuth();
   const [sites, setSites] = useState<ExplorationSite[]>([]);
   const [listStatus, setListStatus] = useState<PriorityListStatus>("SUBMITTED_FOR_REVIEW");
   const [reviewComment, setReviewComment] = useState("");
@@ -25,11 +27,11 @@ export default function SeniorDecisionsPage() {
   const [selectedSite, setSelectedSite] = useState<ExplorationSite | null>(null);
 
   useEffect(() => {
-    // Read user role from localStorage
+    if (user?.role?.name) {
+      setUserRole(user.role.name.toLowerCase());
+    }
+
     if (typeof window !== "undefined") {
-      const role = window.localStorage.getItem("user_role") ?? "senior_officer";
-      setUserRole(role);
-      
       const savedStatus = window.localStorage.getItem("conservation_priority_status") as PriorityListStatus;
       if (savedStatus) {
         setListStatus(savedStatus);

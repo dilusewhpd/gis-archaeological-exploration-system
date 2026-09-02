@@ -25,13 +25,19 @@ export default function ProtectedRoute({
     }
 
     if (allowedRoles && allowedRoles.length > 0) {
-      const userRole = user.role?.name;
-      if (!userRole || !allowedRoles.includes(userRole)) {
+      const userRole = user.role?.name?.toUpperCase().replace(/\s+/g, "_");
+      const normalizedAllowed = allowedRoles.map((r) =>
+        r.toUpperCase().replace(/\s+/g, "_")
+      );
+
+      if (!userRole || !normalizedAllowed.includes(userRole)) {
         if (userRole === "FIELD_OFFICER") {
           router.replace("/field_officer/dashboard");
         } else if (userRole === "ANALYST") {
           router.replace("/analyst/dashboard");
-        } else if (userRole === "ADMIN" || userRole === "SENIOR_OFFICER") {
+        } else if (userRole === "SENIOR_OFFICER") {
+          router.replace("/senior_officer/dashboard");
+        } else if (userRole === "ADMIN") {
           router.replace("/admin/dashboard");
         } else {
           router.replace("/auth/login");
@@ -77,12 +83,14 @@ export default function ProtectedRoute({
     return null;
   }
 
-  if (
-    allowedRoles &&
-    allowedRoles.length > 0 &&
-    (!user.role?.name || !allowedRoles.includes(user.role.name))
-  ) {
-    return null;
+  if (allowedRoles && allowedRoles.length > 0) {
+    const userRole = user.role?.name?.toUpperCase().replace(/\s+/g, "_");
+    const normalizedAllowed = allowedRoles.map((r) =>
+      r.toUpperCase().replace(/\s+/g, "_")
+    );
+    if (!userRole || !normalizedAllowed.includes(userRole)) {
+      return null;
+    }
   }
 
   return <>{children}</>;

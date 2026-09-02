@@ -45,18 +45,8 @@ export default function Sidebar({ role }: SidebarProps) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeRole, setActiveRole] = useState<RoleType>(role);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedRole = window.localStorage.getItem("user_role") as RoleType;
-      if (savedRole && ["field_officer", "senior_officer", "analyst", "admin"].includes(savedRole)) {
-        setActiveRole(savedRole);
-      }
-    }
-  }, [role]);
-
-  const config = ROLE_CONFIGS[activeRole] || ROLE_CONFIGS.field_officer;
+  const config = ROLE_CONFIGS[role] || ROLE_CONFIGS.field_officer;
   const theme = THEMES[config.theme];
   const mobileHeaderClass = MOBILE_HEADER_THEMES[config.theme];
 

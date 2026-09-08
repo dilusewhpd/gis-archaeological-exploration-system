@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import LinkNext from "next/link";
+import LogoutButton from "@/components/LogoutButton";
 
 type ReportType = "analytical" | "risk_assessment";
 type ReportStatus = "ready" | "generating" | "failed";
@@ -91,12 +92,7 @@ export default function AnalystReportsPage() {
           </p>
         </div>
         <div className="flex items-center gap-4">
-          <LinkNext
-            href="/auth/logout"
-            className="text-[13px] font-medium text-[#5B6472] transition hover:text-[#BB892C]"
-          >
-            Log out
-          </LinkNext>
+          <LogoutButton className="text-[13px] font-medium text-[#5B6472] transition hover:text-[#BB892C]" />
           <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#DEDBD1] bg-[#F0E6C8] font-serif text-[12px] text-[#8F6A21]">
             KS
           </div>

@@ -1,108 +1,79 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  apiErrorMessage,
+  getSiteDashboard,
+  listMySites,
+  SITE_STATUS_LABELS,
+  type SiteDashboardStats,
+  type SiteListItem,
+  type SiteStatus,
+} from "@/lib/sites";
 
 /**
  * Field Officer dashboard — /field_officer/dashboard
- * Department of Archaeology, Sri Lanka
  *
- * Server component: fetches the officer's summary stats and recent
- * submissions on the server. Replace DASHBOARD_ENDPOINT with your real
- * API route; falls back to placeholder data if the request fails so the
- * page still renders during local development.
+ * Stat cards + status breakdown come from GET /api/sites/dashboard, which
+ * the backend scopes to the calling field officer's own sites. "Recent
+ * activity" is the officer's most recently updated sites from
+ * GET /api/sites/my-sites (already sorted updatedAt desc).
  *
- * NOTE: the sidebar lives in layout.tsx now — this file renders only
- * the top bar + main content.
+ * NOTE: the old "weekly activity" bar chart was mock-only — there is no
+ * backend time-series endpoint for it, so it was removed. If we want it
+ * back it needs a real aggregation endpoint (e.g. counts grouped by day).
  */
 
-const DASHBOARD_ENDPOINT = `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/field-officer/dashboard-summary`;
+export default function FieldOfficerDashboardPage() {
+  const { user } = useAuth();
 
-type SubmissionStatus = "approved" | "pending" | "correction_requested";
+  const [stats, setStats] = useState<SiteDashboardStats | null>(null);
+  const [recent, setRecent] = useState<SiteListItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-type Submission = {
-  id: string;
-  siteName: string;
-  date: string;
-  status: SubmissionStatus;
-};
+  useEffect(() => {
+    let isMounted = true;
+    const run = async () => {
+      try {
+        const [dashboard, mySites] = await Promise.all([
+          getSiteDashboard(),
+          listMySites(),
+        ]);
+        if (isMounted) {
+          setStats(dashboard);
+          setRecent(mySites.slice(0, 5));
+          setError(null);
+        }
+      } catch (err) {
+        if (isMounted) setError(apiErrorMessage(err));
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    };
+    void run();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
-type DashboardSummary = {
-  sitesSubmitted: number;
-  pendingReview: number;
-  approved: number;
-  correctionRequested: number;
-  weeklyActivity: { label: string; count: number }[];
-  recentSubmissions: Submission[];
-  officer?: {
-    name: string;
-    photoUrl?: string;
-  };
-};
+  const officerName = user ? `${user.firstName} ${user.lastName}`.trim() : "Field Officer";
+  const officerInitials =
+    officerName
+      .split(" ")
+      .map((p) => p[0])
+      .filter(Boolean)
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() || "FO";
 
-const FALLBACK_DATA: DashboardSummary = {
-  sitesSubmitted: 18,
-  pendingReview: 3,
-  approved: 14,
-  correctionRequested: 1,
-  weeklyActivity: [
-    { label: "Mon", count: 1 },
-    { label: "Tue", count: 3 },
-    { label: "Wed", count: 2 },
-    { label: "Thu", count: 4 },
-    { label: "Fri", count: 2 },
-    { label: "Sat", count: 5 },
-    { label: "Sun", count: 1 },
-  ],
-  recentSubmissions: [
-    { id: "1", siteName: "Anuradhapura North", date: "2026-07-01", status: "approved" },
-    { id: "2", siteName: "Sigiriya East ridge", date: "2026-07-05", status: "pending" },
-    { id: "3", siteName: "Polonnaruwa canal site", date: "2026-07-09", status: "pending" },
-    { id: "4", siteName: "Yapahuwa terrace wall", date: "2026-07-11", status: "correction_requested" },
-    { id: "5", siteName: "Ritigala forest shrine", date: "2026-07-13", status: "approved" },
-  ],
-  officer: {
-    name: "Field Officer",
-    photoUrl: undefined,
-  },
-};
-
-async function getDashboardSummary(): Promise<DashboardSummary> {
-  try {
-    const res = await fetch(DASHBOARD_ENDPOINT, { cache: "no-store" });
-    if (!res.ok) return FALLBACK_DATA;
-    return (await res.json()) as DashboardSummary;
-  } catch {
-    return FALLBACK_DATA;
-  }
-}
-
-export default async function FieldOfficerDashboardPage() {
-  const {
-    sitesSubmitted,
-    pendingReview,
-    approved,
-    correctionRequested,
-    weeklyActivity,
-    recentSubmissions,
-    officer,
-  } = await getDashboardSummary();
-
-  const approvalRate = sitesSubmitted > 0 ? Math.round((approved / sitesSubmitted) * 100) : 0;
-  const pendingRate = sitesSubmitted > 0 ? Math.round((pendingReview / sitesSubmitted) * 100) : 0;
-  const outstandingRate =
-    sitesSubmitted > 0 ? Math.round((correctionRequested / sitesSubmitted) * 100) : 0;
-  const maxActivity = Math.max(1, ...weeklyActivity.map((d) => d.count));
-
-  const officerName = officer?.name ?? "Field Officer";
-  const officerInitials = officerName
-    .split(" ")
-    .map((part) => part[0])
-    .filter(Boolean)
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
+  const total = stats?.total ?? 0;
+  const pct = (n: number) => (total > 0 ? Math.round((n / total) * 100) : 0);
 
   return (
     <>
-      {/* Top bar */}
       <header className="flex items-center justify-between border-b border-[#DEDBD1] bg-[#FAF6EB] px-6 py-4 lg:px-9">
         <div>
           <h1 className="font-serif text-[22px] tracking-tight text-[#3A2A12]">
@@ -114,14 +85,6 @@ export default async function FieldOfficerDashboardPage() {
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="relative hidden sm:block">
-            <SearchIcon className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#A6A199]" />
-            <input
-              type="text"
-              placeholder="Search sites"
-              className="w-56 rounded-[20px] border border-[#D4CFC3] bg-white py-2 pl-9 pr-3.5 text-[13px] text-[#23262B] placeholder:text-[#A6A199] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
-            />
-          </div>
           <Link
             href="/field_officer/dashboard/notifications"
             aria-label="Notifications"
@@ -132,190 +95,108 @@ export default async function FieldOfficerDashboardPage() {
           <Link
             href="/field_officer/dashboard/profile"
             aria-label="View profile"
-            className="relative block h-9 w-9 shrink-0 overflow-hidden rounded-full border border-[#DEDBD1] bg-[#F0E6C8] transition hover:border-[#BB892C]/40"
+            className="grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-full border border-[#DEDBD1] bg-[#F0E6C8] text-[12px] font-medium text-[#8F6A21] transition hover:border-[#BB892C]/40"
           >
-            {officer?.photoUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={officer.photoUrl}
-                alt={officerName}
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <span className="flex h-full w-full items-center justify-center text-[12px] font-medium text-[#8F6A21]">
-                {officerInitials || "FO"}
-              </span>
-            )}
+            {officerInitials}
           </Link>
         </div>
       </header>
 
       <main className="flex-1 px-6 py-7 lg:px-9">
+        {error && (
+          <div
+            role="alert"
+            className="mb-5 rounded-[8px] border border-[#E3B9A8] bg-[#FBF0EB] px-4 py-3 text-[13px] text-[#8A3A20]"
+          >
+            {error}
+          </div>
+        )}
+
         {/* Stat rings */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <RingStat
-            label="Sites submitted"
-            value={sitesSubmitted}
+            label="Sites registered"
+            value={total}
             percent={100}
             detail="Total to date"
             color="#BB892C"
+            loading={isLoading}
           />
           <RingStat
             label="Pending review"
-            value={pendingReview}
-            percent={pendingRate}
-            detail={`${pendingRate}% of submissions`}
+            value={stats?.pending ?? 0}
+            percent={pct(stats?.pending ?? 0)}
+            detail={`${pct(stats?.pending ?? 0)}% of your sites`}
             color="#9A5A2E"
+            loading={isLoading}
           />
           <RingStat
             label="Approved"
-            value={approved}
-            percent={approvalRate}
-            detail={`${approvalRate}% approval rate`}
+            value={stats?.approved ?? 0}
+            percent={pct(stats?.approved ?? 0)}
+            detail={`${pct(stats?.approved ?? 0)}% approval rate`}
             color="#2C6B33"
+            loading={isLoading}
           />
         </div>
 
-        {/* Activity + status split */}
         <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[1.5fr_1fr]">
-          <div className="rounded-[10px] border border-[#DEDBD1] bg-white px-5 py-4.5">
+          {/* Recent activity */}
+          <section className="rounded-[10px] border border-[#DEDBD1] bg-white px-5 py-4.5">
             <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-[14px] font-semibold text-[#3A2A12] uppercase tracking-wider">Weekly activity</h2>
-                <p className="mt-0.5 text-[11px] text-[#8A8478]">Survey logs registered per day</p>
-              </div>
-              <div className="text-right">
-                <span className="text-[18px] font-serif font-bold text-[#BB892C]">
-                  {weeklyActivity.reduce((acc, curr) => acc + curr.count, 0)}
-                </span>
-                <span className="ml-1 text-[11px] text-[#8A8478]">logged</span>
-              </div>
+              <h2 className="text-[14px] font-semibold uppercase tracking-wider text-[#3A2A12]">
+                Recent activity
+              </h2>
+              <Link
+                href="/field_officer/dashboard/records"
+                className="text-[13px] font-medium text-[#BB892C] hover:underline"
+              >
+                View all
+              </Link>
             </div>
 
-            <div className="mt-6 flex h-[160px] gap-3">
-              {/* Y-Axis Labels */}
-              <div className="flex flex-col justify-between text-[10px] font-medium text-[#8A8478] pb-6 pt-1 select-none pr-1">
-                <span>{maxActivity}</span>
-                <span>{Math.round(maxActivity / 2)}</span>
-                <span>0</span>
-              </div>
-
-              {/* Chart Grid & Bars Area */}
-              <div className="relative flex-1 h-[160px]">
-                {/* Grid Lines */}
-                <div className="absolute inset-0 pb-6 pt-2 flex flex-col justify-between pointer-events-none">
-                  <div className="w-full border-t border-dashed border-[#DEDBD1]/40" />
-                  <div className="w-full border-t border-dashed border-[#DEDBD1]/40" />
-                  <div className="w-full border-t border-[#DEDBD1]/60" />
-                </div>
-
-                {/* Columns */}
-                <div className="absolute inset-0 pb-6 pt-2 flex items-stretch gap-3.5 px-1">
-                  {weeklyActivity.map((day) => (
-                    <div key={day.label} className="group/bar relative flex flex-1 flex-col justify-end items-center cursor-pointer">
-                      {/* Elegant Tooltip */}
-                      <div className="pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 rounded-[5px] bg-[#241708] border border-[#BB892C]/30 px-2 py-1 text-[10px] font-medium text-[#FAC437] opacity-0 scale-95 transition-all duration-200 group-hover/bar:opacity-100 group-hover/bar:scale-100 shadow-md z-10 whitespace-nowrap">
-                        {day.count} {day.count === 1 ? "site" : "sites"}
-                      </div>
-                      {/* Bar */}
-                      <div className="w-full flex-1 flex items-end justify-center">
-                        <div
-                          className="w-4 rounded-t-[5px] bg-gradient-to-t from-[#D9A05B] to-[#BB892C] transition-all duration-300 group-hover/bar:from-[#BB892C] group-hover/bar:to-[#FAC437] group-hover/bar:shadow-[0_0_12px_rgba(187,137,44,0.4)] border border-[#BB892C]/10"
-                          style={{
-                            height: `${Math.max(6, (day.count / maxActivity) * 100)}%`,
-                          }}
-                        />
-                      </div>
-                      {/* Label */}
-                      <span className="absolute -bottom-5 text-[11px] font-medium text-[#8A8478] transition-colors group-hover/bar:text-[#BB892C]">
-                        {day.label}
-                      </span>
+            <div className="mt-3 divide-y divide-[#DEDBD1]/60">
+              {isLoading ? (
+                <p className="py-6 text-center text-[13px] text-[#8A8D86]">Loading…</p>
+              ) : recent.length === 0 ? (
+                <p className="py-6 text-center text-[13px] text-[#8A8D86]">
+                  No sites yet. Register your first site to get started.
+                </p>
+              ) : (
+                recent.map((s) => (
+                  <Link
+                    key={s.id}
+                    href={`/field_officer/dashboard/records/${s.id}`}
+                    className="flex items-center justify-between gap-3 py-2.5 transition hover:bg-[#FAF6EB]/60"
+                  >
+                    <div className="min-w-0">
+                      <p className="truncate text-[13px] font-medium text-[#23262B]">{s.name}</p>
+                      <p className="text-[11.5px] text-[#8A8478]">
+                        {s.siteCode} · updated {formatDate(s.updatedAt)}
+                      </p>
                     </div>
-                  ))}
-                </div>
-              </div>
+                    <StatusBadge status={s.status} />
+                  </Link>
+                ))
+              )}
             </div>
-          </div>
+          </section>
 
-          <div className="rounded-[10px] border border-[#DEDBD1] bg-white px-5 py-4.5">
-            <h2 className="text-[14px] font-medium text-[#3A2A12]">Submission status</h2>
+          {/* Status breakdown */}
+          <section className="rounded-[10px] border border-[#DEDBD1] bg-white px-5 py-4.5">
+            <h2 className="text-[14px] font-medium text-[#3A2A12]">Your sites by status</h2>
             <div className="mt-4 space-y-4">
-              <StatusRow
-                label="Approved"
-                value={approved}
-                percent={approvalRate}
-                color="#2C6B33"
-                bg="#EAF3EA"
-              />
-              <StatusRow
-                label="Pending"
-                value={pendingReview}
-                percent={pendingRate}
-                color="#9A5A2E"
-                bg="#FBF0EB"
-              />
-              <StatusRow
-                label="Correction requested"
-                value={correctionRequested}
-                percent={outstandingRate}
-                color="#B03A2E"
-                bg="#FBEBEA"
-              />
+              <StatusRow label="Approved" value={stats?.approved ?? 0} percent={pct(stats?.approved ?? 0)} color="#2C6B33" bg="#EAF3EA" />
+              <StatusRow label="Pending review" value={stats?.pending ?? 0} percent={pct(stats?.pending ?? 0)} color="#9A5A2E" bg="#FBF0EB" />
+              <StatusRow label="Draft" value={stats?.draft ?? 0} percent={pct(stats?.draft ?? 0)} color="#5B6472" bg="#EFEEEA" />
+              <StatusRow label="Rejected" value={stats?.rejected ?? 0} percent={pct(stats?.rejected ?? 0)} color="#B03A2E" bg="#FBEBEA" />
             </div>
-          </div>
+          </section>
         </div>
 
-        {/* Recent submissions */}
-        <section className="mt-5">
-          <div className="flex items-center justify-between">
-            <h2 className="text-[15px] font-medium text-[#3A2A12]">Recent submissions</h2>
-            <Link
-              href="/field_officer/dashboard/records"
-              className="text-[13px] font-medium text-[#BB892C] hover:underline"
-            >
-              View all
-            </Link>
-          </div>
-
-          <div className="mt-3 overflow-hidden rounded-[10px] border border-[#DEDBD1] bg-white">
-            <table className="w-full text-left text-[13px]">
-              <thead>
-                <tr className="bg-[#3A2A12] text-[#F4F2ED]">
-                  <th className="px-4 py-2.5 font-medium">Site name</th>
-                  <th className="px-4 py-2.5 font-medium">Date</th>
-                  <th className="px-4 py-2.5 font-medium">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentSubmissions.length === 0 ? (
-                  <tr>
-                    <td colSpan={3} className="px-4 py-6 text-center text-[#8A8D86]">
-                      No submissions yet. Register your first site to get started.
-                    </td>
-                  </tr>
-                ) : (
-                  recentSubmissions.map((s, i) => (
-                    <tr
-                      key={s.id}
-                      className={"transition-colors duration-200 hover:bg-[#FAF6EB]/60 cursor-pointer " + (i % 2 === 1 ? "bg-[#FAF6EB]" : "")}
-                    >
-                      <td className="px-4 py-2.5 text-[#23262B]">{s.siteName}</td>
-                      <td className="px-4 py-2.5 text-[#5B6472]">{formatDate(s.date)}</td>
-                      <td className="px-4 py-2.5">
-                        <StatusBadge status={s.status} />
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        {/* Register new site */}
         <Link
           href="/field_officer/dashboard/new-site"
-          className="group mt-6 inline-flex items-center gap-2 rounded-[20px] bg-[#BB892C] px-4 py-2.5 text-[13px] font-medium text-[#F4F2ED] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:bg-[#8F6A21]"
+          className="group mt-6 inline-flex items-center gap-2 rounded-[20px] bg-[#BB892C] px-4 py-2.5 text-[13px] font-medium text-[#F4F2ED] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#8F6A21] hover:shadow-md"
         >
           <span className="transition-transform duration-300 group-hover:rotate-90">
             <PlusIcon />
@@ -335,32 +216,31 @@ function RingStat({
   percent,
   detail,
   color,
+  loading,
 }: {
   label: string;
   value: number;
   percent: number;
   detail: string;
   color: string;
+  loading?: boolean;
 }) {
   const clamped = Math.max(0, Math.min(100, percent));
   return (
-    <div className="group relative flex items-center gap-4 rounded-[10px] border border-[#DEDBD1] bg-white px-5 py-4.5 shadow-xs transition-all duration-300 hover:-translate-y-0.5 hover:border-[#BB892C]/30 hover:shadow-md cursor-default overflow-hidden">
-      {/* Decorative gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-[#FAF6EB]/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none" />
-      
+    <div className="flex items-center gap-4 rounded-[10px] border border-[#DEDBD1] bg-white px-5 py-4.5 shadow-xs">
       <div
-        className="relative grid h-16 w-16 shrink-0 place-items-center rounded-full transition-transform duration-300 group-hover:scale-105"
-        style={{
-          background: `conic-gradient(${color} ${clamped * 3.6}deg, #EFE9D6 0deg)`,
-        }}
+        className="grid h-16 w-16 shrink-0 place-items-center rounded-full"
+        style={{ background: `conic-gradient(${color} ${clamped * 3.6}deg, #EFE9D6 0deg)` }}
       >
         <div className="grid h-[52px] w-[52px] place-items-center rounded-full bg-white">
           <span className="text-[13px] font-medium text-[#3A2A12]">{clamped}%</span>
         </div>
       </div>
-      <div className="relative z-10">
+      <div>
         <p className="text-[13px] text-[#5B6472]">{label}</p>
-        <p className="mt-0.5 font-serif text-[24px] leading-none text-[#3A2A12] transition-colors group-hover:text-[#BB892C]">{value}</p>
+        <p className="mt-0.5 font-serif text-[24px] leading-none text-[#3A2A12]">
+          {loading ? "—" : value}
+        </p>
         <p className="mt-1 text-[11px] text-[#8A8478]">{detail}</p>
       </div>
     </div>
@@ -381,37 +261,37 @@ function StatusRow({
   bg: string;
 }) {
   return (
-    <div className="group/row transition-all duration-200 hover:translate-x-1 cursor-default">
+    <div>
       <div className="flex items-center justify-between text-[13px]">
-        <span className="text-[#3A2A12] transition-colors group-hover/row:text-[#BB892C]">{label}</span>
+        <span className="text-[#3A2A12]">{label}</span>
         <span className="font-medium" style={{ color }}>
           {value}
         </span>
       </div>
-      <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full transition-all duration-300" style={{ background: bg }}>
+      <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full" style={{ background: bg }}>
         <div
-          className="h-full rounded-full transition-all duration-500 ease-out group-hover/row:brightness-110 group-hover/row:shadow-[0_0_4px_currentColor]"
-          style={{ width: `${Math.max(4, percent)}%`, backgroundColor: color } as any}
+          className="h-full rounded-full"
+          style={{ width: `${Math.max(4, percent)}%`, backgroundColor: color }}
         />
       </div>
     </div>
   );
 }
 
-function StatusBadge({ status }: { status: SubmissionStatus }) {
-  const config: Record<SubmissionStatus, { label: string; bg: string; text: string }> = {
-    approved: { label: "Approved", bg: "#EAF3EA", text: "#2C6B33" },
-    pending: { label: "Pending", bg: "#FBF0EB", text: "#9A5A2E" },
-    correction_requested: { label: "Correction requested", bg: "#FBEBEA", text: "#B03A2E" },
+function StatusBadge({ status }: { status: SiteStatus }) {
+  const config: Record<SiteStatus, { bg: string; text: string }> = {
+    DRAFT: { bg: "#EFEEEA", text: "#5B6472" },
+    PENDING: { bg: "#FBF0EB", text: "#9A5A2E" },
+    APPROVED: { bg: "#EAF3EA", text: "#2C6B33" },
+    REJECTED: { bg: "#FBEBEA", text: "#B03A2E" },
   };
-  const { label, bg, text } = config[status];
-
+  const { bg, text } = config[status];
   return (
     <span
-      className="inline-block rounded-[4px] px-2 py-0.5 text-[12px] font-medium"
+      className="shrink-0 rounded-[4px] px-2 py-0.5 text-[11.5px] font-medium"
       style={{ backgroundColor: bg, color: text }}
     >
-      {label}
+      {SITE_STATUS_LABELS[status]}
     </span>
   );
 }
@@ -420,17 +300,6 @@ function formatDate(iso: string) {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
   return d.toLocaleDateString("en-GB", { year: "numeric", month: "short", day: "numeric" });
-}
-
-/* ---------------- icons (header/button only — nav icons live in layout.tsx) ---------------- */
-
-function SearchIcon({ className = "" }: { className?: string }) {
-  return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
-      <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="1.8" />
-      <path d="m21 21-3.6-3.6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  );
 }
 
 function BellIcon() {

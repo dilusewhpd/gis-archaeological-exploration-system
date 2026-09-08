@@ -27,6 +27,35 @@ export interface SitePhoto {
   uploadedBy?: SitePerson;
 }
 
+export type SiteWorkflowAction =
+  | "CREATED"
+  | "UPDATED"
+  | "SUBMITTED"
+  | "APPROVED"
+  | "REJECTED"
+  | "ARCHIVED";
+
+/**
+ * One row from GET /api/sites/:id/history, oldest first (createdAt asc).
+ * `remarks` is only populated for REJECTED (the rejection reason).
+ */
+export interface WorkflowHistoryEntry {
+  id: string;
+  action: SiteWorkflowAction;
+  remarks: string | null;
+  createdAt: string;
+  performedBy: { id: string; firstName: string; lastName: string } | null;
+}
+
+/** Aggregate counts from GET /api/sites/dashboard. */
+export interface SiteDashboardStats {
+  draft: number;
+  pending: number;
+  approved: number;
+  rejected: number;
+  total: number;
+}
+
 /** Shape returned by GET /api/sites/my-sites (list select). */
 export interface SiteListItem {
   id: string;
@@ -183,6 +212,27 @@ export async function listSites(
   if (params.status) qs.set("status", params.status);
   if (params.search?.trim()) qs.set("search", params.search.trim());
   const res = await apiRequest<Paginated<SiteListItem>>(`/api/sites?${qs.toString()}`);
+  return res.data;
+}
+
+/**
+ * GET /api/sites/:id/history — workflow audit trail, oldest first.
+ * FIELD_OFFICER may only read history for sites they created; other roles
+ * may read any.
+ */
+export async function getSiteHistory(id: string): Promise<WorkflowHistoryEntry[]> {
+  const res = await apiRequest<ApiResponse<WorkflowHistoryEntry[]>>(
+    `/api/sites/${id}/history`
+  );
+  return res.data;
+}
+
+/**
+ * GET /api/sites/dashboard — status counts. Scoped to the caller's own
+ * sites for FIELD_OFFICER; system-wide for every other role.
+ */
+export async function getSiteDashboard(): Promise<SiteDashboardStats> {
+  const res = await apiRequest<ApiResponse<SiteDashboardStats>>("/api/sites/dashboard");
   return res.data;
 }
 

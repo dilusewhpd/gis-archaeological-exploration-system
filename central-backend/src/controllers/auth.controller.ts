@@ -26,7 +26,7 @@ export const login = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    console.log(req.body);
+    console.log("Login attempt:", req.body?.email);
     const result = await authService.login(req.body);
 
     res.status(200).json({

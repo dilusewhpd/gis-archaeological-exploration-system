@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import LogoutButton from "@/components/LogoutButton";
 
 type Notification = {
   id: string;
@@ -68,12 +69,7 @@ export default function FieldOfficerNotificationsPage() {
       <header className="flex items-center justify-between border-b border-[#DEDBD1] bg-[#FAF6EB] px-8 py-4">
         <h1 className="font-serif text-[20px] tracking-tight text-[#3A2A12]">Notifications</h1>
         <div className="flex items-center gap-4">
-          <Link
-            href="/auth/logout"
-            className="text-[13px] font-medium text-[#5B6472] transition hover:text-[#BB892C]"
-          >
-            Log out
-          </Link>
+          <LogoutButton className="text-[13px] font-medium text-[#5B6472] transition hover:text-[#BB892C]" />
           <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#DEDBD1] bg-[#F0E6C8] font-serif text-[12px] text-[#8F6A21]">
             JP
           </div>

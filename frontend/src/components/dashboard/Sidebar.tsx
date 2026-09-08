@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 import { ROLE_CONFIGS, type RoleType } from "@/src/services/roles.config";
+import { useAuth } from "@/hooks/useAuth";
 
 interface SidebarProps {
   role: RoleType;
@@ -43,8 +44,15 @@ const MOBILE_HEADER_THEMES = {
 
 export default function Sidebar({ role }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { logout } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    router.push("/auth/login");
+  };
 
   const config = ROLE_CONFIGS[role] || ROLE_CONFIGS.field_officer;
   const theme = THEMES[config.theme];
@@ -135,6 +143,15 @@ export default function Sidebar({ role }: SidebarProps) {
               </Link>
             );
           })}
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            className={`group relative mt-3 mb-1 flex w-full items-center gap-3 overflow-hidden rounded-[6px] px-3 py-2.5 text-[13px] transition-colors ${theme.navInactive}`}
+          >
+            <span className="shrink-0">{getIcon("logout")}</span>
+            <span className="whitespace-nowrap">Log out</span>
+          </button>
         </nav>
 
         {/* Footer */}
@@ -220,6 +237,27 @@ export default function Sidebar({ role }: SidebarProps) {
               </Link>
             );
           })}
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            title={collapsed ? "Log out" : undefined}
+            className={`group relative mt-3 mb-1 flex w-full items-center gap-3 overflow-hidden rounded-[6px] px-3 py-2.5 text-[13px] transition-colors ${theme.navInactive}`}
+          >
+            <span className="shrink-0">{getIcon("logout")}</span>
+            <span
+              className={`whitespace-nowrap transition-all duration-300 ease-in-out ${
+                collapsed ? "max-w-0 opacity-0" : "max-w-[160px] opacity-100"
+              }`}
+            >
+              Log out
+            </span>
+            {collapsed && (
+              <span className={`pointer-events-none absolute left-full ml-2 whitespace-nowrap rounded-[6px] px-2.5 py-1.5 text-[12px] opacity-0 shadow-lg transition-opacity duration-150 group-hover:opacity-100 z-10 ${theme.tooltip}`}>
+                Log out
+              </span>
+            )}
+          </button>
         </nav>
 
         {/* Bottom card or text */}
@@ -383,6 +421,14 @@ function getIcon(name: string) {
           <circle cx="9" cy="7" r="4" />
           <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
           <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+      );
+    case "logout":
+      return (
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <polyline points="16 17 21 12 16 7" />
+          <line x1="21" y1="12" x2="9" y2="12" />
         </svg>
       );
     default:

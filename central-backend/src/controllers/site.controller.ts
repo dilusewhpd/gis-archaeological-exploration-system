@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { CreateSiteData, GetSitesQuery, RejectSiteData, SiteIdParam, UpdateSiteData } from "../moduleTypes/sites/sites.types.js";
-import { approveSite, createSite, getSiteById, getSiteDashboard, getSites, getSiteWorkflowHistory, rejectSite, submitSite, updateSite } from "../services/site.service.js";
+import { approveSite, createSite, getSiteById, getSiteDashboard, getSites, getSiteWorkflowHistory, rejectSite, submitSite, updateSite, uploadSitePhoto } from "../services/site.service.js";
 import { ROLES } from "../utils/constants/auth.constants.js";
+import { BadRequestError } from "../errors/customErrors.js";
 
 export const createSiteController = async (
   req: Request,
@@ -234,3 +235,35 @@ export const getSiteWorkflowHistoryController = async (
     next(error);
   }
 };
+
+export const uploadSitePhotoController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.validatedParams as SiteIdParam;
+
+    if (!req.file) {
+      throw new BadRequestError("No photo file uploaded.");
+    }
+
+    const caption = typeof req.body?.caption === "string" ? req.body.caption : undefined;
+
+    const photo = await uploadSitePhoto(
+      id,
+      req.file,
+      caption,
+      req.user!.userId,
+      req.user!.role
+    );
+
+    return res.status(201).json({
+      success: true,
+      message: "Photo uploaded successfully.",
+      data: photo,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

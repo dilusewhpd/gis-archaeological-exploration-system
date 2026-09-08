@@ -60,4 +60,24 @@ export const siteDetailsSelect =
         email: true,
       },
     },
+
+    photos: {
+      select: {
+        id: true,
+        imageUrl: true,
+        caption: true,
+        createdAt: true,
+        uploadedBy: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    },
   });

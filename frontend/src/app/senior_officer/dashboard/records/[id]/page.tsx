@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import SiteDetailView from "@/components/sites/SiteDetailView";
+import SiteHistoryTimeline from "@/components/sites/SiteHistoryTimeline";
 import {
   apiErrorMessage,
   approveSite,
@@ -116,8 +117,11 @@ export default function SeniorReviewDetailPage() {
       </header>
 
       <main className="grid flex-1 grid-cols-1 gap-6 bg-[#F0E6C8]/30 px-8 py-7 lg:grid-cols-[1.6fr_1fr]">
-        <div className="rounded-[10px] border border-[#DEDBD1] bg-white p-6 shadow-xs">
-          <SiteDetailView site={site} />
+        <div className="space-y-6">
+          <div className="rounded-[10px] border border-[#DEDBD1] bg-white p-6 shadow-xs">
+            <SiteDetailView site={site} />
+          </div>
+          <SiteHistoryTimeline siteId={site.id} />
         </div>
 
         <div className="space-y-6">

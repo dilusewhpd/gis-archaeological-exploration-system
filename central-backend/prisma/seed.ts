@@ -1,5 +1,4 @@
 import "dotenv/config";
-
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
@@ -30,7 +29,7 @@ async function main() {
     {
       name: "SENIOR_OFFICER",
       description: "Senior Archaeological Officer",
-    }
+    },
   ];
 
   for (const role of roles) {

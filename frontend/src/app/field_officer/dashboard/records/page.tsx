@@ -1,32 +1,68 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { getSites, type ExplorationSite, type RecordStatus } from "@/src/services/siteService";
+import { useEffect, useState } from "react";
+import {
+  apiErrorMessage,
+  isEditable,
+  listMySites,
+  SITE_STATUS_LABELS,
+  type SiteListItem,
+  type SiteStatus,
+} from "@/lib/sites";
 
-type FilterKey = "all" | "DRAFT" | "SUBMITTED" | "APPROVED" | "REJECTED" | "NEEDS_CORRECTION";
+type FilterKey = "all" | SiteStatus;
 
 const FILTERS: { key: FilterKey; label: string }[] = [
   { key: "all", label: "All" },
   { key: "DRAFT", label: "Drafts" },
-  { key: "SUBMITTED", label: "Pending review" },
+  { key: "PENDING", label: "Pending review" },
   { key: "APPROVED", label: "Approved" },
   { key: "REJECTED", label: "Rejected" },
-  { key: "NEEDS_CORRECTION", label: "Needs correction" },
 ];
 
 export default function MyRecordsPage() {
-  const [sites, setSites] = useState<ExplorationSite[]>([]);
+  const [sites, setSites] = useState<SiteListItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState<FilterKey>("all");
   const [query, setQuery] = useState("");
 
-  useEffect(() => {
-    setSites(getSites());
-  }, []);
+  const [reloadKey, setReloadKey] = useState(0);
 
-  const filteredRecords = sites.filter((r) => {
-    if (activeFilter !== "all" && r.status !== activeFilter) return false;
-    if (query.trim() && !r.name.toLowerCase().includes(query.toLowerCase().trim())) return false;
+  useEffect(() => {
+    let isMounted = true;
+    const run = async () => {
+      try {
+        const data = await listMySites();
+        if (isMounted) {
+          setSites(data);
+          setError(null);
+        }
+      } catch (err) {
+        if (isMounted) setError(apiErrorMessage(err));
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    };
+    void run();
+    return () => {
+      isMounted = false;
+    };
+  }, [reloadKey]);
+
+  function reload() {
+    setIsLoading(true);
+    setReloadKey((k) => k + 1);
+  }
+
+  const filtered = sites.filter((s) => {
+    if (activeFilter !== "all" && s.status !== activeFilter) return false;
+    if (query.trim()) {
+      const q = query.toLowerCase().trim();
+      if (!s.name.toLowerCase().includes(q) && !s.siteCode.toLowerCase().includes(q))
+        return false;
+    }
     return true;
   });
 
@@ -44,18 +80,23 @@ export default function MyRecordsPage() {
       </header>
 
       <main className="flex-1 px-8 py-7 bg-[#F0E6C8]/30">
-        {/* Search */}
-        <div className="mb-4">
+        <div className="mb-4 flex items-center gap-3">
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by site name…"
+            placeholder="Search by site name or code…"
             className="w-full max-w-[320px] rounded-[6px] border border-[#D4CFC3] bg-white px-3.5 py-2 text-[13px] text-[#23262B] placeholder:text-[#A6A199] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
           />
+          <button
+            type="button"
+            onClick={reload}
+            className="rounded-[6px] border border-[#D4CFC3] bg-white px-3 py-2 text-[13px] font-medium text-[#5B6472] transition hover:bg-[#FAF6EB]"
+          >
+            Refresh
+          </button>
         </div>
 
-        {/* Filter tabs */}
         <nav className="mb-5 flex flex-wrap gap-1.5" aria-label="Filter records by status">
           {FILTERS.map((f) => {
             const isActive = f.key === activeFilter;
@@ -77,52 +118,68 @@ export default function MyRecordsPage() {
           })}
         </nav>
 
-        {/* Table */}
+        {error && (
+          <div
+            role="alert"
+            className="mb-4 rounded-[6px] border border-[#E3B9A8] bg-[#FBF0EB] px-3.5 py-2.5 text-[13px] text-[#8A3A20]"
+          >
+            {error}
+          </div>
+        )}
+
         <div className="overflow-hidden rounded-[8px] border border-[#DEDBD1] bg-white">
           <table className="w-full text-left text-[13px]">
             <thead>
               <tr className="bg-[#3A2A12] text-[#F4F2ED]">
                 <th className="px-4 py-2.5 font-medium">Site name</th>
+                <th className="px-4 py-2.5 font-medium">Site code</th>
                 <th className="px-4 py-2.5 font-medium">District</th>
-                <th className="px-4 py-2.5 font-medium">Visit date</th>
+                <th className="px-4 py-2.5 font-medium">Last updated</th>
                 <th className="px-4 py-2.5 font-medium">Status</th>
-                <th className="px-4 py-2.5 font-medium">Risk Score / Band</th>
                 <th className="px-4 py-2.5 font-medium text-right">Action</th>
               </tr>
             </thead>
             <tbody>
-              {filteredRecords.length === 0 ? (
+              {isLoading ? (
                 <tr>
                   <td colSpan={6} className="px-4 py-8 text-center text-[#8A8D86]">
-                    No records match this filter.
+                    Loading your records…
+                  </td>
+                </tr>
+              ) : filtered.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-4 py-8 text-center text-[#8A8D86]">
+                    {sites.length === 0
+                      ? "You haven't registered any sites yet."
+                      : "No records match this filter."}
                   </td>
                 </tr>
               ) : (
-                filteredRecords.map((r, i) => (
-                  <tr key={r.id} className={i % 2 === 1 ? "bg-[#FAF9F6]" : undefined}>
-                    <td className="px-4 py-2.5 text-[#23262B] font-semibold">{r.name}</td>
-                    <td className="px-4 py-2.5 text-[#5B6472]">{r.district ?? "—"}</td>
-                    <td className="px-4 py-2.5 text-[#5B6472]">{formatDate(r.visitDate)}</td>
+                filtered.map((s, i) => (
+                  <tr key={s.id} className={i % 2 === 1 ? "bg-[#FAF9F6]" : undefined}>
+                    <td className="px-4 py-2.5 font-semibold text-[#23262B]">{s.name}</td>
+                    <td className="px-4 py-2.5 font-mono text-[12px] text-[#5B6472]">{s.siteCode}</td>
+                    <td className="px-4 py-2.5 text-[#5B6472]">{s.district}</td>
+                    <td className="px-4 py-2.5 text-[#5B6472]">{formatDate(s.updatedAt)}</td>
                     <td className="px-4 py-2.5">
-                      <StatusBadge status={r.status} />
-                      {r.status === "NEEDS_CORRECTION" && r.reviewComments && (
-                        <p className="mt-1 max-w-[220px] text-[11.5px] leading-snug text-[#B03A2E]">
-                          Comment: {r.reviewComments}
-                        </p>
-                      )}
-                    </td>
-                    <td className="px-4 py-2.5">
-                      {r.status === "APPROVED" && r.riskScore !== null ? (
-                        <span className="flex items-center gap-1.5 font-medium">
-                          <span className="text-[13px] font-bold text-[#BB892C]">{r.riskScore}%</span>
-                          <span className="text-[11px] text-[#8A8D86] font-normal">({r.riskBand})</span>
-                        </span>
-                      ) : (
-                        <span className="text-[#8A8D86] italic text-[12px]">Pending approval</span>
-                      )}
+                      <StatusBadge status={s.status} />
                     </td>
                     <td className="px-4 py-2.5 text-right">
-                      <RecordAction record={r} />
+                      {isEditable(s.status) ? (
+                        <Link
+                          href={`/field_officer/dashboard/records/${s.id}/edit`}
+                          className="text-[13px] font-medium text-[#BB892C] hover:underline"
+                        >
+                          Continue editing
+                        </Link>
+                      ) : (
+                        <Link
+                          href={`/field_officer/dashboard/records/${s.id}`}
+                          className="text-[13px] font-medium text-[#BB892C] hover:underline"
+                        >
+                          View details
+                        </Link>
+                      )}
                     </td>
                   </tr>
                 ))
@@ -135,43 +192,20 @@ export default function MyRecordsPage() {
   );
 }
 
-function RecordAction({ record }: { record: ExplorationSite }) {
-  if (record.status === "DRAFT" || record.status === "NEEDS_CORRECTION") {
-    return (
-      <Link
-        href={`/field_officer/dashboard/records/${record.id}/edit`}
-        className="text-[13px] font-medium text-[#BB892C] hover:underline"
-      >
-        Continue editing
-      </Link>
-    );
-  }
-  return (
-    <Link
-      href={`/field_officer/dashboard/records/${record.id}`}
-      className="text-[13px] font-medium text-[#BB892C] hover:underline"
-    >
-      View details
-    </Link>
-  );
-}
-
-function StatusBadge({ status }: { status: RecordStatus }) {
-  const config: Record<RecordStatus, { label: string; bg: string; text: string }> = {
-    DRAFT: { label: "Draft", bg: "#EFEEEA", text: "#5B6472" },
-    SUBMITTED: { label: "Submitted", bg: "#FBF0EB", text: "#9A5A2E" },
-    APPROVED: { label: "Approved", bg: "#EAF3EA", text: "#2C6B33" },
-    REJECTED: { label: "Rejected", bg: "#FBEBEA", text: "#B03A2E" },
-    NEEDS_CORRECTION: { label: "Correction requested", bg: "#FBEBEA", text: "#B03A2E" },
+function StatusBadge({ status }: { status: SiteStatus }) {
+  const config: Record<SiteStatus, { bg: string; text: string }> = {
+    DRAFT: { bg: "#EFEEEA", text: "#5B6472" },
+    PENDING: { bg: "#FBF0EB", text: "#9A5A2E" },
+    APPROVED: { bg: "#EAF3EA", text: "#2C6B33" },
+    REJECTED: { bg: "#FBEBEA", text: "#B03A2E" },
   };
-  const { label, bg, text } = config[status];
-
+  const { bg, text } = config[status];
   return (
     <span
-      className="inline-block rounded-[4px] px-2 py-0.5 text-[12px] font-medium border border-black/5"
+      className="inline-block rounded-[4px] border border-black/5 px-2 py-0.5 text-[12px] font-medium"
       style={{ backgroundColor: bg, color: text }}
     >
-      {label}
+      {SITE_STATUS_LABELS[status]}
     </span>
   );
 }

@@ -303,11 +303,11 @@ export const submitSite = async (
     );
   }
 
-  // Only DRAFT sites can be submitted
+  // DRAFT sites and REJECTED sites (revised, then resubmitted) can be submitted
   ensureSiteStatus(
     site.status,
-    [SiteStatus.DRAFT],
-    "Only draft sites can be submitted."
+    [SiteStatus.DRAFT, SiteStatus.REJECTED],
+    "Only draft or rejected sites can be submitted for review."
   );
 
   const submittedSite = await prisma.$transaction(
@@ -319,6 +319,10 @@ export const submitSite = async (
         data: {
           status: SiteStatus.PENDING,
           submittedAt: new Date(),
+          // A fresh submission starts clean — the prior rejection does not
+          // carry forward on the live record (the workflow history keeps it).
+          rejectedAt: null,
+          rejectionReason: null,
           updatedById: currentUserId,
         },
         select: siteDetailsSelect,
@@ -569,3 +573,57 @@ export const getSiteWorkflowHistory = async (
 
   return history;
 };
+
+export const uploadSitePhoto = async (
+  siteId: string,
+  file: Express.Multer.File,
+  caption: string | undefined,
+  currentUserId: string,
+  currentUserRole: string
+) => {
+  const site = await prisma.site.findUnique({
+    where: { id: siteId },
+    select: {
+      id: true,
+      createdById: true,
+      status: true,
+    },
+  });
+
+  if (!site) {
+    throw new NotFoundError("Site not found.");
+  }
+
+  if (
+    currentUserRole === ROLES.FIELD_OFFICER &&
+    site.createdById !== currentUserId
+  ) {
+    throw new ForbiddenError("You can only upload photos to sites you created.");
+  }
+
+  const photo = await prisma.sitePhoto.create({
+    data: {
+      siteId,
+      imageUrl: `/uploads/sites/${file.filename}`,
+      caption: caption || null,
+      uploadedById: currentUserId,
+    },
+    select: {
+      id: true,
+      siteId: true,
+      imageUrl: true,
+      caption: true,
+      createdAt: true,
+      uploadedBy: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return photo;
+};

@@ -140,6 +140,9 @@ export const getSites = async (
         district: true,
         divisionalSecretariat: true,
 
+        latitude: true,
+        longitude: true,
+
         historicalPeriod: true,
         siteType: true,
 

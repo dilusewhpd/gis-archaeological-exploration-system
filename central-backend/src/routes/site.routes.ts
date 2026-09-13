@@ -25,6 +25,7 @@ router.get(
   "/",
   authenticate,
   authorize(
+    ROLES.ADMIN,
     ROLES.SENIOR_OFFICER,
     ROLES.FIELD_OFFICER,
     ROLES.ANALYST,

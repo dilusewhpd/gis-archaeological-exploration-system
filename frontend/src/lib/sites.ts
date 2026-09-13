@@ -56,7 +56,7 @@ export interface SiteDashboardStats {
   total: number;
 }
 
-/** Shape returned by GET /api/sites/my-sites (list select). */
+/** Shape returned by GET /api/sites and GET /api/sites/my-sites (list select). */
 export interface SiteListItem {
   id: string;
   siteCode: string;
@@ -64,6 +64,9 @@ export interface SiteListItem {
   province: string;
   district: string;
   divisionalSecretariat: string;
+  /** Decimal columns — serialized as strings by the API. */
+  latitude: string | number;
+  longitude: string | number;
   historicalPeriod: string;
   siteType: string;
   status: SiteStatus;
@@ -307,6 +310,14 @@ export const SITE_STATUS_LABELS: Record<SiteStatus, string> = {
   PENDING: "Pending review",
   APPROVED: "Approved",
   REJECTED: "Rejected",
+};
+
+/** Marker/legend color per status — shared by the GIS map and its Leaflet layer. */
+export const STATUS_COLOR: Record<SiteStatus, string> = {
+  DRAFT: "#5B6472",
+  PENDING: "#9A5A2E",
+  APPROVED: "#2C6B33",
+  REJECTED: "#B03A2E",
 };
 
 /** A field officer may edit a site only in these states (matches updateSite). */

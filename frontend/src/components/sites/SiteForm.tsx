@@ -8,6 +8,18 @@ import {
   type ReactNode,
 } from "react";
 import { buildSitePayload, type SiteFormValues } from "@/lib/sites";
+import {
+  DISTRICTS,
+  HISTORICAL_PERIODS,
+  isPointInPolygon,
+  PROVINCES,
+  projectToPercent,
+  SITE_TYPES,
+  SL_BOUNDS,
+  SRI_LANKA_POLYGON,
+  toTitleCase,
+  unprojectRatio,
+} from "@/lib/sri-lanka";
 
 /**
  * Shared create/edit form for exploration sites.
@@ -21,64 +33,6 @@ import { buildSitePayload, type SiteFormValues } from "@/lib/sites";
  * Lanka's bounding box, not a tiled map. Swap <CoordinatePicker/> for a real
  * map component when the GIS module lands — it only needs to emit { lat, lng }.
  */
-
-const SL_BOUNDS = { latMin: 5.9, latMax: 9.9, lngMin: 79.5, lngMax: 81.9 };
-
-const SRI_LANKA_POLYGON = [
-  { lat: 9.80, lng: 80.20 },
-  { lat: 9.30, lng: 80.40 },
-  { lat: 8.50, lng: 81.20 },
-  { lat: 7.70, lng: 81.80 },
-  { lat: 7.00, lng: 81.80 },
-  { lat: 6.30, lng: 81.70 },
-  { lat: 5.92, lng: 80.60 },
-  { lat: 6.20, lng: 80.10 },
-  { lat: 6.90, lng: 79.82 },
-  { lat: 8.00, lng: 79.70 },
-  { lat: 9.00, lng: 79.80 },
-  { lat: 9.50, lng: 80.00 },
-  { lat: 9.80, lng: 80.20 },
-];
-
-function isPointInPolygon(lat: number, lng: number, polygon: { lat: number; lng: number }[]) {
-  let inside = false;
-  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-    const xi = polygon[i].lng, yi = polygon[i].lat;
-    const xj = polygon[j].lng, yj = polygon[j].lat;
-    const intersect = ((yi > lat) !== (yj > lat))
-        && (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi);
-    if (intersect) inside = !inside;
-  }
-  return inside;
-}
-
-const PROVINCES = [
-  "Central", "Eastern", "North Central", "Northern", "North Western",
-  "Sabaragamuwa", "Southern", "Uva", "Western",
-];
-
-const DISTRICTS = [
-  "Ampara", "Anuradhapura", "Badulla", "Batticaloa", "Colombo", "Galle",
-  "Gampaha", "Hambantota", "Jaffna", "Kalutara", "Kandy", "Kegalle",
-  "Kilinochchi", "Kurunegala", "Mannar", "Matale", "Matara", "Monaragala",
-  "Mullaitivu", "Nuwara Eliya", "Polonnaruwa", "Puttalam", "Ratnapura",
-  "Trincomalee", "Vavuniya",
-];
-
-// Exact prisma enum values — do NOT edit the strings.
-const HISTORICAL_PERIODS = [
-  "PREHISTORIC", "PROTOHISTORIC", "ANURADHAPURA", "POLONNARUWA", "DAMBADENIYA",
-  "YAPAHUWA", "KURUNEGALA", "GAMPOLA", "KOTTE", "KANDYAN", "COLONIAL", "MODERN",
-];
-
-const SITE_TYPES = [
-  "TEMPLE", "STUPA", "MONASTERY", "FORTRESS", "PALACE", "CAVE", "CEMETERY",
-  "INSCRIPTION", "RESERVOIR", "MONUMENT", "SETTLEMENT", "OTHER",
-];
-
-function toTitleCase(v: string) {
-  return v.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
-}
 
 const EMPTY: SiteFormValues = {
   siteCode: "",
@@ -513,8 +467,7 @@ function CoordinatePicker({
 }) {
   const polygonPointsString = useMemo(() => {
     return SRI_LANKA_POLYGON.map((p) => {
-      const xPct = ((p.lng - SL_BOUNDS.lngMin) / (SL_BOUNDS.lngMax - SL_BOUNDS.lngMin)) * 100;
-      const yPct = ((SL_BOUNDS.latMax - p.lat) / (SL_BOUNDS.latMax - SL_BOUNDS.latMin)) * 100;
+      const { xPct, yPct } = projectToPercent(p.lat, p.lng);
       return `${xPct.toFixed(1)},${yPct.toFixed(1)}`;
     }).join(" ");
   }, []);
@@ -523,20 +476,17 @@ function CoordinatePicker({
 
   function handleClick(e: MouseEvent<HTMLDivElement>) {
     const rect = e.currentTarget.getBoundingClientRect();
-    const xRatio = (e.clientX - rect.left) / rect.width;
-    const yRatio = (e.clientY - rect.top) / rect.height;
-    const lng = SL_BOUNDS.lngMin + xRatio * (SL_BOUNDS.lngMax - SL_BOUNDS.lngMin);
-    const lat = SL_BOUNDS.latMax - yRatio * (SL_BOUNDS.latMax - SL_BOUNDS.latMin);
+    const { lat, lng } = unprojectRatio(
+      (e.clientX - rect.left) / rect.width,
+      (e.clientY - rect.top) / rect.height
+    );
     onChange({
       lat: Math.round(lat * 10000) / 10000,
       lng: Math.round(lng * 10000) / 10000,
     });
   }
 
-  const markerPos = value && {
-    xPct: ((value.lng - SL_BOUNDS.lngMin) / (SL_BOUNDS.lngMax - SL_BOUNDS.lngMin)) * 100,
-    yPct: ((SL_BOUNDS.latMax - value.lat) / (SL_BOUNDS.latMax - SL_BOUNDS.latMin)) * 100,
-  };
+  const markerPos = value ? projectToPercent(value.lat, value.lng) : null;
 
   return (
     <div
@@ -554,26 +504,33 @@ function CoordinatePicker({
       }}
       className="relative mt-3 aspect-[3/4] w-full cursor-crosshair overflow-hidden rounded-[6px] border border-[#DEDBD1] bg-[#FAF6EB]"
     >
-      <svg className="absolute inset-0 h-full w-full" aria-hidden="true">
+      <svg
+        className="absolute inset-0 h-full w-full"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
         <polygon
           points={polygonPointsString}
           fill="#F3E9CD"
           stroke="#D5C5A1"
-          strokeWidth="1.5"
+          strokeWidth={1.5}
+          vectorEffect="non-scaling-stroke"
           className="opacity-80"
         />
-        {gridLines.map((_, i) => (
-          <line key={`v${i}`}
-            x1={`${(i / (gridLines.length - 1)) * 100}%`} y1="0"
-            x2={`${(i / (gridLines.length - 1)) * 100}%`} y2="100%"
-            stroke="#DEDBD1" strokeWidth={1} strokeDasharray="2,2" />
-        ))}
-        {gridLines.map((_, i) => (
-          <line key={`h${i}`}
-            x1="0" y1={`${(i / (gridLines.length - 1)) * 100}%`}
-            x2="100%" y2={`${(i / (gridLines.length - 1)) * 100}%`}
-            stroke="#DEDBD1" strokeWidth={1} strokeDasharray="2,2" />
-        ))}
+        {gridLines.map((_, i) => {
+          const p = (i / (gridLines.length - 1)) * 100;
+          return (
+            <g key={i}>
+              <line x1={p} y1="0" x2={p} y2="100"
+                stroke="#DEDBD1" strokeWidth={1} strokeDasharray="2,2"
+                vectorEffect="non-scaling-stroke" />
+              <line x1="0" y1={p} x2="100" y2={p}
+                stroke="#DEDBD1" strokeWidth={1} strokeDasharray="2,2"
+                vectorEffect="non-scaling-stroke" />
+            </g>
+          );
+        })}
       </svg>
 
       {!markerPos && (

@@ -1,118 +1,89 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import StatCard from "@/src/components/dashboard/StatCard";
 import QuickLinkCard from "@/src/components/dashboard/QuickLinkCard";
-import ActivityTimeline from "@/src/components/dashboard/ActivityTimeline";
+import {
+  apiErrorMessage,
+  getSiteDashboard,
+  listSites,
+  SITE_STATUS_LABELS,
+  type SiteDashboardStats,
+  type SiteListItem,
+} from "@/lib/sites";
+import { getUserCount } from "@/lib/users";
 
 /**
  * Admin dashboard — /admin/dashboard
- * Department of Archaeology, Sri Lanka
  *
- * Server component that fetches summary stats and exploration approvals.
- * Falls back to placeholder mock data if the API is not active.
+ * Total users:   GET /api/users pagination total (ADMIN only)
+ * Site counts:   GET /api/sites/dashboard (system-wide for admin)
+ * Pending list:  GET /api/sites?status=PENDING (read-only — admin has no
+ *                review route yet; see the flag in the PR notes)
  */
 
-const DASHBOARD_ENDPOINT = `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/admin/dashboard-summary`;
+export default function AdminDashboardPage() {
+  const { user } = useAuth();
 
-type PendingApproval = {
-  id: string;
-  siteName: string;
-  submittedBy: string;
-  date: string;
-};
+  const [stats, setStats] = useState<SiteDashboardStats | null>(null);
+  const [userCount, setUserCount] = useState<number | null>(null);
+  const [pending, setPending] = useState<SiteListItem[]>([]);
+  const [recent, setRecent] = useState<SiteListItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-type ActivityItem = {
-  id: string;
-  title: string;
-  detail: string;
-  timestamp: string;
-  status: "completed" | "pending" | "alert" | "info";
-};
+  useEffect(() => {
+    let isMounted = true;
+    const run = async () => {
+      try {
+        const [dashboard, count, pendingSites, allSites] = await Promise.all([
+          getSiteDashboard(),
+          getUserCount().catch(() => null),
+          listSites({ status: "PENDING" }),
+          listSites(),
+        ]);
+        if (isMounted) {
+          setStats(dashboard);
+          setUserCount(count);
+          setPending(pendingSites);
+          setRecent(allSites.slice(0, 6));
+          setError(null);
+        }
+      } catch (err) {
+        if (isMounted) setError(apiErrorMessage(err));
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    };
+    void run();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
-type AdminDashboardData = {
-  totalUsers: number;
-  totalExplorationSites: number;
-  pendingApprovalsCount: number;
-  highRiskAreas: number;
-  pendingApprovals: PendingApproval[];
-  recentActivities: ActivityItem[];
-};
+  const adminName = user ? `${user.firstName} ${user.lastName}`.trim() : "Administrator";
+  const initials =
+    adminName
+      .split(" ")
+      .map((p) => p[0])
+      .filter(Boolean)
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() || "AD";
 
-const FALLBACK_DATA: AdminDashboardData = {
-  totalUsers: 24,
-  totalExplorationSites: 248,
-  pendingApprovalsCount: 7,
-  highRiskAreas: 12,
-  pendingApprovals: [
-    { id: "site1", siteName: "Anuradhapura North", submittedBy: "J. Perera", date: "2026-07-01" },
-    { id: "site2", siteName: "Sigiriya East Ridge", submittedBy: "K. Silva", date: "2026-07-05" },
-    { id: "site3", siteName: "Polonnaruwa Canal Site", submittedBy: "J. Perera", date: "2026-07-09" },
-    { id: "site4", siteName: "Yapahuwa Terrace Wall", submittedBy: "R. Bandara", date: "2026-07-11" },
-  ],
-  recentActivities: [
-    {
-      id: "act1",
-      title: "Exploration Record Approved",
-      detail: "Approved site survey for 'Ritigala Forest Shrine' submitted by J. Perera.",
-      timestamp: "3 hours ago",
-      status: "completed",
-    },
-    {
-      id: "act2",
-      title: "New User Provisioned",
-      detail: "Created new Field Officer account 'j.wijesinghe' and assigned exploration access.",
-      timestamp: "1 day ago",
-      status: "completed",
-    },
-    {
-      id: "act3",
-      title: "System Backup Successful",
-      detail: "Automated daily backup of spatial database and user records completed.",
-      timestamp: "1 day ago",
-      status: "completed",
-    },
-    {
-      id: "act4",
-      title: "Password Reset Approved",
-      detail: "Approved password reset request and issued temp token for Analyst 'k.silva'.",
-      timestamp: "2 days ago",
-      status: "completed",
-    },
-  ],
-};
-
-async function getDashboardData(): Promise<AdminDashboardData> {
-  try {
-    const res = await fetch(DASHBOARD_ENDPOINT, { cache: "no-store" });
-    if (!res.ok) return FALLBACK_DATA;
-    return (await res.json()) as AdminDashboardData;
-  } catch {
-    return FALLBACK_DATA;
-  }
-}
-
-export default async function AdminDashboardPage() {
-  const {
-    totalUsers,
-    totalExplorationSites,
-    pendingApprovalsCount,
-    highRiskAreas,
-    pendingApprovals,
-    recentActivities,
-  } = await getDashboardData();
+  const dash = (n?: number) => (isLoading ? "—" : (n ?? 0));
 
   return (
     <div className="flex flex-1 flex-col">
-      {/* Top bar */}
       <header className="flex items-center justify-between border-b border-[#DEDBD1] bg-[#FAF6EB] px-6 py-4 lg:px-9">
         <div>
-          <h1 className="font-serif text-[22px] tracking-tight text-[#3A2A12]">
-            Admin dashboard
-          </h1>
+          <h1 className="font-serif text-[22px] tracking-tight text-[#3A2A12]">Admin dashboard</h1>
           <p className="mt-0.5 text-[13px] text-[#8A8478]">
-            Department control panel for user accounts, site approvals, and system health
+            User accounts, site approvals, and system overview
           </p>
         </div>
-
         <div className="flex items-center gap-4">
           <Link
             href="/admin/dashboard/notifications"
@@ -124,108 +95,104 @@ export default async function AdminDashboardPage() {
           <Link
             href="/admin/dashboard/profile"
             aria-label="View profile"
-            className="relative flex h-9 w-9 shrink-0 overflow-hidden rounded-full border border-[#DEDBD1] bg-[#F0E6C8] items-center justify-center transition hover:border-[#BB892C]/40"
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-[#DEDBD1] bg-[#F0E6C8] text-[12px] font-semibold text-[#8F6A21] transition hover:border-[#BB892C]/40"
           >
-            <span className="text-[12px] font-medium text-[#8F6A21] font-semibold">
-              NF
-            </span>
+            {initials}
           </Link>
         </div>
       </header>
 
-      {/* Main content */}
-      <main className="flex-1 px-6 py-7 lg:px-9 bg-[#F0E6C8]">
-        {/* Summary Cards */}
+      <main className="flex-1 bg-[#F0E6C8] px-6 py-7 lg:px-9">
+        {error && (
+          <div
+            role="alert"
+            className="mb-5 rounded-[8px] border border-[#E3B9A8] bg-[#FBF0EB] px-4 py-3 text-[13px] text-[#8A3A20]"
+          >
+            {error}
+          </div>
+        )}
+
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard
             label="Total Users"
-            value={totalUsers}
-            detail="Active system accounts"
+            value={userCount === null ? (isLoading ? "—" : "n/a") : userCount}
+            detail="Registered system accounts"
             colorClass="text-[#3A2A12]"
             icon={<UsersIcon />}
           />
           <StatCard
-            label="Total Exploration Sites"
-            value={totalExplorationSites}
-            detail="Sites registered on database"
+            label="Total Sites"
+            value={dash(stats?.total)}
+            detail="Sites in the database"
             colorClass="text-[#BB892C]"
             icon={<MapPinIcon />}
           />
           <StatCard
             label="Pending Approvals"
-            value={pendingApprovalsCount}
-            detail="Reports requiring sign-off"
+            value={dash(stats?.pending)}
+            detail="Awaiting senior officer review"
             colorClass="text-[#9A5A2E]"
             icon={<DocIcon />}
           />
-          <Link href="/admin/dashboard/decisions" className="block cursor-pointer">
-            <StatCard
-              label="High-Risk Areas"
-              value={highRiskAreas}
-              detail="View prioritized threat zones"
-              colorClass="text-[#B03A2E]"
-              icon={<AlertIcon />}
-            />
-          </Link>
+          <StatCard
+            label="Approved Sites"
+            value={dash(stats?.approved)}
+            detail="Authorized into the database"
+            colorClass="text-[#2C6B33]"
+            icon={<CheckIcon />}
+          />
         </section>
 
-        {/* Dashboard Grid */}
         <div className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-3">
-          {/* Left Column: Quick Actions & Pending Approvals */}
           <div className="space-y-5 lg:col-span-2">
-            {/* Quick Actions */}
             <div className="rounded-[10px] border border-[#DEDBD1] bg-white px-5 py-5">
-              <h2 className="text-[14px] font-semibold text-[#3A2A12] uppercase tracking-wider">
-                System Administration Actions
+              <h2 className="text-[14px] font-semibold uppercase tracking-wider text-[#3A2A12]">
+                Administration
               </h2>
               <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <QuickLinkCard
                   href="/admin/dashboard/users"
                   title="User Management"
-                  description="Provision user accounts, assign database roles, and monitor status."
+                  description="Provision accounts, assign roles, and manage account status."
                   icon={<UsersIcon />}
-                  theme="warm"
-                />
-                <QuickLinkCard
-                  href="/senior_officer/dashboard"
-                  title="Exploration Review & Approval"
-                  description="Review pending survey records and issue approvals or corrections."
-                  icon={<StampIcon />}
-                  theme="warm"
-                />
-                <QuickLinkCard
-                  href="/admin/dashboard/decisions"
-                  title="Decision Support Dashboard"
-                  description="Access prioritize site listings and policy planning parameters."
-                  icon={<BalanceIcon />}
                   theme="warm"
                 />
                 <QuickLinkCard
                   href="/admin/dashboard/gis-map"
                   title="GIS Map View"
-                  description="Interact with the global spatial coordinate system and heritage maps."
+                  description="View all registered sites on the national spatial map."
                   icon={<MapIcon />}
+                  theme="warm"
+                />
+                <QuickLinkCard
+                  href="/admin/dashboard/decisions"
+                  title="Decision Support"
+                  description="Prioritised site listings and planning parameters."
+                  icon={<BalanceIcon />}
+                  theme="warm"
+                />
+                <QuickLinkCard
+                  href="/admin/dashboard/reports"
+                  title="Reports"
+                  description="Generated summaries and exports."
+                  icon={<DocIcon />}
                   theme="warm"
                 />
               </div>
             </div>
 
-            {/* Pending Approvals Table */}
             <div className="rounded-[10px] border border-[#DEDBD1] bg-white px-5 py-5">
-              <div className="flex items-center justify-between">
-                <h2 className="text-[14px] font-semibold text-[#3A2A12] uppercase tracking-wider">
-                  Pending Approvals Queue
-                </h2>
-                <Link
-                  href="/senior_officer/dashboard"
-                  className="text-[13px] font-medium text-[#BB892C] hover:underline"
-                >
-                  Manage queue ({pendingApprovalsCount})
-                </Link>
-              </div>
+              <h2 className="text-[14px] font-semibold uppercase tracking-wider text-[#3A2A12]">
+                Pending approvals ({isLoading ? "…" : pending.length})
+              </h2>
+              <p className="mt-1 text-[12px] text-[#8A8478]">
+                Read-only. Approvals are actioned by senior officers.
+              </p>
 
               <div className="mt-4 overflow-hidden rounded-[8px] border border-[#DEDBD1]">
-                {pendingApprovals.length === 0 ? (
+                {isLoading ? (
+                  <p className="px-5 py-8 text-center text-[13px] text-[#8A8D86]">Loading…</p>
+                ) : pending.length === 0 ? (
                   <p className="px-5 py-8 text-center text-[13px] text-[#8A8D86]">
                     No exploration reports are waiting on review.
                   </p>
@@ -233,29 +200,21 @@ export default async function AdminDashboardPage() {
                   <table className="w-full text-left text-[13px]">
                     <thead>
                       <tr className="bg-[#3A2A12] text-[12px] text-[#F4F2ED]">
-                        <th className="px-5 py-3 font-medium">Site Name</th>
-                        <th className="px-5 py-3 font-medium">Submitted By</th>
-                        <th className="px-5 py-3 font-medium">Date</th>
-                        <th className="px-5 py-3 font-medium text-right">Action</th>
+                        <th className="px-5 py-3 font-medium">Site</th>
+                        <th className="px-5 py-3 font-medium">Code</th>
+                        <th className="px-5 py-3 font-medium">Registered by</th>
+                        <th className="px-5 py-3 font-medium">Updated</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-[#DEDBD1]/60">
-                      {pendingApprovals.map((approval, i) => (
-                        <tr
-                          key={approval.id}
-                          className={i % 2 === 1 ? "bg-[#F8F7F4]" : undefined}
-                        >
-                          <td className="px-5 py-3 text-[#3A2A12] font-medium">{approval.siteName}</td>
-                          <td className="px-5 py-3 text-[#3A4048]">{approval.submittedBy}</td>
-                          <td className="px-5 py-3 text-[#5B6472]">{formatDate(approval.date)}</td>
-                          <td className="px-5 py-3 text-right">
-                            <Link
-                              href={`/senior_officer/dashboard/records/${approval.id}`}
-                              className="inline-flex items-center rounded bg-[#3A2A12]/5 px-2.5 py-1 text-[12px] font-medium text-[#3A2A12] hover:bg-[#3A2A12]/10 transition"
-                            >
-                              Review
-                            </Link>
+                      {pending.map((s, i) => (
+                        <tr key={s.id} className={i % 2 === 1 ? "bg-[#F8F7F4]" : undefined}>
+                          <td className="px-5 py-3 font-medium text-[#3A2A12]">{s.name}</td>
+                          <td className="px-5 py-3 font-mono text-[12px] text-[#5B6472]">{s.siteCode}</td>
+                          <td className="px-5 py-3 text-[#3A4048]">
+                            {s.createdBy ? `${s.createdBy.firstName} ${s.createdBy.lastName}` : "—"}
                           </td>
+                          <td className="px-5 py-3 text-[#5B6472]">{formatDate(s.updatedAt)}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -265,50 +224,51 @@ export default async function AdminDashboardPage() {
             </div>
           </div>
 
-          {/* Right Column: Recent Activities */}
           <div className="space-y-5 lg:col-span-1">
             <div className="rounded-[10px] border border-[#DEDBD1] bg-white px-5 py-5">
-              <h2 className="mb-5 text-[14px] font-semibold text-[#3A2A12] uppercase tracking-wider">
-                System Log Activities
-              </h2>
-              <ActivityTimeline activities={recentActivities} />
-            </div>
-
-            {/* System Evaluation Metrics (RQ5 Support) */}
-            <div className="rounded-[10px] border border-[#DEDBD1] bg-white p-5">
-              <h2 className="text-[12px] font-semibold text-[#3A2A12] uppercase tracking-wider mb-3">
-                Research Evaluation Logs (RQ5)
-              </h2>
-              <div className="space-y-2 text-[12.5px]">
-                <div className="flex justify-between border-b border-[#DEDBD1]/40 pb-1">
-                  <span className="text-[#8A8478]">Coordinate Validation Time</span>
-                  <span className="font-semibold text-[#2C6B33]">4.2 mins (vs 3 days manual)</span>
-                </div>
-                <div className="flex justify-between border-b border-[#DEDBD1]/40 pb-1">
-                  <span className="text-[#8A8478]">Correction Loop Rate</span>
-                  <span className="font-semibold text-[#BB892C]">11.1% (automated trigger)</span>
-                </div>
-                <div className="flex justify-between border-b border-[#DEDBD1]/40 pb-1">
-                  <span className="text-[#8A8478]">Report Compilation Speed</span>
-                  <span className="font-semibold text-[#2C6B33]">1.5 secs (vs 4 hrs manual)</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-[#8A8478]">Vulnerability Zone Mapping</span>
-                  <span className="font-semibold text-[#BB892C]">K-Means / DBSCAN (Real-time)</span>
-                </div>
+              <h2 className="text-[13px] font-medium text-[#3A2A12]">Sites by status</h2>
+              <div className="mt-3 space-y-2 text-[12.5px]">
+                {(["APPROVED", "PENDING", "DRAFT", "REJECTED"] as const).map((k) => (
+                  <div key={k} className="flex justify-between border-b border-[#DEDBD1]/40 pb-1 last:border-0">
+                    <span className="text-[#8A8478]">{SITE_STATUS_LABELS[k]}</span>
+                    <span className="font-semibold text-[#3A2A12]">
+                      {dash(
+                        k === "APPROVED"
+                          ? stats?.approved
+                          : k === "PENDING"
+                          ? stats?.pending
+                          : k === "DRAFT"
+                          ? stats?.draft
+                          : stats?.rejected
+                      )}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
 
-            {/* Admin Stats Info card */}
-            <div className="rounded-[10px] border border-[#DEDBD1] bg-[#FAF6EB]/40 p-5">
-              <h3 className="font-serif text-[15px] font-medium text-[#3A2A12]">
-                Exploration Management System
-              </h3>
-              <p className="mt-2 text-[12px] leading-relaxed text-[#8A8478]">
-                This administrative workspace controls user roles, handles report validations, and provides access keys for field data collection.
-              </p>
-              <div className="mt-4 text-[11px] text-[#A6A199] border-t border-[#DEDBD1] pt-3">
-                Current Time: <span className="font-medium text-[#5B6472]">July 2026</span>
+            <div className="rounded-[10px] border border-[#DEDBD1] bg-white px-5 py-5">
+              <h2 className="mb-3 text-[13px] font-medium text-[#3A2A12]">Recently updated sites</h2>
+              <div className="divide-y divide-[#DEDBD1]/60">
+                {isLoading ? (
+                  <p className="py-3 text-[13px] text-[#8A8D86]">Loading…</p>
+                ) : recent.length === 0 ? (
+                  <p className="py-3 text-[13px] text-[#8A8D86]">No sites yet.</p>
+                ) : (
+                  recent.map((s) => (
+                    <div key={s.id} className="flex items-center justify-between gap-2 py-2.5">
+                      <div className="min-w-0">
+                        <p className="truncate text-[13px] font-medium text-[#3A2A12]">{s.name}</p>
+                        <p className="text-[11px] text-[#8A8478]">
+                          {s.district} · {formatDate(s.updatedAt)}
+                        </p>
+                      </div>
+                      <span className="shrink-0 text-[11px] font-semibold text-[#8A8478]">
+                        {SITE_STATUS_LABELS[s.status]}
+                      </span>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
@@ -318,15 +278,11 @@ export default async function AdminDashboardPage() {
   );
 }
 
-/* ---------------- helper methods ---------------- */
-
 function formatDate(iso: string) {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
   return d.toLocaleDateString("en-GB", { year: "numeric", month: "short", day: "numeric" });
 }
-
-/* ---------------- icons ---------------- */
 
 function BellIcon() {
   return (
@@ -357,12 +313,10 @@ function MapPinIcon() {
   );
 }
 
-function AlertIcon() {
+function CheckIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <polygon points="12 2 2 22 22 22" />
-      <line x1="12" y1="9" x2="12" y2="13" />
-      <line x1="12" y1="17" x2="12.01" y2="17" />
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 6 9 17l-5-5" />
     </svg>
   );
 }
@@ -374,17 +328,6 @@ function DocIcon() {
       <polyline points="14 2 14 8 20 8" />
       <line x1="16" y1="13" x2="8" y2="13" />
       <line x1="16" y1="17" x2="8" y2="17" />
-    </svg>
-  );
-}
-
-function StampIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 22v-9" />
-      <path d="M5 13a7 7 0 0 1 14 0" />
-      <path d="M3 21h18" />
-      <path d="M6 17h12" />
     </svg>
   );
 }
@@ -405,14 +348,6 @@ function MapIcon() {
       <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21" />
       <line x1="9" y1="3" x2="9" y2="18" />
       <line x1="15" y1="6" x2="15" y2="21" />
-    </svg>
-  );
-}
-
-function ShieldIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
     </svg>
   );
 }

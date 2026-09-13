@@ -16,7 +16,7 @@ export default function FieldOfficerGisMapPage() {
 
       <main className="flex-1 px-8 py-7 bg-[#F0E6C8]/30">
         <div className="rounded-[10px] border border-[#DEDBD1] bg-white p-5">
-          <GisMapView isFieldOfficer={true} />
+          <GisMapView role="field_officer" />
         </div>
       </main>
     </div>

@@ -8,7 +8,7 @@ export default function GisMapPage() {
       </header>
 
       <main className="flex-1 px-8 py-7 bg-[#F0E6C8]/30">
-        <GisMapView />
+        <GisMapView role="analyst" />
       </main>
     </div>
   );

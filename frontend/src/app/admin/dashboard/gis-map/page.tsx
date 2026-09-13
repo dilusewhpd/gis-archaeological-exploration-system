@@ -19,7 +19,7 @@ export default function AdminGisMapPage() {
 
       <main className="flex-1 px-6 py-7 lg:px-9 bg-[#F0E6C8]/30">
         <div className="rounded-[10px] border border-[#DEDBD1] bg-white p-5">
-          <GisMapView />
+          <GisMapView role="admin" />
         </div>
       </main>
     </div>

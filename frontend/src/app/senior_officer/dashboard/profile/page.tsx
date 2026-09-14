@@ -15,7 +15,6 @@ type SeniorOfficerProfile = {
   fullName: string;
   email: string;
   phone: string | null;
-  photoUrl: string | null;
   joinedDate: string;
 };
 
@@ -23,7 +22,6 @@ const SENIOR_OFFICER_PROFILE: SeniorOfficerProfile = {
   fullName: "Chamari Wickramasinghe",
   email: "c.wickramasinghe@archaeology.gov.lk",
   phone: "+94 76 512 3456",
-  photoUrl: null,
   joinedDate: "2023-08-01",
 };
 
@@ -31,7 +29,6 @@ export default function SeniorOfficerProfilePage() {
   const [fullName, setFullName] = useState(SENIOR_OFFICER_PROFILE.fullName);
   const [email, setEmail] = useState(SENIOR_OFFICER_PROFILE.email);
   const [phone, setPhone] = useState(SENIOR_OFFICER_PROFILE.phone ?? "");
-  const [hasPhoto, setHasPhoto] = useState(Boolean(SENIOR_OFFICER_PROFILE.photoUrl));
   const [saved, setSaved] = useState(false);
 
   const isDirty =
@@ -81,16 +78,6 @@ export default function SeniorOfficerProfilePage() {
               >
                 {initials}
               </div>
-
-              <label className="mt-3 cursor-pointer text-[12px] font-medium text-[#BB892C] underline-offset-2 hover:underline">
-                {hasPhoto ? "Replace photo" : "Add profile photo"}
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="sr-only"
-                  onChange={() => setHasPhoto(true)}
-                />
-              </label>
 
               <h2 className="mt-4 font-serif text-[17px] text-[#3A2A12]">{fullName}</h2>
               <p className="mt-0.5 text-[13px] text-[#5B6472]">Senior Officer</p>

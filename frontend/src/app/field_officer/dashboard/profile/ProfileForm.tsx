@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import type { UserProfile } from "./page";
 
@@ -11,30 +11,13 @@ export default function ProfileForm({ initialProfile }: { initialProfile: UserPr
 
   const [fullName, setFullName] = useState(initialProfile.fullName);
   const [phone, setPhone] = useState(initialProfile.phone ?? "");
-  const [photoFile, setPhotoFile] = useState<File | null>(null);
-  const [photoPreview, setPhotoPreview] = useState<string | null>(
-    initialProfile.profileImageUrl
-  );
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
 
-  function handlePhotoChange(e: ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0] ?? null;
-    if (!file) return;
-    setPhotoFile(file);
-    setPhotoPreview((prev) => {
-      if (prev && prev.startsWith("blob:")) URL.revokeObjectURL(prev);
-      return URL.createObjectURL(file);
-    });
-    setSaved(false);
-  }
-
   function handleCancel() {
     setFullName(initialProfile.fullName);
     setPhone(initialProfile.phone ?? "");
-    setPhotoFile(null);
-    setPhotoPreview(initialProfile.profileImageUrl);
     setError(null);
     setSaved(false);
   }
@@ -54,7 +37,6 @@ export default function ProfileForm({ initialProfile }: { initialProfile: UserPr
       const formData = new FormData();
       formData.append("fullName", fullName.trim());
       formData.append("phone", phone.trim());
-      if (photoFile) formData.append("photo", photoFile);
 
       const res = await fetch(UPDATE_ENDPOINT, { method: "PATCH", body: formData });
 
@@ -75,8 +57,7 @@ export default function ProfileForm({ initialProfile }: { initialProfile: UserPr
 
   const isDirty =
     fullName !== initialProfile.fullName ||
-    phone !== (initialProfile.phone ?? "") ||
-    photoFile !== null;
+    phone !== (initialProfile.phone ?? "");
 
   const initials = fullName
     .split(" ")
@@ -90,10 +71,10 @@ export default function ProfileForm({ initialProfile }: { initialProfile: UserPr
       {/* Left Column: Photo + role summary */}
       <div className="rounded-[8px] border border-[#DEDBD1] bg-white px-5 py-6 text-center h-fit">
         <div className="flex flex-col items-center">
-          {photoPreview ? (
+          {initialProfile.profileImageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={photoPreview}
+              src={initialProfile.profileImageUrl}
               alt={`${initialProfile.fullName}'s profile photo`}
               className="h-[88px] w-[88px] rounded-full border border-[#DEDBD1] object-cover"
             />
@@ -105,16 +86,6 @@ export default function ProfileForm({ initialProfile }: { initialProfile: UserPr
               {initials}
             </div>
           )}
-
-          <label className="mt-3 cursor-pointer text-[12px] font-medium text-[#BB892C] underline-offset-2 hover:underline">
-            {photoPreview ? "Replace photo" : "Add profile photo"}
-            <input
-              type="file"
-              accept="image/*"
-              className="sr-only"
-              onChange={handlePhotoChange}
-            />
-          </label>
 
           <h2 className="mt-4 font-serif text-[17px] text-[#3A2A12]">{fullName}</h2>
           <p className="mt-0.5 text-[13px] text-[#5B6472]">Field officer</p>

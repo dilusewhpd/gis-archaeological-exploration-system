@@ -13,14 +13,12 @@ import { ProfileForm } from "./profile-form";
  * Use-case mapping:
  *  - "User views own profile information" (Authentication and User
  *     Management module)
- *  - "User update own profile information" --<<extends>>--> "Update
- *     profile image" (shown only when the user has no photo, per the
- *     "If haven't profile photo" guard on the diagram)
+ *  - "User update own profile information"
  *
- * The actual field-editing (PATCH) and photo upload are client
- * interactions — this page renders the form shell and passes control to
- * a small client component (ProfileForm) for the editable parts. Wire
- * ProfileForm's submit handler to your real API route.
+ * The actual field-editing (PATCH) is a client interaction — this page
+ * renders the form shell and passes control to a small client component
+ * (ProfileForm) for the editable parts. Wire ProfileForm's submit handler
+ * to your real API route.
  */
 
 const PROFILE_ENDPOINT = `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/api/analyst/profile`;
@@ -76,8 +74,6 @@ export default async function AnalystProfilePage() {
           <div className="rounded-[8px] border border-[#DEDBD1] bg-white px-5 py-6 text-center">
             <div className="flex flex-col items-center">
               <Avatar photoUrl={profile.photoUrl} name={profile.fullName} size={88} />
-
-              <PhotoUploadControl hasPhoto={Boolean(profile.photoUrl)} />
 
               <h2 className="mt-4 font-serif text-[17px] text-[#3A2A12]">{profile.fullName}</h2>
               <p className="mt-0.5 text-[13px] text-[#5B6472]">{profile.role}</p>
@@ -147,20 +143,6 @@ function Avatar({
     >
       {initials}
     </div>
-  );
-}
-
-/**
- * Only rendered path that matches the "If haven't profile photo" extend
- * guard — when a photo already exists this becomes a lower-key "Replace
- * photo" affordance instead of the extend flow.
- */
-function PhotoUploadControl({ hasPhoto }: { hasPhoto: boolean }) {
-  return (
-    <label className="mt-3 cursor-pointer text-[12px] font-medium text-[#BB892C] underline-offset-2 hover:underline">
-      {hasPhoto ? "Replace photo" : "Add profile photo"}
-      <input type="file" accept="image/*" className="sr-only" />
-    </label>
   );
 }
 

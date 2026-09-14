@@ -14,8 +14,7 @@ import LogoutButton from "@/components/LogoutButton";
  *
  * Use-case mapping (Authentication and User Management module):
  *  - "User views own profile information"
- *  - "User update own profile information" --<<extends>>--> "Update
- *     profile image" (shown only when there's no photo yet)
+ *  - "User update own profile information"
  *
  * Note: unlike the "Reset user password" action admins perform on other
  * accounts (Users page), there's no self-service password change here —
@@ -27,7 +26,6 @@ type AdminProfile = {
   fullName: string;
   email: string;
   phone: string | null;
-  photoUrl: string | null;
   joinedDate: string;
 };
 
@@ -35,7 +33,6 @@ const ADMIN_PROFILE: AdminProfile = {
   fullName: "Dilshan Bandara",
   email: "d.bandara@archaeology.gov.lk",
   phone: "+94 77 345 6789",
-  photoUrl: null,
   joinedDate: "2024-01-15",
 };
 
@@ -43,7 +40,6 @@ export default function AdminProfilePage() {
   const [fullName, setFullName] = useState(ADMIN_PROFILE.fullName);
   const [email, setEmail] = useState(ADMIN_PROFILE.email);
   const [phone, setPhone] = useState(ADMIN_PROFILE.phone ?? "");
-  const [hasPhoto, setHasPhoto] = useState(Boolean(ADMIN_PROFILE.photoUrl));
   const [saved, setSaved] = useState(false);
 
   const isDirty =
@@ -93,16 +89,6 @@ export default function AdminProfilePage() {
               >
                 {initials}
               </div>
-
-              <label className="mt-3 cursor-pointer text-[12px] font-medium text-[#BB892C] underline-offset-2 hover:underline">
-                {hasPhoto ? "Replace photo" : "Add profile photo"}
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="sr-only"
-                  onChange={() => setHasPhoto(true)}
-                />
-              </label>
 
               <h2 className="mt-4 font-serif text-[17px] text-[#3A2A12]">{fullName}</h2>
               <p className="mt-0.5 text-[13px] text-[#5B6472]">Admin</p>

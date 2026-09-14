@@ -1,0 +1,430 @@
+id,name,country,lat,lon,location_precision,description,elevation_m,distance_to_coast_km,climate_zone,risk_score,risk_label
+96853716,Bayon at Angkor Thom,Cambodia,13.441222854899785,103.85891557744948,precise,"A temple in the Khmer capital of Angkor Thom, constructed in the late 12th or early 13th century CE.",35.0,318.3,tropical,80.26152537447987,Medium
+963537714,Bodhgaya,India,24.69918764091671,84.98794203102443,precise,"A town in India traditionally identified as the place in which Gautama Buddha attained enlightenment. One of the four main Buddhist pilgrimage sites, it is home to the Mahabodhi Temple, a UNESCO World Heritage Site.",124.0,416.7,subtropical,62.98167284929189,Medium
+965370150,Varaha Cave,India,12.6180857,80.1922234,precise,The modern name of a seventh-century Pallava cave temple in Mahābalipuram.,20.0,44.0,tropical,89.64530949309936,High
+796757740,Ganeshwar,India,27.67341947019764,75.81536629127508,precise,"Chalcolithic settlement in modern Rajasthan, India. The pre-Harappan settlement, located near copper mines and inhabited during the 4th-3rd millennia BCE, is one of two type-sites of the Ganeshwar-Jodhpura Cultural Complex.",484.0,1012.2,subtropical,17.877109255155972,Low
+770309382,Dharmaraja Cave,India,12.6147635,80.1916985,precise,Modern name of a seventh-century Pallava cave temple in Mahābalipuram.,18.0,44.4,tropical,89.78670362483156,High
+713767971,Mahabodhi Temple,India,24.695459631707845,84.99144152946182,precise,"One of the four main Buddhist pilgrimage sites, identified as the place where Gautama Buddha attained Enlightenment. The first temple on the site was built by Emperor Asoka in the third century B.C., and the present temple dates from the fifth or sixth centuries. It is one of the earliest Buddhist temples built entirely in brick, still standing in India, from the late Gupta period. The site was largely abandoned from the twelfth-eighteenth centuries. It was named a UNESCO World Heritage Site in 2002.",129.0,416.2,subtropical,62.613179715903264,Medium
+781071241,Five Rathas,India,12.60895104105855,80.18959010239806,precise,The Five Rathas is the modern name of a group of five seventh-century Pallava rock-cut temples at Mahābalipuram.,7.0,45.1,tropical,90.60939476153303,High
+746407955,Basawakkulama Tank,Sri Lanka,8.350635787492518,80.38776202454244,precise,"A reservoir at Anurādhapura in north-central Sri Lanka, originally built in the 4th century BCE and still in use today.",83.0,166.7,equatorial,88.63028256541024,High
+743295152,Madhukeshwara temple,India,14.53526821417048,75.0171062385693,precise,A Shiva temple at Banavasi in India whose foundation may date as early as the 7th century CE.,579.0,169.1,tropical,43.014952111215116,Low
+73737782,Tanda,India,23.476401,86.358962,precise,16th-century city of Bengal in South Asia,214.0,226.4,tropical,69.2906261997674,Medium
+731165748,Punjeri,India,12.6158244,80.1761091,precise,Modern location in the vicinity of Mamallapuram that may have been the site of a port or harbor facility for the ancient city.,9.0,44.8,tropical,90.46499906898921,High
+698151982,Pattadakal,India,15.950412144336797,75.81603800262538,precise,A group of temples featuring nine Hindu temples and a Jain sanctuary dating to the seventh and eighth centuries CE and connected with the Chalukya dynasty.,526.0,221.5,tropical,45.50724418286057,Low
+694336700,Cave 5 at Udayagiri,India,23.5363125,77.7724056,precise,Cave 5 at Udayagiri is dedicated to Vishnu and contains a monumental relief panel of Vishnu's Varaha avatar.,440.0,720.9,subtropical,29.613665613703937,Low
+60008,Prinas (river),India,25.009326644570564,81.64414397451684,precise,"Pliny the Elder describes the ancient Prinas River as a navigable river that debouches into the Ganges. The Barrington Atlas Map-by-Map Directory indicates that the Prinas corresponds to the modern Tons River. The Tons is a modern-day tributary of the Yamuna River (the ancient Iomanes/Iobares), itself the second-largest tributary of the Ganges.",105.0,707.9,subtropical,55.6984313281461,Medium
+60028,Sambalaka,India,27.5,77.5,rough,"An ancient place, cited: BAtlas 6 D4 Sambalaka",183.0,1059.8,subtropical,40.96386568944948,Low
+60090,Toutapos? (river),India,32.67849361077441,74.76957692286175,precise,"An ancient place, cited: BAtlas 6 C3 Toutapos? fl.",269.0,1533.6,subtropical,34.367649565365625,Low
+60005,Prapiotai,India,23.09570707430325,77.38127072756039,precise,An ancient people of Paripātra (W Vindhyas).,489.0,658.2,tropical,35.237335055612945,Low
+60091,Tripuri,India,23.171013,79.857072,precise,"An ancient place, cited: BAtlas 6 D5 Tripuri",385.0,804.9,tropical,38.81086484385551,Low
+60079,Tamalites,India,22.290418,87.915951,precise,A settlement of the Mandalai located on the lower Ganges River.,7.0,45.8,tropical,90.58838383585169,High
+60043,Sesatai/Bessadae,India,25.61456015080549,91.33956186558702,precise,"An ancient place, cited: BAtlas 6 G4 Sesatai/Bessadae",1554.0,463.8,subtropical,26.07876095569696,Low
+60063,Souannagoura,India,25.584897,88.312399,precise,"An ancient place, cited: BAtlas 6 F4 Souannagoura",33.0,343.0,subtropical,72.17354022898793,Medium
+60018,Rhappha?,India,26.045295,84.743581,precise,"An ancient place, cited: BAtlas 6 E4 Rhappha?",59.0,534.1,subtropical,64.44335264325518,Medium
+60019,Rhodopha,India,28.12714368771833,78.31090321440459,precise,"Rhodopha was an ancient settlement listed in an itinerary in Megasthenes' Indika as transmitted by the Elder Pliny. As a tentative identification, BAtlas silently followed Rawlinson, who writes ""Said to be Dabhai near Anupshahr"" (p. 42 n. 3).",186.0,1159.5,subtropical,40.73376512698144,Low
+60035,Sarabos (river),India,28.076415215026355,82.0313418985219,precise,"The modern Ghaghara river in India, a major tributary of the Ganges.",414.0,883.8,subtropical,26.71832792629466,Low
+60015,Rarungae,India,26.951333408449813,77.47529749706955,precise,"An ancient people, tribe, or cultural group. Located: Veranjā, in Mathura region?.",207.0,1005.1,subtropical,39.12306118970513,Low
+60054,Siripalla,India,22.939776,79.589819,precise,"An ancient place, cited: BAtlas 6 E5 Siripalla",448.0,827.4,tropical,33.303401849411685,Low
+60003,Poulindai,India,22.94952743144581,79.94807378160549,precise,"An ancient place, cited: BAtlas 6 D5 Poulindai",409.0,791.3,tropical,37.37827261449178,Low
+60097,Vaiśālī,India,25.682066,85.354435,precise,"An ancient place, cited: BAtlas 6 F4 Vaiśālī",48.0,463.2,subtropical,67.41516132107803,Medium
+60016,Rājagṛha,India,25.024108,85.420057,precise,"An ancient place, cited: BAtlas 6 F4 Rājagṛha",77.0,405.8,subtropical,66.91375178975801,Medium
+60041,Selampoura,India,22.782979,88.587306,precise,"An ancient place, cited: BAtlas 6 F5 Selampoura",5.0,43.1,tropical,90.82282635274417,High
+60000,Porouaroi?,India,23.463076325234464,79.03112042482962,precise,"An ancient place, cited: BAtlas 6 D5 Porouaroi?",480.0,814.3,tropical,31.242200316075063,Low
+60099,Vidiśā,India,23.523122,77.814463,precise,"An ancient place, cited: BAtlas 6 D5 Vidiśā",435.0,723.0,subtropical,29.93413377410661,Low
+60056,Sobanos (river),India,25.993230455829963,96.81992628218136,precise,An ancient river mentioned by Ptolemy. It may be identifiable with the modern Salween.,418.0,946.8,subtropical,24.52054386501538,Low
+60071,Śuńgas,India,24.57884198233776,82.50832634293745,precise,"An ancient place, cited: BAtlas 6 D5 Śuńgas",336.0,608.5,subtropical,40.96423946485922,Low
+60030,Sambos (river),India,27.5,82.5,rough,"An ancient place, cited: BAtlas 6 E4 Sambos fl.",105.0,806.4,subtropical,52.74189392869839,Medium
+60067,Śrāvastī,India,27.722423,81.682871,precise,"An ancient place, cited: BAtlas 6 E4 Śrāvastī",126.0,883.5,subtropical,48.816986605661505,Low
+60010,Pseudostomos,India,22.5,92.5,rough,"An ancient place, cited: BAtlas 6 G5 Pseudostomos",259.0,431.5,tropical,59.68291653810998,Medium
+60007,Prasii,India,26.052803827185013,83.11036064738104,precise,"An ancient tribe of India, whose capital was Palimbothra.",80.0,657.7,subtropical,59.12271954281404,Medium
+60011,Puṇḍranagara,India,24.870868,89.371189,precise,"An ancient place, cited: BAtlas 6 F5 Puṇḍranagara",22.0,285.3,subtropical,74.74914287967667,Medium
+60066,Sourasenoi,India,27.61818034799969,77.09393608367112,precise,"An ancient people, tribe, or cultural group. Located: Mathura region. Skt.: Śūrasena.",200.0,1053.6,subtropical,39.65996250213056,Low
+60027,Salariga,India,23.826933,91.273523,precise,"An ancient place, cited: BAtlas 6 G5 Salariga",14.0,337.9,subtropical,73.78392339267825,Medium
+60070,Suari/Uberae,India,22.50177408079373,86.01400543321668,precise,"An ancient place, cited: BAtlas 6 E5 Suari/Uberae",246.0,183.1,tropical,68.13589603154063,Medium
+60100,Virāta,India,27.442939,76.171377,precise,"An ancient place, cited: BAtlas 6 D4 Virāta",444.0,999.9,subtropical,20.94511675472986,Low
+60110,Zadadros/Hypasis/Sydrus (river),India,30.82226802489244,75.92922443334163,precise,"An ancient place, cited: BAtlas 6 C3 Zadadros/Hypasis/Sydrus fl.",253.0,1351.7,subtropical,35.59485256519517,Low
+60107,Yaudheyas,India,31.204753529452592,75.81530340336627,precise,"An ancient place, cited: BAtlas 6 D3 Yaudheyas",245.0,1390.4,subtropical,36.20845406510994,Low
+615575177,Preah Ko,Cambodia,13.344314108468597,103.97123915216709,precise,"Temple constructed in the city of Hariharalaya, dedicated in 880 CE by the Khmer king Indravarman I.",21.0,309.4,tropical,81.6024669115651,Medium
+688874222,Koh Ker,Cambodia,13.755107382730282,104.54752744642614,precise,"An ancient temple complex of the Khmer Empire, Koh Ker is also known as Lingapura or Chok Gargyar. The site is located in the Srayong commune of Preah, Vihear province's Kulen district. The site was inscribed as a UNESCO World Heritage site in September 2023 and covers some 1,187 ha.",94.0,368.8,tropical,74.22042610273927,Medium
+637812857,Karkabhat,India,20.688414061671185,81.32189986910319,precise,"Megalithic site in Chhattisgarh, India containing over 800 burials and several stone monuments dated to the first millennium BCE.",338.0,648.6,tropical,47.107213204420084,Low
+100487408,Srah Srang,Cambodia,13.430892067974725,103.90686492808558,precise,Large baray or reservoir at Angkor constructed in the 10th century CE.,26.0,317.9,tropical,80.9638333051305,Medium
+167035137,Vaiṣṇava Temple at Udayagiri,India,23.53945211051204,77.77117554168628,precise,Temple constructed near the Udayagiri cave complex during the Gupta period (ca. 4th-5th century CE).,464.0,721.0,subtropical,27.76985955314798,Low
+168523099,Rakhigarhi,India,29.29132307275164,76.11148221804302,precise,"Large settlement and necropolis site in Haranya, India, associated with the Harappan culture (6000-1900 BCE).",227.0,1192.4,subtropical,37.58905743991819,Low
+119192778,Mamallapuram,India,12.6195981,80.1936497,precise,An ancient settlement and modern town (also known as Mahabalipuram) located on the east coast of peninsular India. It is the site of a large complex of Hindu temples dating to the 7th/8th centuries CE that is registered as a UNESCO World Heritage Site. The city is mentioned in Tamil literature beginning in the 8th century CE. The exact location of the city's harbor and its possible identification with non-Tamil sources (especially Roman ones) remain inconclusive.,9.0,43.8,tropical,90.49501467710543,High
+110853570,Achutrajpur,India,19.7751174,85.1673161,precise,Ancient settlement and center of Buddhism near modern Banpur with remains from the 7th-12th centuries. Demolished in modern times.,12.0,316.3,tropical,82.08566090296732,High
+126644698,Shore Temple of Mahabalipuram,India,12.616581549313102,80.19902372129862,precise,"The so-called ""Shore Temple"" of Mahabalipuram is a granite-built tomb at the ""Group of Monuments at Mahabalipuram"" UNESCO World Heritage Site. It dates to the eighth century CE.",6.0,44.0,tropical,90.71911211795023,High
+12874648,Rukhaegarh,India,25.3261,85.372333,precise,"Settlement site near Nalanda, Bihar District, India, containing remains dated from the Northern Black Polished Ware period through the early Medieval period.",57.0,432.8,subtropical,67.637334120407,Medium
+154636892,Nālandā Mahavihara,India,25.136397002348684,85.4434796266283,precise,"Buddhist monastery and educational center founded during the Gupta Empire (5th century CE). The site was destroyed around 1200 CE. It was located in ancient and medieval Magadha (modern-day Bihar), eastern India.",63.0,412.7,subtropical,67.78044671860695,Medium
+897851371,Bhirrana,India,29.55468129365645,75.54795999109017,precise,Bhirrana is an archaeological site located in the Fatehabad district of the north Indian state of Haryana. The site's initial occupation predates the so-called Indus Valley civilization with activity beginning in the 8th-7th millennium BCE.,215.0,1206.1,subtropical,38.50945968979036,Low
+876542161,Cave 1 at Udayagiri,India,23.5325586,77.7706357,precise,"The southernmost cave at Udayagiri, dedicated to an unidentified god.",454.0,720.5,subtropical,28.55186923209957,Low
+847284570,Alahana Parivena,Sri Lanka,7.962000703075716,81.00359526256695,precise,A middle to late eleventh century CE monastic college located outside of Polonnaruwa in Sri Lanka that belonged to King Parakramabahu I.,75.0,232.2,equatorial,87.27786173371257,High
+839190400,Kanchipuram,India,12.836393,79.7053304,precise,"An ancient city of India, founded in the 4th century BCE and frequently mentioned in literature thereafter, is still a center of religious life and architecture, as well as the textile industry.",87.0,67.0,tropical,83.81603794464003,High
+830472708,Marakkanam,India,12.1959326,79.9441819,precise,"A modern town in the Villupuram district of Tamil Nadu that was firmly identified in the Barrington Atlas as the location of an emporion named ""Sopatma"", mentioned in the PME.",13.0,36.5,tropical,90.40732786639644,High
+836684868,Preah Khan,Cambodia,13.46064242958711,103.87399086564356,precise,Temple at Angkor dedicated in 1191 CE under Jayavarman VII. The temple entered a period of decline beginning in the 15th century.,38.0,320.7,tropical,79.95938735253291,Medium
+835093310,Group of monuments at Mahabalipuram (Q3522747),India,12.617287146018716,80.19164855767,precise,This group of sanctuaries was carved out of rock along the Coromandel coast in the seventh and eighth centuries. The Group of Monuments at Mahabalipuram is a UNESCO World Heritage site.,14.0,44.1,tropical,90.10250905722381,High
+835369289,Angkor Wat,Cambodia,13.412487199530515,103.86668284407146,precise,"The principal temple of Angkor, the capital city of the Khmer empire, Angkor Wat was constructed in the 12th century CE. Angkor was inscribed as a UNESCO World Heritage site in 1992.",38.0,315.3,tropical,80.1214716363605,Medium
+49922,Bittigo M.,India,10.567355478899778,76.81426578787415,precise,"An ancient place, cited: BAtlas 5 D4 Bittigo M.",233.0,284.5,tropical,66.08941580591741,Medium
+49934,Calingae,India,19.54520400098917,84.73048497491246,precise,The Calingae were a people of ancient India.,28.0,367.9,tropical,79.30965252434079,Medium
+49918,Bhokardan,India,20.252014,75.769909,precise,"An ancient place, cited: BAtlas 5 D2 Bhokardan",578.0,340.8,tropical,37.93797238514942,Low
+49954,Cydara (river),India,10.0,80.0,rough,"An ancient place, cited: BAtlas 5 inset Cydara fl.",0.0,22.2,equatorial,99.3336534998199,High
+49903,Barous(s)ai? (islands),India,8.155266766666667,93.23463946666668,precise,The Nicobar Islands,0.0,974.6,equatorial,70.74678832993156,Medium
+49939,Kaveripumpattinam/Poombuhar,India,11.1452914,79.8537308,precise,"This ancient settlement and seaport was located on the southeastern coast of peninsular India in the vicinity of the modern village of Poompuhar/Poombuhar. Excavations (including a wood-then-brick-built wharf carbon-dated to ca. 250 BCE), as well as epigraphic and literary evidence, demonstrate a thriving seaborne trade and Buddhist religious center through to the 7th century CE. The place was known to the Romans as Chaberis (Ptolemy) and Kamara (PME).",6.0,84.1,tropical,89.51548623248978,High
+49978,Eyyal,India,10.490381,76.275437,precise,"An ancient place, cited: BAtlas 5 D4 Eyyal",15.0,297.8,tropical,82.41084909064935,High
+49958,Dandagula/Dantapura/Paloura,India,18.3592355,83.917687,precise,"The name ""Dandagula"" (Pliny) has long been identified with a ""Dantapura"" mentioned in Buddhist texts and ""Paloura"" (Ptolemy) has long been identified as coincident. Law 1976 (whence BAtlas) places them at the former fortified settlement of Dantapura, ""on the southern bank of the river Vamśadharā, three miles from Chicacole Road Station"". Dayalan 2019 passes over Law's suggestion in silence and follows Gerini 1909 in identifying Ptolemy's Paloura with modern Palur.",38.0,519.6,tropical,73.98928289821667,Medium
+49935,Calingon Pr.,India,17.5,82.5,rough,"An ancient place, cited: BAtlas 5 E3 Calingon Pr.",47.0,553.2,tropical,72.29045677810755,Medium
+49990,Gondaloi,India,16.048306644084846,74.94796574496029,precise,"Kuntalas, an ancient people in Mysore.",600.0,137.1,tropical,43.38486012726618,Low
+49945,Chersonesos,India,14.811768,74.131102,precise,"An ancient place, cited: BAtlas 5 C4 Chersonesos",9.0,84.4,tropical,89.27638098758688,High
+49912,Benagouron,India,16.642933,81.004404,precise,"An ancient place, cited: BAtlas 5 E3 Benagouron",16.0,412.1,tropical,78.903364895476,Medium
+49953,Cottonara,India,9.004191350292476,76.88894218680161,precise,"Pliny the Elder identifies Cottonara as a district known for pepper, which was conveyed to Becare via dug-out canoes.",80.0,120.9,equatorial,90.23509797960118,High
+49924,Boragoda,Sri Lanka,7.117366,81.231243,precise,"An ancient place, cited: BAtlas 5 inset Boragoda",264.0,168.6,equatorial,74.69051897441759,Medium
+49909,Batoi,India,10.904530231788655,79.49692728269049,precise,"An ancient people, tribe, or cultural group. Located: Kaverī Delta.",18.0,115.5,tropical,87.65259388776829,High
+49933,Calamina,India,12.846573,80.170138,precise,"An ancient place, cited: BAtlas 5 E4 Calamina",11.0,22.1,tropical,90.99295299824873,High
+49972,Elankoros,India,8.19228,77.265021,precise,"An ancient place, cited: BAtlas 5 D5 Elankoros",21.0,27.8,equatorial,97.55486215709278,High
+49925,Boreion Pr.,Sri Lanka,9.835,80.212,precise,The northernmost point of the island of Sri Lanka.,1.0,23.6,equatorial,99.21493146096785,High
+49952,Colombo,Sri Lanka,6.932385848675455,79.85269426215123,precise,"An ancient place, cited: BAtlas 5 inset Colombo",6.0,110.5,equatorial,96.22307417822155,High
+49944,Chavadipalaiyam,India,11.100144,77.68957,precise,"An ancient place, cited: BAtlas 5 D4 Chavadipalaiyam",208.0,246.6,tropical,69.14451204075583,Medium
+49991,Gootiparti,India,16.96695,79.386282,precise,"An ancient place, cited: BAtlas 5 D3 Gootiparti",184.0,451.9,tropical,64.82311219424011,Medium
+49951,Coliacum/Kalligikon Pr.,India,10.2781938,79.8258095,precise,"An ancient place, cited: BAtlas 5 D4 Coliacum/Kalligikon Pr.",2.0,56.5,tropical,90.65071776645486,High
+49906,Bassa (island),Sri Lanka,6.18202,81.48132,precise,"An ancient place, cited: BAtlas 5 inset Bassa Ins.",0.0,143.1,equatorial,95.70476647856884,High
+49910,Batticaloa,Sri Lanka,7.735421,81.682337,precise,"An ancient place, cited: BAtlas 5 inset Batticaloa",8.0,253.0,equatorial,91.79244964668145,High
+49947,Choromandae,India,12.678589508107486,79.47637078700315,precise,"An ancient people, tribe, or cultural group. Located: people of Coromandel coast?",100.0,93.4,tropical,82.0265234530103,High
+49984,Ganges (river in Sri Lanka),Sri Lanka,7.07429741452205,80.57353523911175,precise,"This ancient name is probably to be associated with the modern Mahaweli, which is the longest river of Sri Lanka.",648.0,126.4,equatorial,51.20602713410973,Low
+49992,Gumada,India,17.900337,83.407061,precise,"An ancient place, cited: BAtlas 5 E3 Gumada",30.0,593.8,tropical,72.3757262759079,Medium
+49988,Gintota,Sri Lanka,6.0637143,80.1759516,precise,A modern settlement on the southwest coast of Sri Lanka. The discovery of Roman bronze coins of the fourth and fifth centuries CE were reported in the early 20th century in the vicinity of Gintota.,5.0,7.6,equatorial,99.38838044087,High
+49967,Dosaron (river),India,22.5,87.5,rough,"An ancient place, cited: BAtlas 5 F2 Dosaron fl.",19.0,82.2,tropical,88.57541345054909,High
+49926,Brahmagiri,India,14.660387,76.772076,precise,"An ancient place, cited: BAtlas 5 D4 Brahmagiri",580.0,332.5,tropical,38.03370155753535,Low
+49927,Budinathan,India,10.370429,77.25846,precise,"An ancient place, cited: BAtlas 5 D4 Budinathan",400.0,253.8,tropical,54.201963664364385,Medium
+49931,Cabirus (river),India,11.93251178217356,77.10451499147801,precise,"An ancient river of peninsular India, known to Pliny as Cabirus and to Ptolemy as Chabēros. Scholars identify it with the modern Kāverī.",743.0,293.3,tropical,38.69642213951254,Low
+49911,Bazakata? (island),India,19.21563373147177,93.38353411481158,precise,"An ancient place, cited: BAtlas 5 G3 Bazakata? Ins.",0.0,642.1,tropical,73.22697802857485,Medium
+49907,Bata,India,10.37826,78.827628,precise,"An ancient place, cited: BAtlas 5 D4 Bata",102.0,143.6,tropical,80.36633955059733,Medium
+49961,Desarene,India,20.45581557901068,85.48611060294839,precise,"An ancient place, cited: BAtlas 5 E2 Desarene",49.0,244.7,tropical,81.39687150698285,Medium
+49998,Hikkaduwa,Sri Lanka,6.129456741721451,80.11780514431346,precise,"An ancient place, cited: BAtlas 5 inset Hikkaduwa",7.0,17.0,equatorial,98.95283334959882,High
+49957,Dagana,Sri Lanka,5.979566853778961,80.69206949557113,precise,"An ancient city of southern Sri Lanka. It was characterized by Ptolemy as ""sacred to Selene"", a description repeated in the Arabic geographic tradition. Its precise location is uncertain: BAtlDir echoes earlier suggestions (see RE) that tentatively identify it with Tangalla, but RE would prefer as ""more likely"" an identification with the temple complex and associated settlement at Tenavaram (modern Tongra), an identification also suggested by earlier scholars.",28.0,54.5,equatorial,96.21654410796427,High
+49916,Bhagavanpavam,India,18.538293,84.168049,precise,"An ancient place, cited: BAtlas 5 E3 Bhagavanpavam",35.0,486.8,tropical,75.20389540689673,Medium
+49941,Chandravalli,India,14.042306,76.447865,precise,"An ancient place, cited: BAtlas 5 D4 Chandravalli",764.0,327.6,tropical,37.66688678112619,Low
+49995,Hendala,Sri Lanka,6.972562,79.873839,precise,"An ancient place, cited: BAtlas 5 inset Hendala",6.0,114.0,equatorial,96.11801954981478,High
+49917,Bhatkuli,India,15.81095,77.507825,precise,"An ancient place, cited: BAtlas 5 D3 Bhatkuli",345.0,398.5,tropical,54.077215481861394,Medium
+49901,Baris (river),India,9.377496532851488,76.85072642424458,precise,"An ancient place, cited: BAtlas 5 D5 Baris fl.",127.0,159.0,equatorial,85.48659449837386,High
+49956,Dachinabades,India,19.167558683363467,78.31466548337144,precise,"An ancient place, cited: BAtlas 5 D2 Dachinabades",343.0,579.8,tropical,48.78878610536931,Low
+49921,Bishopsdown,India,11.309907,76.698626,precise,"An ancient place, cited: BAtlas 5 D4 Bishopsdown",1835.0,344.1,tropical,37.17162924720855,Low
+49999,Hippokoura,India,16.569362,74.35932,precise,"An ancient place, cited: BAtlas 5 C3 Hippokoura",547.0,133.1,tropical,46.54992000305816,Low
+49871,Argarou,India,11.097740890827586,78.67343905322404,precise,"An ancient place, cited: BAtlas 5 D4 Argarou",115.0,151.7,tropical,79.12611068749445,Medium
+49884,Attikuli,Sri Lanka,8.897691,79.972546,precise,"An ancient place, cited: BAtlas 5 inset Attikuli",6.0,100.4,equatorial,96.52623182019539,High
+49892,Balita/Bambala,India,8.380214,76.990276,precise,"An ancient place, cited: BAtlas 5 D5 Balita/Bambala",20.0,64.2,equatorial,96.53899420915171,High
+49847,Akkialur,India,15.271778,75.060545,precise,"An ancient place, cited: BAtlas 5 C3 Akkialur",581.0,137.5,tropical,43.810044952708985,Low
+49846,Akkenpalle,India,17.767529,78.773453,precise,"An ancient place, cited: BAtlas 5 D3 Akkenpalle",556.0,554.8,tropical,33.20203637304388,Low
+49850,Alagankulam,India,9.358891,78.9793549,precise,"The ancient settlement associated with the modern village of Alagankulam on the Vaigai river in Tamil Nadu is thought to have been an ancient seaport though now positioned some 3 kilometers from the coast. The immediate area has produced local and imported ceramics (including Mediterranean amphorae and Roman potsherds), as well as fourth-century Roman coins.",6.0,122.2,equatorial,95.87189156326178,High
+49870,Argarikos Kolpos,Sri Lanka,9.3229187,79.8488668,precise,"An ancient place, cited: BAtlas 5 D4 Argarikos Kolpos",0.0,55.6,equatorial,98.33113218873815,High
+49836,Adam,India,20.766373,78.759421,precise,"An ancient place, cited: BAtlas 5 D2 Adam",250.0,653.3,tropical,53.715756345336395,Medium
+49860,Andrisimoundou (Akron),Sri Lanka,9.043863200822926,79.81495959977401,precise,"An ancient place, cited: BAtlas 5 inset Andrisimoundou (Akron)",5.0,86.5,equatorial,97.0201489605002,High
+49856,Ampitiya,Sri Lanka,6.790699,81.431589,precise,"An ancient place, cited: BAtlas 5 inset Ampitiya",142.0,162.0,equatorial,84.246044861685,High
+49895,Banabasi,India,14.535519,75.01242,precise,A settlement in south India that has served as a regional administrative and sacred center since at least the beginning of the first millennium CE.,561.0,168.7,tropical,44.40756172926986,Low
+49883,Athirala,India,14.020422,79.030061,precise,"An ancient place, cited: BAtlas 5 D4 Athirala",616.0,178.1,tropical,42.15422019450114,Low
+49843,Aioi,India,8.717024137559111,76.85062411335839,precise,"An ancient people, tribe, or cultural group. Located: S Kerala coast.",39.0,99.0,equatorial,94.03714748440963,High
+49855,Amaravati,India,16.385871,80.1347,precise,"An ancient place, cited: BAtlas 5 E3 Amaravati",65.0,376.9,tropical,76.20160511418896,Medium
+49879,Arouarnoi,India,12.597511428219192,79.82866687152996,precise,"An ancient people, tribe, or cultural group. Located: people on Tamil Nadu coast.",47.0,67.9,tropical,86.85703139690932,High
+49896,Bangalore,India,12.968424,77.590624,precise,"An ancient place, cited: BAtlas 5 D4 Bangalore",919.0,267.7,tropical,39.46482170728779,Low
+49863,Anurādhapura,Sri Lanka,8.32444,80.4127603,precise,"The ancient capital of Sri Lanka from the fourth century BCE to the 11th century CE. It was recorded under the name Anourogrammon by Ptolemy, who notes its primary political status (Basileion). It has sometimes been argued that a ""Palaesimundum"" mentioned by Pliny in retelling the story of a Sri Lankan embassy to the emperor Claudius is also to be identified with Anourogrammon. A large number of numismatic finds from many periods have been reported in the vicinity.",90.0,170.2,equatorial,87.98832662457804,High
+49862,Annamalai,India,12.5,77.5,rough,"An ancient place, cited: BAtlas 5 D4 Annamalai",759.0,258.7,tropical,39.734962180333774,Low
+49835,Abour,India,10.99906,79.641886,precise,"An ancient place, cited: BAtlas 5 D4 Abour",11.0,101.7,tropical,88.60371059219756,High
+49874,Ariake Sadenon,India,18.143053494109164,74.49926834869882,precise,"This name, transmitted by Ptolemy, corresponds to a region of India in the Konkan coast and hinterland, including the general area of modern Mumbai and Pune.",557.0,202.9,tropical,43.687828681652505,Low
+49858,Andarae,India,16.82018311971633,81.45822730294078,precise,"An ancient place, cited: BAtlas 5 E3 Andarae",9.0,442.6,tropical,78.52479016035672,Medium
+49878,Arouaia M.,India,14.078904512618754,78.95764465550293,precise,"An ancient place, cited: BAtlas 5 D4 Arouaia M.",550.0,188.3,tropical,44.66295787257475,Low
+49854,Alosygni,India,16.6303373,82.0256534,precise,"An ancient ""emporion"" listed by Ptolemy on the east coast of India. He also remarks that it is the ""aphoterion"" (point of departure) for those sailing out to the Chryse Chersonnesos. BAtlas tentatively identifies it with modern Vilasa in the Ghodivari river delta in the east Indian state of Andhra Pradesh.",13.0,444.2,tropical,78.16996443741337,Medium
+49849,Akour,India,9.929814,79.084495,precise,"An ancient place, cited: BAtlas 5 D5 Akour",12.0,101.3,equatorial,96.0390166479547,High
+49873,Argyra Chora,India,20.39820598855183,93.3412247598826,precise,"An ancient place, cited: BAtlas 5 G2 Argyra Chora",2.0,571.6,tropical,75.1896780257897,Medium
+49845,Akhilandapuram,India,10.88677,77.505862,precise,"An ancient place, cited: BAtlas 5 D4 Akhilandapuram",311.0,274.3,tropical,60.41296038453376,Medium
+49853,Aloe,India,10.109984,76.353203,precise,"An ancient place, cited: BAtlas 5 D4 Aloe",12.0,256.5,tropical,83.88059426831728,High
+49890,Bakare,India,9.35099,76.36792,precise,"An ancient port settlement on the southwest coast of India, mentioned by the Periplus, Pliny, and Ptolemy. Casson (whence BAtlas) places it at modern Pirakkād/Purakkad in the state of Kerala.",9.0,186.6,equatorial,93.70878583810914,High
+49886,Azanos? (river),India,10.0,80.0,rough,"An ancient place, cited: BAtlas 5 inset Azanos? fl.",0.0,22.2,equatorial,99.3336534998199,High
+49868,Arasankuppam,India,12.737908,80.115092,precise,"An ancient place, cited: BAtlas 5 E4 Arasankuppam",27.0,35.4,tropical,89.36654241047341,High
+49891,Balapitiya,Sri Lanka,6.290816,80.039504,precise,"An ancient place, cited: BAtlas 5 inset Balapitiya",7.0,36.9,equatorial,98.35552274808603,High
+403766790,Ramappa Temple,India,18.2593042,79.9432497,precise,A thirteenth-century temple that was built during the period of the Kakatiya ruler Ganapati Deva.,204.0,586.1,tropical,59.261013835256385,Medium
+478135823,Udayagiri Caves,India,23.53699961025953,77.77161958958447,rough,"Complex of 20 cave temples in Madhya Pradesh dedicated to the gods Vishnu and Shiva, constructed from the 3rd-5th centuries CE.",439.0,720.9,subtropical,29.690365801193288,Low
+465741478,Devipattinam,India,9.47763,78.89558,precise,"A modern village located on the Bay of Bengal in Tamil Nadu, just north of the Rameswaram peninsula. Epigraphic and ceramic evidence indicate that the village's antecedent was a thriving locus of maritime trade from the 13th to the 17th centuries CE.",6.0,126.3,equatorial,95.74882756998528,High
+444530273,Kayal,India,8.66967,78.09331,precise,A medieval port city on the Bay of Bengal that seems to have replaced ancient Korkai as landscape change modified the course of the Tamiraparani river and the coastline at its delta.,6.0,91.0,equatorial,96.80837853648787,High
+454189058,Visakhapatnam,India,17.6935526,83.2921297,precise,"Although the present city in the Indian state of Andhra Pradesh seems to have been founded in the 11th or 12th century CE, archaeological evidence indicates the natural harbor at Visakhapatnam has served as a center of maritime trade from the 4th or 3rd century BCE onward.",11.0,612.6,tropical,73.26873640562054,Medium
+394186381,Banteay Srei,Cambodia,13.59893595001731,103.96305165150494,precise,"Buddhist temple at Angkor, located approximately 20 km northeast of the main temple complex. Dedicated to Shiva, the temple was constructed during the 10th century CE during the reigns of Rajendravarman II and Jayavarman V.",56.0,337.2,tropical,78.08352644380703,Medium
+308085066,Ajanta Caves,India,20.552562348137844,75.7007458984884,precise,"The Ajanta Caves are among the earliest Buddhist cave monuments and date from the second and first centuries B.C. During the Gupta period (fifth and sixth centuries A.D.), additional decorated caves were added to the group.",460.0,349.2,tropical,46.736463400716126,Low
+371645386,Nachchaduwa Tank,Sri Lanka,8.2479832410779,80.48852377064074,precise,"A major modern reservoir in Sri Lanka, located southeast of Anuradhapura. Its original construction is traditionally dated to the late third or early fourth century CE. BAtlas 5 inset labels its geometry as ""Megisba Stagnum"", a toponym for a swamp or wetland reported by Pliny during the first century CE.",100.0,180.7,equatorial,86.90616086446425,High
+364279264,Angkor Thom,Cambodia,13.44125729032968,103.85899253047144,precise,Walled city established as the capital city of the Khmer Empire during the late 12th century CE by Jayavarman VII. The city was abandoned by 1609.,35.0,318.3,tropical,80.26152537447987,Medium
+348371058,Polonnaruwa,Sri Lanka,7.9475093461190465,81.00133944621713,precise,An ancient city of the Kingdom of Polonnaruwa dating ca. AD 1070. Inscribed as a UNESCO World Heritage Site in 1982.,69.0,233.5,equatorial,87.69904256809757,High
+338595017,Khajuraho Group of Monuments,India,24.853084307939035,79.92084200133833,precise,The Khajuraho Group of Monuments is designated as a UNESCO World Heritage site located in the modern Indian state of Madhya Pradesh. These temples were built during the Chandella dynasty (ca. 950-1050 CE). The remaining temples belong to two different religions – Hinduism and Jainism,221.0,854.5,subtropical,42.400921429543914,Low
+357004422,Sri Ahobila Narasimha Swamy Temple,India,15.124439305864389,78.73617884429487,precise,"Main temple in Ahobilam dedicated to the man-lion form of the Hindu god Vishnu built or expanded in the 14th century, sacked by the Mughals in 1578, then restored and expanded at various times up to the present day.",378.0,290.3,tropical,54.79379809288798,Medium
+35745675,Siyapur,India,26.9762626,79.8266233,precise,"Settlement in Uttar Pradesh, India containing remains dated from the pre-Painted Grey Ware period (1200 BCE) through the Kushana period (3rd century CE).",137.0,980.5,subtropical,45.06177055600531,Low
+292003314,Cave 13 at Udayagiri,India,23.5362633,77.7720448,precise,"Cave 13 at Udayagiri, known as the Nārāyaṇa cave, contains a large relief panel of Vishnu's Nārāyaṇa avatar.",440.0,720.9,subtropical,29.613665613703937,Low
+270118641,Ganesh Ratha,India,12.618430438149767,80.19250431627813,precise,Modern name of a seventh-century Pallava rock-cut temple at Mahābalipuram.,11.0,44.0,tropical,90.33561118050348,High
+210176087,Mangadu Megalithic Site,India,8.911111,76.622222,precise,An archaeological site with Iron Age funerary megaliths located in the vicinity of the modern Moonamkutty-Mangad Road in the northeastern portion of India's Kollam municipality. The site was damaged by cashewnut tree farming and is now not visible due to habitation on the site.,22.0,132.1,equatorial,94.34753404308164,High
+241021040,Ta Prohm,Cambodia,13.434835994579696,103.88935323400896,precise,Khmer temple at Angkor constructed in 1186 CE under Jayavarman VII.,35.0,318.1,tropical,80.26752849610313,Medium
+229277206,Qutb Minar,India,28.524401,77.1855011,precise,The second tallest minar (73 m) in India after Minar-E-Fateh was built by Qutb-ud-din Aibak beginning in AD 1192. The monument is listed as a UNESCO World Heritage Site.,250.0,1148.9,subtropical,35.82495312766321,Low
+224541893,Vessagiriya,Sri Lanka,8.328036113461684,80.38996056803015,precise,"Vessagiriya is the site of an ancient Buddhist forest monastery in Sri Lanka. It is considered part of the ruined site of Anuradhapura. The monastery was initially built in the middle of the third century BCE and was expanded in the late fifth century CE. A Roman bronze coin, as well as punch-marked coins and/or ingots, were excavated at Vessagiriya in the first decade of the 20th century.",90.0,169.2,equatorial,88.01834223269425,High
+25660908,Machilipatnam,India,16.1817369,81.1348181,precise,"A modern city in the Indian state of Andhra Pradesh, Machilipatnam served as a major port on the Bay of Bengal, from the 16th through the 19th centuries. Some Roman coins and Mediterranean ceramics have been recovered in the area.",7.0,365.0,tropical,81.00740172515411,Medium
+59934,Mirzapur,India,25.219374,82.299705,precise,"An ancient place, cited: BAtlas 6 E4 Mirzapur",91.0,665.9,subtropical,58.03288949387822,Medium
+59959,Orumcolae/Korandakaloi,India,24.76729762655588,92.35610866237346,precise,"An ancient place, cited: BAtlas 6 G5 Orumcolae/Korandakaloi",14.0,484.0,subtropical,69.39864304689844,Medium
+59914,Mandaei,India,23.821306227935445,85.35171892605567,precise,"An ancient place, cited: BAtlas 6 E5 Mandaei",536.0,331.0,subtropical,33.95353321924095,Low
+59902,Maghas,India,25.454140363015323,81.00216390253907,precise,"An ancient place, cited: BAtlas 6 E4 Maghas",107.0,788.8,subtropical,53.11676825656518,Medium
+59955,Oratae,India,26.60396041428212,74.24012882487686,precise,"An ancient people, tribe, or cultural group. Located: Rathors, people in Ajmir region.",345.0,858.3,subtropical,32.776038870023235,Low
+59903,Magon (river),India,24.5953202848868,85.07818481102056,precise,The Mohana River.,135.0,402.6,subtropical,62.5611908613478,Medium
+59978,Palibothra,India,25.614443,85.13502,precise,"A key ancient city of north central India, Palibothra reached its cultural peak during the third century BCE under Asoka.",57.0,472.4,subtropical,66.44871603900468,Medium
+59919,Maroundai,India,26.12642188032687,88.01989263255584,precise,"An ancient place, cited: BAtlas 6 F4 Maroundai",50.0,404.2,subtropical,69.03268182495634,Medium
+59935,Mitras,India,28.49248956590193,79.98363391176228,precise,"An ancient place, cited: BAtlas 6 D4 Mitras",181.0,1067.4,subtropical,41.11726606442817,Low
+59962,Ottorokorai/Hyperboraei,India,30.58742568709274,81.51979629050639,precise,"An ancient place, cited: BAtlas 6 D3 Ottorokorai/Hyperboraei",4701.0,1123.5,subtropical,10.0,Low
+59923,Mauryas,India,26.213061925068008,80.89886660447735,precise,"An ancient place, cited: BAtlas 6 D4 Mauryas",115.0,844.4,subtropical,50.83429894538855,Low
+59990,Pentapolis,India,22.334611,91.822736,precise,"An ancient place, cited: BAtlas 6 G5 Pentapolis",10.0,362.6,tropical,80.84933862216499,Medium
+59912,Mallus (mountain),India,24.84755155691068,87.29169465742618,precise,"An ancient place, cited: BAtlas 6 F5 Mallus M.",89.0,280.5,subtropical,69.75430523684827,Medium
+59904,Maiandros (mountain),India,23.61534386654545,93.73105122351193,precise,A mountain chain in Arakan.,1073.0,569.3,subtropical,22.91211429943571,Low
+59953,Oidanes/Diardines (river),India,28.34389630715664,90.6643547085122,precise,"An ancient place, cited: BAtlas 6 G4 Oidanes/Diardines fl.",4776.0,691.8,subtropical,19.235202305198705,Low
+59973,Ozoana,India,26.638152,79.3409,precise,"An ancient place, cited: BAtlas 6 D4 Ozoana",144.0,999.3,subtropical,43.960575810994925,Low
+59965,Ouindion M.,India,22.58507677744753,76.27631039743082,precise,"An ancient place, cited: BAtlas 6 D5 Ouindion M.",417.0,538.0,tropical,44.36762465041564,Low
+59908,Mālavas,India,25.843791108841906,74.87536851741842,precise,"An ancient place, cited: BAtlas 6 C4 Mālavas",371.0,790.3,subtropical,32.82289534720319,Low
+59909,Maleus (mountain),India,22.5,87.5,rough,Parswanath hill.,19.0,82.2,tropical,88.57541345054909,High
+59972,Ozene,India,23.177194,75.782933,precise,"An ancient place, cited: BAtlas 6 D5 Ozene",493.0,558.1,tropical,37.93509667808922,Low
+59925,Mega Stoma,India,22.83827433433748,88.85902563898368,rough,"Ptolemy enumerates the ancient mouths (stomata) of the Ganges river, from west to east. He lists ""Mega Stoma"" as the second of these. Due to significant natural and constructed changes in the hydrology of the Ganges within and since antiquity, modern scholars cannot securely identify a particular channel in the Ganges delta today, but the Barrington Atlas does connect the ancient Oxymatis (modern Ichamati) river with the Mega stoma.",4.0,68.6,tropical,90.1341285332699,High
+59952,Odonbaeorae,India,31.952442975200075,75.82468635811176,precise,"An ancient place, cited: BAtlas 6 D3 Odonbaeorae",327.0,1471.7,subtropical,29.91903869098348,Low
+59905,Mais (river),India,23.14532665810573,74.05849595954383,precise,"An ancient place, cited: BAtlas 6 C5 Mais fl.",203.0,479.1,tropical,62.54938409118132,Medium
+59913,Maltecorae,India,27.297169328198937,75.6899519139831,precise,"An ancient place, cited: BAtlas 6 D4 Maltecorae",484.0,968.6,subtropical,18.80399123378486,Low
+59991,Persakra,India,27.99437543860005,78.46147737434983,precise,"An ancient settlement of India, mentioned by Ptolemy, that Vogel 1952 identifies with the Sanskrit toponym Paricakra in the Shatapatha Brahmana. BAtlDir tentatively locates it in the vicinity of a modern ""Sakra"" (a common placename). This modern town, based on the BAtlas coordinates, lies to the northeast of modern Aligarh in Uttar Pradesh. It does not seem to appear in open, online gazetteers.",183.0,1154.3,subtropical,40.96386568944948,Low
+59910,Malli,India,24.40202662520794,87.04258149157646,precise,"An ancient Indian people that settled at the confluence of the rivers Hydaspes, Acesines, and Hydraotes.",206.0,247.3,subtropical,61.77690149005316,Medium
+59992,Pertalis,India,23.013782,88.414196,precise,"An ancient place, cited: BAtlas 6 F5 Pertalis",13.0,58.3,tropical,89.75298760946285,High
+59971,Oxymatis (river),India,22.88949134012961,88.84745843155267,precise,The Ichamati River.,4.0,70.9,tropical,90.06509263460258,High
+59926,Memadakhedi,India,22.523077,76.289743,precise,"An ancient place, cited: BAtlas 6 D5 Memadakhedi",289.0,533.9,tropical,54.30831264232858,Medium
+59989,Pauravas,India,32.72520584135368,74.03014464762643,precise,"An ancient place, cited: BAtlas 6 C3 Pauravas",258.0,1531.1,subtropical,35.211351627748435,Low
+59966,Ouxenton (mountain),India,22.804016131931185,82.6490584905173,precise,Mountains linking Vindhya ranges to E Ghaṭs Skt.: Ṛkṣavat.,413.0,517.0,tropical,45.30475317081366,Low
+59931,Methora,India,27.483527,77.678846,precise,"An ancient place, cited: BAtlas 6 D4 Methora",179.0,1066.6,subtropical,41.27066643940687,Low
+59900,Mactocalingae,India,22.66527272514604,81.02629615499434,precise,"An ancient place, cited: BAtlas 6 E5 Mactocalingae",672.0,677.2,tropical,27.17343018369552,Low
+59901,Madyandinoi,India,26.51705136122212,85.6465210471525,precise,"An ancient people, tribe, or cultural group. Located: Skt.: Mādhyandini.",56.0,521.1,subtropical,65.06365611123408,Medium
+59960,Oscobares (mountain),India,31.0660734,81.3113433,precise,Mt. Kailash.,6442.0,1177.6,subtropical,10.0,Low
+599210092,Kopia,India,26.874272256012016,83.0789322670274,precise,"Settlement and glassmaking site in northern India, inhabited and in use during the first millennium BCE.",80.0,717.3,subtropical,57.333789299087314,Medium
+59758,Campā,India,25.781491,87.439721,precise,"An ancient place, cited: BAtlas 6 F4 Campā",35.0,375.2,subtropical,71.05363727266693,Medium
+59719,Astomi,India,30.746069477488664,80.44915267747022,precise,"An ancient place, cited: BAtlas 6 E3 Astomi",4749.0,1203.2,subtropical,10.0,Low
+59735,Bargysoi,India,26.243751339055336,85.48293992980784,precise,"An ancient people, tribe, or cultural group. Located: between Śrāvastī and Vaiśālī Skt.: Bhārga.",52.0,504.6,subtropical,65.86571439510912,Medium
+59754,Byltai,India,35.49080666855811,76.31219890207619,precise,"An ancient place, cited: BAtlas 6 D2 Byltai",3516.0,1853.0,subtropical,10.0,Low
+59739,Batankaisara?,India,26.860053,77.791142,precise,"An ancient place, cited: BAtlas 6 D4 Batankaisara?",174.0,1012.2,subtropical,41.6541673768536,Low
+59778,Colobae,India,31.79441564704721,77.12664513948312,precise,"An ancient people, tribe, or cultural group. Skt.: Kolūta.",2217.0,1487.1,subtropical,10.0,Low
+59775,Chrisobora/Kleisobora,India,28.030792,77.649033,precise,"An ancient place, cited: BAtlas 6 D4 Chrisobora/Kleisobora",190.0,1118.9,subtropical,40.42696437702404,Low
+59763,Casuagus/Kossoanos (river),India,26.02259499410573,86.78947279055427,precise,"An ancient place, cited: BAtlas 6 F4 Casuagus/Kossoanos fl.",48.0,420.5,subtropical,68.69682778764064,Medium
+59705,Ārjunāyanas,India,27.6075119353747,76.39497942924939,precise,"An ancient place, cited: BAtlas 6 D4 Ārjunāyanas",444.0,1024.9,subtropical,20.94511675472986,Low
+59768,Charmae,India,25.21116839153654,78.49739095457578,precise,"An ancient people, tribe, or cultural group. Located: Chamars, inhabitants of Bundelkhand.",293.0,906.1,subtropical,35.32970255151394,Low
+59748,Bilaspur,India,22.081816,82.153531,precise,"An ancient place, cited: BAtlas 6 E5 Bilaspur",265.0,554.4,tropical,55.5337971756904,Medium
+59772,Chirotosagi/Kirradai,India,27.449538422411816,87.95251097554161,precise,"An ancient place, cited: BAtlas 6 F4 Chirotosagi/Kirradai",2671.0,551.5,subtropical,23.44639212390443,Low
+59749,Bolingae,India,27.59925032250876,75.68518877457329,precise,"An ancient place, cited: BAtlas 6 D4 Bolingae",473.0,1000.4,subtropical,18.720811317538793,Low
+59770,Chatriaioi,India,23.58914261429,76.19429159574085,precise,"Khatri, an ancient people in Malwa, also a caste.",422.0,619.6,subtropical,34.03485009068532,Low
+59730,Bamanghati,India,22.270096,86.319292,precise,"An ancient place, cited: BAtlas 6 F5 Bamanghati",373.0,142.8,tropical,59.604601227477225,Medium
+59767,Chakerbedha,India,21.852861,81.934312,precise,"An ancient place, cited: BAtlas 6 E5 Chakerbedha",249.0,575.6,tropical,56.12466928345607,Medium
+59721,Attakenoi,India,30.624399132691057,74.07626418007459,precise,"An ancient people, tribe, or cultural group. Located: along R. Sutlej.",180.0,1298.9,subtropical,41.193966251917516,Low
+59717,Asthagoura,India,25.020732,83.021033,precise,"An ancient place, cited: BAtlas 6 E4 Asthagoura",98.0,594.8,subtropical,59.630097918516064,Medium
+59756,Caesi,India,31.65203426855432,76.40745132830165,precise,"An ancient place, cited: BAtlas 6 D3 Caesi",637.0,1452.5,subtropical,10.0,Low
+59757,Cainnas (river),India,25.22249462415458,80.23359079763623,precise,"An ancient river of the Indian peninsula, mentioned by Pliny and Arrian, that perhaps should be identified with the modern Ken.",144.0,843.6,subtropical,48.63400599469044,Low
+59741,Bepyron (mountain),India,27.377594551198428,92.06043510572331,precise,A mountain mentioned in ancient sources.,3154.0,661.6,subtropical,20.14167367030856,Low
+59794,Dosara,India,24.881711,84.731548,precise,"An ancient place, cited: BAtlas 6 E5 Dosara",99.0,449.6,subtropical,63.911664029501914,Medium
+59777,Chunar,India,25.205564,82.714728,precise,"An ancient place, cited: BAtlas 6 E4 Chunar",83.0,631.7,subtropical,59.67302479136774,Medium
+59720,Astrybai,India,31.09309337437042,74.12951864455823,precise,"An ancient people, tribe, or cultural group.",201.0,1351.3,subtropical,39.58326231464122,Low
+59684,Antibolei (river),India,23.826826467049468,90.82273079301956,precise,"An ancient place, cited: BAtlas 6 G5 Antibolei fl.",4.0,297.1,subtropical,75.77556207871352,Medium
+59651,Abiria,India,22.6473654352932,74.73711205081261,precise,"An ancient place, cited: BAtlas 6 C5 Abiria",440.0,452.8,tropical,45.16085014966263,Low
+59647,Abali,India,24.05842999721749,84.76457221623407,precise,"An ancient place, cited: BAtlas 6 E5 Abali",483.0,391.5,subtropical,36.202698865145024,Low
+59656,Adisdara,India,29.381476,79.111003,precise,"An ancient place, cited: BAtlas 6 D4 Adisdara",332.0,1194.8,subtropical,29.535537753536744,Low
+59683,Aninacha,India,27.478658,80.056044,precise,"An ancient place, cited: BAtlas 6 E4 Aninacha",143.0,996.6,subtropical,44.118318140398074,Low
+59682,Andomatis (river),India,23.421717229195067,86.60687364030639,precise,"An ancient place, cited: BAtlas 6 F5 Andomatis fl.",184.0,201.4,tropical,72.34202202735334,Medium
+59657,Adrestae,India,31.507940963272706,74.6708279608821,precise,"An ancient place, cited: BAtlas 6 C3 Adrestae",220.0,1403.4,subtropical,38.12595875234363,Low
+59659,Aganagara?,India,23.620683,88.430067,precise,"An ancient place, cited: BAtlas 6 F5 Aganagara?",13.0,125.3,subtropical,80.24194186567607,Medium
+59655,Adamas? (river),India,22.65087510717981,86.37591043921834,precise,"An ancient place, cited: BAtlas 6 F5 Adamas? fl.",94.0,164.5,tropical,80.35261484088312,Medium
+59680,Amystis (river),India,23.9326639231594,87.19021429660275,precise,"An ancient place, cited: BAtlas 6 F5 Amystis fl.",132.0,195.5,subtropical,69.00752386468508,Medium
+59871,Kathaioi/Xathroi,India,32.22274185807949,74.67188998686004,precise,The Kathaioi/Xathroi were a people of ancient India subjugated by Alexander the Great. Their territory lay in the Punjab either to the east of the Hydraotes or between the Hydaspes and Acesines rivers.,242.0,1482.1,subtropical,36.43855462757799,Low
+59884,Kondochates (river),India,27.2403391948911,83.89502975748147,precise,"An ancient place, cited: BAtlas 6 E4 Kondochates fl.",94.0,689.3,subtropical,57.10042370149062,Medium
+59847,Indabara,India,28.612334,77.256284,precise,"An ancient place, cited: BAtlas 6 D4 Indabara",200.0,1160.7,subtropical,39.65996250213056,Low
+59807,Eragassa,India,25.692849,78.502924,precise,"An ancient place, cited: BAtlas 6 D4 Eragassa",217.0,947.2,subtropical,39.92527530712767,Low
+59870,Katadoupe,India,23.63355,88.132158,precise,"An ancient place, cited: BAtlas 6 F5 Katadoupe",16.0,127.2,subtropical,79.95481164778721,Medium
+59866,Kāśī,India,25.326033,83.033976,precise,"An ancient place, cited: BAtlas 6 E4 Kāśī",86.0,615.7,subtropical,59.92317395875922,Medium
+59820,Gangaridae,India,22.85090066305825,89.2620336294572,precise,"An ancient place, cited: BAtlas 6 F5 Gangaridae",8.0,106.1,tropical,88.70174247895423,High
+59876,Kindia,India,25.333951,82.739094,precise,"An ancient place, cited: BAtlas 6 E4 Kindia",82.0,638.8,subtropical,59.536614161231924,Medium
+59821,Gange,India,25.425265,81.810766,precise,"An ancient place, cited: BAtlas 6 E4 Gange",95.0,719.2,subtropical,56.12625683132628,Medium
+59860,Kambouson Stoma,India,22.5,87.5,rough,"An ancient place, cited: BAtlas 6 F5 Kambouson Stoma",19.0,82.2,tropical,88.57541345054909,High
+59856,Kakouthis,India,25.227741,85.052746,precise,"An ancient place, cited: BAtlas 6 F4 Kakouthis",63.0,448.3,subtropical,66.7118910696695,Medium
+59883,Kommenases (river),India,25.424970693889943,83.78730237369851,precise,"An ancient place, cited: BAtlas 6 E4 Kommenases fl.",66.0,562.1,subtropical,63.06601430357558,Medium
+59880,Kognabanda,India,23.475906,77.715146,precise,"An ancient place, cited: BAtlas 6 D5 Kognabanda",428.0,712.0,tropical,38.30120677581046,Low
+59875,Kelydna,India,25.022024,88.137799,precise,"An ancient place, cited: BAtlas 6 F4 Kelydna",18.0,280.9,subtropical,75.18801230534542,Medium
+59822,Ganges (river),India,25.932326764891943,83.77990189470715,precise,"The Ganges flows some 2,525 km (1,569 mi) from its sources in the western Himalayas to the Bay of Bengal.",66.0,596.4,subtropical,62.03647894518921,Medium
+59834,Hemodos/Imaus/Caucasus (mountains),India,30.247764207578754,81.17261048904085,precise,"Although ancient, western commentators varied in their precision and ideas about location, they seem all to have meant by these names a single range or mountainous region corresponding to the modern notion of the Himalaya or at least the eastern portion of what we today consider the Hindu Kush, Pamir, and Himalaya ranges.",4049.0,1115.7,subtropical,10.0,Low
+59862,Kanogiza,India,27.053262,79.918632,precise,"An ancient place, cited: BAtlas 6 D4 Kanogiza",140.0,978.2,subtropical,44.90070589220457,Low
+59835,(H)Eorta/Sageda,India,26.953896,81.857671,precise,"An ancient place, cited: BAtlas 6 E4 (H)Eorta/Sageda",99.0,817.4,subtropical,52.87192336435604,Medium
+59819,Ganganoi,India,28.97803224008604,79.57606554735061,precise,"An ancient people, tribe, or cultural group. Located: upper R. Ganges-Ghaggar Doab.",226.0,1131.7,subtropical,37.66575762740755,Low
+59839,Vipās/Hyp(h)asis/Bibasis/Hypanis (river),India,31.730138675406824,75.54716082714245,precise,"Known as Vipās in Sanskrit sources, the modern Beas river, as well as the combined Beas-Sutlej, traverses parts of modern India and Pakistan. It was also known -- to varying degrees of clarity -- to Greek and Roman writers by the name variants Hypasis, Hyphasis, Bibasis, and Hypanis.",236.0,1442.0,subtropical,36.89875575251407,Low
+59808,Erannoboas/Sonus (river),India,24.8285318048606,83.79738394056189,precise,"A river which flowed into the Ganges river at Patna, mentioned by both Arrian and Pliny.",376.0,521.5,subtropical,40.50758987139651,Low
+59873,Kauśāmbī,India,25.338984,81.392899,precise,Kauśāmbī was the capital of the ancient Indian kingdom of Vatsa. It was situated along the Yamunā river near its confluence with the Ganges.,89.0,748.7,subtropical,55.70099751683386,Medium
+59812,Euthymedeia/Sangala,India,32.238201,74.541542,precise,"An ancient place, cited: BAtlas 6 C3 Euthymedeia/Sangala",234.0,1482.3,subtropical,37.052156127492765,Low
+59804,Emodon/Kasia (mountain),India,35.315833,80.915833,precise,"An ancient place, cited: BAtlas 6 E2 Emodon/Kasia M.",7006.0,1594.7,subtropical,10.0,Low
+59828,Glauganikai,India,33.21859136895765,74.3173777620029,precise,"An ancient place, cited: BAtlas 6 C3 Glauganikai",778.0,1588.2,subtropical,10.0,Low
+59869,Kaspiria/Caspyre/Kattybourine,India,34.0907837288023,74.8246963017859,precise,"An ancient place, cited: BAtlas 6 C3 Kaspiria/Caspyre/Kattybourine",1588.0,1689.9,subtropical,10.0,Low
+59891,Kylindrene Chora,India,32.065365240876936,77.07596156778014,precise,"An ancient place, cited: BAtlas 6 D3 Kylindrene Chora",2391.0,1514.4,subtropical,10.0,Low
+59852,Iomanes/Iobares (river),India,30.754385934728944,78.18148087998077,precise,"A major river of the Indian subcontinent, the Yamuna is the second-largest tributary river of the Ganges and the longest tributary in India. The river flows from the Yamunotri Glacier and travels a total length of 1,376 km (855 mi). It drains some 366,223 square km.",2205.0,1360.3,subtropical,10.0,Low
+59825,Gatasmira,India,27.330766,77.064491,precise,"An ancient place, cited: BAtlas 6 D4 Gatasmira",208.0,1023.5,subtropical,39.04636100221579,Low
+50083,Kourelloura,India,11.067143,77.170952,precise,"An ancient place, cited: BAtlas 5 D4 Kourelloura",342.0,301.1,tropical,57.23083627484931,Medium
+50040,Kapuhenvala,Sri Lanka,8.022877,80.273603,precise,"An ancient place, cited: BAtlas 5 inset Kapuhenvala",100.0,199.9,equatorial,86.32986118863282,High
+50017,Kalaikaris,India,10.308184,76.334349,precise,"An ancient place, cited: BAtlas 5 D4 Kalaikaris",18.0,276.9,tropical,82.80807473781032,High
+50060,Koddoura,India,16.259169,80.930118,precise,"An ancient place, cited: BAtlas 5 E3 Koddoura",6.0,368.7,tropical,80.97304416261343,Medium
+50037,Kantarodai,Sri Lanka,9.7508976,80.0089587,precise,"Kantarodai is the name of a small, modern neighborhood in Chunnakam town in northern Sri Lanka. Archaeological excavations there have produced both local and imported pottery as well as mainland Indian and Roman coins.",10.0,5.5,equatorial,99.06791228046731,High
+50021,Kaliyamputhur,India,10.323111,77.45179,precise,"An ancient place, cited: BAtlas 5 D4 Kaliyamputhur",1070.0,247.3,tropical,40.077140112858686,Low
+50076,Kory (island),India,9.24417392393757,79.32526871393956,precise,"An ancient place, cited: BAtlas 5 D5 Kory Ins.",5.0,96.4,equatorial,96.7229944401496,High
+50099,Magaris,India,20.378459,85.994719,precise,"An ancient place, cited: BAtlas 5 F2 Magaris",17.0,207.0,tropical,84.98286593262347,High
+50020,Kaliour/Orthoura,India,10.687267,78.679619,precise,"An ancient place, cited: BAtlas 5 D4 Kaliour/Orthoura",88.0,175.0,tropical,80.49765208059887,Medium
+50041,Kareoi,India,9.156823970428553,78.27056168428261,precise,An ancient people located on Gulf of Mannar.,14.0,144.9,equatorial,94.57693575910879,High
+50000,Hippuri Pr.,Sri Lanka,8.533333,79.866667,precise,"An ancient place, cited: BAtlas 5 inset Hippuri Pr.",0.0,141.6,equatorial,95.74978989074319,High
+50082,Kottobora,India,16.421321,80.992405,precise,"An ancient place, cited: BAtlas 5 E3 Kottobora",6.0,387.7,tropical,80.40274760840525,Medium
+50066,Komar(ei) (promontory),India,8.0772932,77.5513761,precise,"The modern Kanyakumari (Cape Comorin), southernmost tip of the Indian subcontinent.",2.0,6.2,equatorial,99.66050285470074,High
+50027,Kalmunai,Sri Lanka,7.4131557,81.8269327,precise,"A modern settlement on the east coast of Sri Lanka (Ampara district, Eastern province). It was the reported findspot of a single Roman bronze coin.",6.0,238.7,equatorial,92.3750732177221,High
+50070,Koneripatty,India,11.542717,77.829432,precise,"An ancient place, cited: BAtlas 5 D4 Koneripatty",317.0,218.2,tropical,61.636634874917654,Medium
+50085,Kudavelli,India,17.5,77.5,rough,"An ancient place, cited: BAtlas 5 D3 Kudavelli",603.0,452.8,tropical,33.90893264497539,Low
+50093,Lingarajupalem,India,17.398822,82.733563,precise,"An ancient place, cited: BAtlas 5 E3 Lingarajupalem",14.0,554.4,tropical,74.78554423551654,Medium
+50046,Karoura,India,12.5,77.5,rough,"An ancient place, cited: BAtlas 5 D4 Karoura",759.0,258.7,tropical,39.734962180333774,Low
+50011,Jaffna,Sri Lanka,9.661533,80.044986,precise,"An ancient place, cited: BAtlas 5 inset Jaffna",10.0,16.2,equatorial,98.74674527362376,High
+50047,Karukkakkuriochi,India,10.329253,79.166017,precise,"An ancient place, cited: BAtlas 5 D4 Karukkakkuriochi",29.0,108.6,tropical,87.01599952138739,High
+50051,Kathanganni,India,10.686144,77.427325,precise,"An ancient place, cited: BAtlas 5 D4 Kathanganni",323.0,287.7,tropical,59.09034898590424,Medium
+50092,Limyrike,India,11.07163180379676,75.92164718452868,precise,"An ancient place, cited: BAtlas 5 D4 Limyrike",33.0,373.0,tropical,78.77307198550132,Medium
+50084,Kouroula,India,10.926422,79.837316,precise,"An ancient place, cited: BAtlas 5 D4 Kouroula",3.0,108.3,tropical,89.01920907854529,High
+50071,Koniakoi,India,8.281588785704466,77.67640181912101,precise,"An ancient people, tribe, or cultural group. Located: Cape Comorin.",52.0,28.0,equatorial,95.17115322329978,High
+50048,Karur,India,10.951893,78.079902,precise,"An ancient place, cited: BAtlas 5 D4 Karur",114.0,215.1,tropical,77.29982132041542,Medium
+50025,Kalligeris,India,13.495276,76.152406,precise,"An ancient place, cited: BAtlas 5 D4 Kalligeris",731.0,337.4,tropical,37.372733821587225,Low
+50033,Kanathra (island),Sri Lanka,9.51604786767614,79.68877811792926,precise,"Neduntheevu is an island in the Palk Strait, northern Sri Lanka.",1.0,46.5,equatorial,98.5275740351064,High
+50064,Korkai/Kolchoi,India,8.63948,78.05799,precise,"An ancient settlement of southeastern India associated with trade and pearl fishery in both Sangam and Roman literature (Ptolemy calls it an ""emporion""). Although the area -- where chance finds, and excavation have surfaced material ranging in date from the first millennium BCE to at least the second century CE -- now lies some 6km inland from the ocean and 2km north of the current course of the Thamirabharani river, modern scholars uniformly consider it to have been an ancient seaport equipped with a harbor of some kind. Literary sources attest to its importance during the Pandya dynasty.",11.0,85.8,equatorial,96.58095876124547,High
+50044,Karmara,India,10.771881,79.632958,precise,"An ancient place, cited: BAtlas 5 D4 Karmara",17.0,115.3,tropical,87.7352971968809,High
+50052,Katriyal,India,16.64652,75.78982,precise,"An ancient place, cited: BAtlas 5 D3 Katriyal",617.0,247.9,tropical,40.05913074798895,Low
+50091,Leuke (island),India,14.0188543,74.3250429,precise,"An ancient place, cited: BAtlas 5 C4 Leuke Ins.",49.0,174.1,tropical,83.51597343998802,High
+50068,Kondapur,India,17.428536,78.362612,precise,"An ancient place, cited: BAtlas 5 D3 Kondapur",581.0,531.7,tropical,31.97789223329489,Low
+50086,Kulattupalaiyam,India,10.917509,77.89183,precise,"An ancient place, cited: BAtlas 5 D4 Kulattupalaiyam",189.0,234.9,tropical,70.95299821801319,Medium
+50028,Kalpitiya,Sri Lanka,8.2368062,79.7661508,precise,"A modern settlement located in the Puttalam district of Sri Lanka's North Western province. In the early 20th century, Roman bronze coins of the 4th and 5th centuries CE were reported to have been found in the vicinity.",4.0,175.7,equatorial,94.41945690402268,High
+50004,India,India,20.63673796159033,79.53326050324434,precise,The region of ancient India as understood by the Greeks and Romans.,274.0,727.4,tropical,49.650795284180134,Low
+50065,Kolugala,Sri Lanka,7.313839,80.517829,precise,A modern settlement in Sri Lanka catalogued as the findspot of 220 Roman coins dating between the reigns of Constantine I and Honorius.,282.0,150.3,equatorial,73.85920122813617,Medium
+50024,Kalliga,India,18.597236,83.966616,precise,"An ancient place, cited: BAtlas 5 E3 Kalliga",28.0,497.6,tropical,75.41662815166698,Medium
+50073,Koreoura?,India,10.594294,76.036497,precise,"An ancient place, cited: BAtlas 5 D4 Koreoura?",11.0,320.5,tropical,82.03629553636853,High
+50042,Karige,India,11.432137,79.690518,precise,"An ancient place, cited: BAtlas 5 D4 Karige",6.0,53.4,tropical,90.43696540165776,High
+50078,Kotpad,India,17.917534,83.301502,precise,"An ancient place, cited: BAtlas 5 E3 Kotpad",152.0,600.5,tropical,62.81719882782886,Medium
+50081,Kottapatnam,India,14.1160137,80.1199192,precise,"A modern village near the coast north from Chennai where an archaeologically attested seaport settlement flourished from the 3rd century BCE until the 15th century CE as attested by remnants of Chinese and Thai pottery -- as well as a Chinese coin. It is probably to be identified with Ptolemy's ""Kottis"".",5.0,125.6,tropical,88.34653868315598,High
+50019,Kalindoia,India,12.5,77.5,rough,"An ancient place, cited: BAtlas 5 D4 Kalindoia",759.0,258.7,tropical,39.734962180333774,Low
+50058,Kitalagama,Sri Lanka,6.024434333333335,80.55979333333335,precise,Kitalagama is recorded as the early 20th century findspot of two separately reported hoards (or parts thereof) of Roman bronze coins. The identifiable coins date from the Constantinian and Theodosian dynasties. Walburg reports that neither find is sufficiently well-documented to determine which of two modern towns is meant: Kitalagama West or Kitalagama East.,10.0,39.9,equatorial,98.03537536126935,High
+50074,Korounkala,India,17.998359,79.587917,precise,"An ancient place, cited: BAtlas 5 D3 Korounkala",263.0,561.0,tropical,55.489094537102034,Medium
+50035,Kannagara?,India,16.315208,81.06276,precise,"An ancient place, cited: BAtlas 5 E3 Kannagara?",5.0,377.7,tropical,80.7796038770568,Medium
+50063,Kolchikos Kolpos,India,7.927230308933972,79.23670020753552,precise,"The Gulf of Mannar is a shallow bay that is part of the Laccadive Sea in the Indian Ocean. It is situated between the southeastern tip of India and the west coast of Sri Lanka.
+",0.0,192.2,equatorial,94.23100012006243,High
+50034,Kandy,Sri Lanka,7.271587510837998,80.65782045212683,precise,"The modern Sri Lankan city of Kandy (capital of Central Province), together with some nearby towns and villages, is reported as the find spot or place of purchase of ancient coins in the 20th century, including fourth-century Roman and imitation Roman bronze and punch-marked bronze, as well as early Sinhalese gold coins. Walburg 2023 expresses skepticism about the accuracy and completeness of several of the reports.",574.0,150.2,equatorial,51.465748042058415,Low
+50022,Kallakinar,India,10.811697,77.334093,precise,"An ancient place, cited: BAtlas 5 D4 Kallakinar",318.0,294.8,tropical,59.260739105725825,Medium
+50075,Kurunegala,Sri Lanka,7.471079,80.355886,precise,"A city of Sri Lanka where significant numbers of imported coins have been found, including Roman (reigns of Vespasian and Nero) and Chinese (Song and Southern Song dynasties). A Brahmi inscription from Kaduruvava in the Kurunegala district mentions a trade corporation of ""Kambojas"", an ancient people of Arachosia (i.e., the area of Kandahar in Afghanistan), possibly to be identified with Ptolemy's Tambyzoi, q.v..",121.0,164.5,equatorial,85.78170977867073,High
+50080,Kottiara,India,8.991778,76.777701,precise,"An ancient place, cited: BAtlas 5 D5 Kottiara",40.0,127.0,equatorial,93.12001026966612,High
+50038,Kantakossyla,India,16.150994,80.260333,precise,"An ancient place, cited: BAtlas 5 E3 Kantakossyla",29.0,350.4,tropical,79.7582254788853,Medium
+50096,Maagrammon,Sri Lanka,6.28428,81.278156,precise,"An ancient place, cited: BAtlas 5 inset Maagrammon",20.0,123.3,equatorial,94.76507176948307,High
+50079,Kottayam,India,9.586011,76.521245,precise,"An ancient place, cited: BAtlas 5 D5 Kottayam",25.0,197.1,equatorial,92.16641895305928,High
+50055,Kerobothros,India,10.90479485224958,76.25058185317283,precise,"An ancient place, cited: BAtlas 5 D4 Kerobothros",46.0,340.6,tropical,78.74847525110536,Medium
+50043,Karivalamvandanallur,India,9.149927,77.578469,precise,"An ancient place, cited: BAtlas 5 D5 Karivalamvandanallur",139.0,117.1,equatorial,85.82384622857133,High
+50643,Galiba,India,10.0,80.0,rough,"An ancient place, cited: BAtlas 5 unlocated Galiba",0.0,22.2,equatorial,99.3336534998199,High
+50645,Galiboi,India,10.0,80.0,rough,An ancient people whose territory is unlocated,0.0,22.2,equatorial,99.3336534998199,High
+50168,Nagappattinam,India,10.7647952,79.8430779,precise,"An ancient seaport, locus of Indian Ocean trade, Buddhist center, and major site for bronze production attested archaeologically and in epigraphic and literary sources from the time of Ptolemy to the present.",8.0,108.6,tropical,88.62670345866368,High
+50105,Malaia (mountain),Sri Lanka,6.887936236789827,80.71591239074576,precise,The southern mountain ranges of Sri Lanka.,1397.0,114.0,equatorial,51.57822067475087,Medium
+50172,Odoka,Sri Lanka,6.045488,80.226317,precise,"An ancient place, cited: BAtlas 5 inset Odoka",6.0,5.8,equatorial,99.36570834798984,High
+50132,Mihintale,Sri Lanka,8.315311,80.508861,precise,"A mountain, associated settlement, and Buddhist pilgrimage site in Sri Lanka comprising multiple religious monuments, monasteries, and other features. Epigraphic finds span the period from the third century BCE to the tenth century CE.",129.0,174.3,equatorial,84.873955319217,High
+50165,Nelkynda,India,9.272624,76.558846,precise,Nelcynda was located some fifty miles from Muziris in the kingdom of the Pandyas.,12.0,166.4,equatorial,94.08500055958875,High
+50124,Matara,Sri Lanka,5.952062,80.510826,precise,"A modern city of Sri Lanka whence a hoard of ancient coins (now in the British museum) that included locally minted, late Roman imitations.",4.0,34.8,equatorial,98.64865608759814,High
+50153,Nagarjunakonda,India,16.521989135648727,79.24041571099886,precise,"Nagarjunakonda was a Buddhist archaeological site located in Andhra Pradesh, India.",199.0,407.9,tropical,64.9932961390136,Medium
+50104,Krishna/Maisolos (river),India,16.57542963071817,77.23648317768321,precise,The modern Krishna river in India was known to Ptolemy as Maisolos.,364.0,386.2,tropical,52.98910389939331,Medium
+50145,Musiris? L.,India,12.5,77.5,rough,"An ancient place, cited: BAtlas 5 D4 Musiris? L.",759.0,258.7,tropical,39.734962180333774,Low
+50186,Oxeia (promontory),Sri Lanka,8.5253465,81.3187225,precise,"Ptolemy provides this name for a promontory of Sri Lanka, which BAtlDir identifies with the southern cape of Koddiyar Bay (i.e., the promontory at the tip of which the so-called Foul Point lighthouse now stands).",0.0,202.6,equatorial,93.91883779565374,High
+50128,Melange,India,14.159117,79.991827,precise,"An ancient place, cited: BAtlas 5 E4 Melange",3.0,133.1,tropical,88.27482199726302,High
+50123,Masalia,India,16.11050054235501,80.20345089471738,precise,"An ancient place, cited: BAtlas 5 D3 Masalia",27.0,346.0,tropical,80.04369452957536,Medium
+50174,Olochoira,India,13.344129,74.720013,precise,"An ancient place, cited: BAtlas 5 C4 Olochoira",4.0,259.4,tropical,84.40715050469503,High
+50119,Mankada,India,11.016492,76.177746,precise,"An ancient place, cited: BAtlas 5 D4 Mankada",47.0,355.2,tropical,78.23354718511919,Medium
+50158,Nandyal,India,15.47641,78.482406,precise,"An ancient place, cited: BAtlas 5 D3 Nandyal",210.0,337.9,tropical,66.2506866447662,Medium
+50178,Orientale Mare/Gangeticus Sinus/Eous Oceanus,India,15.0000001,89.9999999,precise,"Ancient Greek and Roman sources refer to the Bay of Bengal, which forms the northeastern portion of the Indian Ocean, by these names. It was also sometimes construed as an ocean entirely surrounding Asia.",0.0,779.8,tropical,69.0938287909713,Medium
+50139,Modoutou Emporion,Sri Lanka,9.213943,80.776299,precise,"Ptolemy places the ""Modoutoi"" in the northern part of ancient Sri Lanka, and provides coordinates for a ""Modoutou emporion"". Tentatively following Berthelot, BAtlas places the emporion in the vicinity of modern Mullaitivu.",34.0,107.2,equatorial,94.17452043530336,High
+50155,Nagour,India,11.18796,79.775066,precise,"An ancient place, cited: BAtlas 5 D4 Nagour",4.0,79.2,tropical,89.81596308723796,High
+50114,Mambalam,India,13.037431,80.274633,precise,"An ancient place, cited: BAtlas 5 E4 Mambalam",13.0,5.0,tropical,91.35281952205739,High
+50138,Modoura,India,9.90839,78.122503,precise,"An ancient place, cited: BAtlas 5 D5 Modoura",138.0,206.0,equatorial,83.23215885452868,High
+50179,Orneon? Pr.,Sri Lanka,5.9192089,80.5916227,precise,"An ancient place, cited: BAtlas 5 inset Orneon? Pr.",8.0,44.2,equatorial,98.05970862134828,High
+50159,Nanigaina,India,16.770014,80.286238,precise,"An ancient place, cited: BAtlas 5 E3 Nanigaina",53.0,419.2,tropical,75.852347140745,Medium
+50118,Maniolai (islands),India,12.356071346709554,92.80095117106964,precise,Islands mentioned in Ptolemy. They may correspond to the modern Andaman islands in the Bay of Bengal.,112.0,849.9,tropical,58.39931366321738,Medium
+50163,Nastullapur,India,18.165296,78.838349,precise,"An ancient place, cited: BAtlas 5 D3 Nastullapur",481.0,595.3,tropical,37.738918306037995,Low
+50175,Ongole,India,15.488367,80.047904,precise,"An ancient place, cited: BAtlas 5 E3 Ongole",12.0,278.0,tropical,83.23525869381854,High
+50137,Modogoulla,India,16.001479,76.439,precise,"An ancient place, cited: BAtlas 5 D3 Modogoulla",548.0,287.9,tropical,41.826803679177885,Low
+50160,Naoura/Nitriae,India,14.281472,74.449703,precise,"An ancient place, cited: BAtlas 5 C4 Naoura/Nitriae",20.0,152.4,tropical,86.39161757330108,High
+50199,Paloura,India,10.472567,76.700285,precise,"An ancient place, cited: BAtlas 5 D4 Paloura",814.0,278.0,tropical,39.15566094369072,Low
+50156,Namades/Lamnaios (river),India,22.52964037676565,77.61144148724505,precise,"The modern Narmada River in Gujarat, India, originates in the Vindhya mountain range and flows west to empty into the Gulf of Khambhat.",322.0,635.7,tropical,48.721617548948885,Low
+50117,Mandas (river),India,18.7916693485695,78.06443769366221,precise,"An ancient place, cited: BAtlas 5 E3 Mandas fl.",355.0,554.3,tropical,48.63378186246077,Low
+50140,Modubae,India,17.024297320346573,78.45215174242466,precise,Mūtibas. An ancient people in S India.,671.0,489.5,tropical,32.80735982711009,Low
+50194,Palaeogoni/Serendivae,Sri Lanka,7.573899844308213,80.8953661251433,precise,"An ancient place, cited: BAtlas 5 inset Palaeogoni/Serendivae",122.0,191.1,equatorial,84.90659441528992,High
+50182,Ouangana? (island),Sri Lanka,9.596698163244024,79.83167340477169,precise,"An ancient place, cited: BAtlas 5 inset Ouangana? Ins.",0.0,29.2,equatorial,99.12354424300635,High
+50157,Nanagounas (river),India,21.41708996022309,75.53370878175613,precise,"An ancient place, cited: BAtlas 5 C2 Nanagounas fl.",567.0,391.9,tropical,37.24787687279337,Low
+50120,Mantai,Sri Lanka,8.956304,79.961254,precise,Mantai was an ancient coastal town and harbor of northern Sri Lanka.,13.0,93.9,equatorial,96.18443196052539,High
+50150,Nagadiba,Sri Lanka,9.089818241402211,80.50191613174175,precise,"Ptolemy records a city and island called ""Nagadiba"" and also provides the ethnic name ""Nagadiboi"". One strand of twentieth century western scholarship, reflected in BAtlas, tentatively placed this site on the northeastern coast of Sri Lanka in the vicinity of modern Trincomalee (see also Emmanuel 2000). Another scholarly tradition, most recently repeated in Ashire 2012, identifies the Ptolemaic Nagadiba with the island and settlement hosting what is now known as the Nagadeepa/Nainadhivu Buddhist shrine off the northern peninsula of Jaffna.",54.0,96.3,equatorial,92.96768681398324,High
+50107,Malanga,India,12.838963,79.69958,precise,"Ptolemy places this ancient city in India. BAtlas identifies it firmly with modern Kanchipuram, which is located inland and southwest from modern Chennai.",86.0,67.5,tropical,83.87773032807127,High
+50146,Muziris,India,10.153976,76.213146,precise,An important port and trading village,6.0,268.6,tropical,83.97760653504712,High
+50166,Nellore,India,14.450364,79.984779,precise,"An ancient place, cited: BAtlas 5 D4 Nellore",22.0,164.8,tropical,85.86602365768124,High
+50127,Megisba Stagnum,India,10.0,80.0,rough,"Pliny the Elder describes the ""Megisba Stagnum"" as an inland marsh or lake of Sri Lanka that has a circumference of 375 Roman miles. He says that from this wetland once flowed two rivers: one called Palaesimundus and the other called Cydara.",0.0,22.2,equatorial,99.3336534998199,High
+50167,Nevasa,India,19.62041,74.894449,precise,"An ancient place, cited: BAtlas 5 C3 Nevasa",477.0,230.4,tropical,48.99841445760422,Low
+50192,Paithana,India,19.468043,75.385416,precise,"An ancient place, cited: BAtlas 5 D3 Paithana",460.0,276.4,tropical,48.921599671576985,Low
+50184,Oulippada?,Sri Lanka,6.808048,80.497715,precise,"An ancient place, cited: BAtlas 5 inset Oulippada?",2060.0,95.7,equatorial,52.127506303277706,Medium
+50147,Mysore,India,12.5,77.5,rough,"An ancient place, cited: BAtlas 5 D4 Mysore",759.0,258.7,tropical,39.734962180333774,Low
+50110,Mallayapalam,India,15.825602,79.858189,precise,"An ancient place, cited: BAtlas 5 E3 Mallayapalam",56.0,317.8,tropical,78.6658292412617,Medium
+50151,Nagagoura,India,21.146995,79.096187,precise,"An ancient place, cited: BAtlas 5 D2 Nagagoura",305.0,699.5,tropical,48.11052493845292,Low
+50312,Tyndis,India,10.763548,75.926477,precise,"An ancient place, cited: BAtlas 5 D4 Tyndis",6.0,342.8,tropical,81.75044841282354,Medium
+50328,Vidiyadurrapuram,India,16.415293,80.595167,precise,"An ancient place, cited: BAtlas 5 E3 Vidiyadurrapuram",17.0,381.1,tropical,79.75714855958948,Medium
+50324,Vasavasamudram,India,12.49946,80.118864,precise,"An ancient place, cited: BAtlas 5 E4 Vasavasamudram",6.0,59.0,tropical,90.26887799620691,High
+50332,Waghoda,India,21.151298,75.418646,precise,"An ancient place, cited: BAtlas 5 D2 Waghoda",184.0,363.3,tropical,67.48249507333725,Medium
+50333,Weepangandla,India,16.280753,78.297275,precise,"An ancient place, cited: BAtlas 5 D3 Weepangandla",387.0,423.7,tropical,50.09941428278004,Low
+50325,Veeravasaram,India,16.467309,81.483682,precise,"An ancient place, cited: BAtlas 5 E3 Veeravasaram",3.0,406.0,tropical,80.08356254234647,Medium
+50309,Tosale,India,20.141589,86.016551,precise,"An ancient place, cited: BAtlas 5 F2 Tosale",15.0,223.7,tropical,84.63500565206128,High
+50329,Vinukonda,India,18.040711,83.589194,precise,"An ancient place, cited: BAtlas 5 E3 Vinukonda",21.0,569.1,tropical,73.80741348378265,Medium
+50305,Tiagoura,India,20.344225,74.204221,precise,"An ancient place, cited: BAtlas 5 C2 Tiagoura",753.0,209.7,tropical,41.20572697802857,Low
+50313,Tyndis (river),India,22.5,82.5,rough,The Mahanadi river.,332.0,524.9,tropical,51.28034505333263,Low
+50318,Udappu,Sri Lanka,8.514013,79.986721,precise,"An ancient place, cited: BAtlas 5 inset Udappu",37.0,143.0,equatorial,92.86986110227463,High
+50322,Valaicchenai,Sri Lanka,6.971356,81.630057,precise,"An ancient place, cited: BAtlas 5 inset Valaicchenai",49.0,191.4,equatorial,90.4967034195774,High
+50314,Tynnas (river),India,12.5,77.5,rough,"An ancient place, cited: BAtlas 5 D4 Tynnas fl.",759.0,258.7,tropical,39.734962180333774,Low
+50338,Zaba? (island),Sri Lanka,6.4,81.716667,precise,"An ancient place, cited: BAtlas 5 inset Zaba? Ins.",0.0,173.5,equatorial,94.79229199183575,High
+50303,Thanjavur,India,10.783937,79.141673,precise,"An ancient place, cited: BAtlas 5 D4 Thanjavur",54.0,143.4,tropical,84.05395167170924,High
+50335,Yashwantpur,India,13.020918,77.551183,precise,"An ancient place, cited: BAtlas 5 D4 Yashwantpur",912.0,274.1,tropical,39.27272181534398,Low
+50323,Valuvaly,India,10.711186,76.546666,precise,"An ancient place, cited: BAtlas 5 D4 Valuvaly",83.0,308.6,tropical,76.87106777371856,Medium
+50336,Yelleshwaram,India,16.159267,78.970364,precise,"An ancient place, cited: BAtlas 5 D3 Yelleshwaram",532.0,379.3,tropical,40.310580097184896,Low
+50320,Vadgaon,India,15.763323,74.665214,precise,"An ancient place, cited: BAtlas 5 C3 Vadgaon",659.0,97.2,tropical,44.58248289110337,Low
+50300,*Templum Augusti,India,10.157551,76.207229,precise,"An ancient place, cited: BAtlas 5 D4 *Templum Augusti",9.0,269.2,tropical,83.72949660770934,High
+50301,Tennagora,India,11.376307,77.897214,precise,"An ancient place, cited: BAtlas 5 D4 Tennagora",254.0,215.3,tropical,66.55579195028356,Medium
+50326,Vellalore,India,10.806522,77.055401,precise,"An ancient place, cited: BAtlas 5 D4 Vellalore",309.0,304.9,tropical,59.64788315115612,Medium
+50311,Tropina,India,9.806614,76.482942,precise,"An ancient place, cited: BAtlas 5 D5 Tropina",45.0,220.2,equatorial,89.93905465578764,High
+50307,Tondamanathan,India,11.52503,79.681619,precise,"An ancient place, cited: BAtlas 5 D4 Tondamanathan",4.0,43.6,tropical,90.88451873617541,High
+50257,Sardonyx (mountain),India,21.54876483663184,76.38888953949329,precise,The modern Satpura range.,380.0,469.5,tropical,49.26160074348258,Low
+50216,Phrourion,India,12.245497,79.414997,precise,"An ancient place, cited: BAtlas 5 D4 Phrourion",90.0,56.8,tropical,83.89209658495744,High
+50294,Tagara,India,18.301382,76.14594,precise,"An ancient place, cited: BAtlas 5 D3 Tagara",636.0,361.0,tropical,36.66436547004442,Low
+50236,Pyrron Oros,India,7.5,77.5,rough,"An ancient place, cited: BAtlas 5 D5 Pyrron Oros",0.0,66.7,equatorial,97.99795893864808,High
+50220,Podoperoura,India,10.595404,76.561462,precise,"An ancient place, cited: BAtlas 5 D4 Podoperoura",76.0,296.0,tropical,77.78616574840838,Medium
+50298,Sri Lanka,Sri Lanka,7.981399724107249,80.57467817700461,rough,"The island of Sri Lanka lies at the center of the Indian Ocean world, connecting and connected by trade and communication with and between Africa, Arabia, southwest Asia, peninsular south Asia, Southeast Asia, Oceania, and beyond.",131.0,211.8,equatorial,83.59496963988003,High
+50299,Tarachoi,Sri Lanka,7.756747232932038,81.50598691179326,precise,"An ancient people, tribe, or cultural group. Located: E coast of Sri Lanka.",8.0,242.8,equatorial,92.0986088494669,High
+50221,Podouke/Arikamedu,India,11.902299155510416,79.81975045173745,precise,"Podouke/Arikamedu is an archaeological site located in Kakkayanthope, Ariyankuppam Commune, Puducherry, India.",3.0,2.2,tropical,92.20386509967628,High
+50260,Selour,India,10.432112,77.38007,precise,"An ancient place, cited: BAtlas 5 D4 Selour",344.0,259.7,tropical,58.32008207588213,Medium
+50295,Tainour,India,9.869413,77.93307,precise,"An ancient place, cited: BAtlas 5 D5 Tainour",138.0,202.4,equatorial,83.34021504374708,High
+50201,Pandion,India,9.653858785357343,78.19358994658116,precise,"An ancient place, cited: BAtlas 5 D5 Pandion",78.0,188.8,equatorial,88.3504385634885,High
+50226,Pounnata,India,9.584268,76.530222,precise,"An ancient place, cited: BAtlas 5 D5 Pounnata",11.0,196.4,equatorial,93.26123250359149,High
+50271,Sippara,India,18.300264,83.554891,precise,"An ancient place, cited: BAtlas 5 E3 Sippara",105.0,551.9,tropical,67.88086619427649,Medium
+50210,Peddabunkur,India,18.295769,79.094869,precise,"An ancient place, cited: BAtlas 5 D3 Peddabunkur",303.0,602.8,tropical,51.16643461827013,Low
+50293,Tadali,India,20.091678,79.114719,precise,"An ancient place, cited: BAtlas 5 D2 Tadali",201.0,672.7,tropical,56.89176273485973,Medium
+50250,Salihundan,India,18.336424,83.963492,precise,"An ancient place, cited: BAtlas 5 E3 Salihundan",16.0,517.9,tropical,75.72771355677988,Medium
+50266,Sigiriya,Sri Lanka,7.957136736929782,80.75726324052827,precise,An archaeological site currently interpreted as the capital city of the parricidal King Kassapa I (A.D. 477–95). The site was listed as a UNESCO World Heritage Site in 1982.,204.0,221.2,equatorial,77.71370923686523,Medium
+50273,Sisupalgarh,India,20.230313,80.880875,precise,"An ancient place, cited: BAtlas 5 F2 Sisupalgarh",404.0,704.1,tropical,40.379134579672936,Low
+50205,Paralia,India,8.531066006606288,77.50765587158209,precise,"An ancient place, cited: BAtlas 5 D5 Paralia",168.0,47.9,equatorial,85.67662087302271,High
+50252,Saline? (island),India,18.7969257,93.6353035,precise,"An ancient place, cited: BAtlas 5 G3 Saline? Ins.",28.0,691.1,tropical,69.60860798117834,Medium
+50244,Sadenoi,India,18.877867641368937,77.47571170006027,precise,"An ancient people, tribe, or cultural group. Śātavāhanas, dominant political power in Deccan Skt.: Śātavāhana.",392.0,491.9,tropical,47.668848871807086,Low
+50213,Perinkari,India,9.684856,78.616334,precise,"An ancient place, cited: BAtlas 5 D5 Perinkari",36.0,152.2,equatorial,92.67041769509474,High
+50248,Salakenoi,India,16.60732313316992,81.56768619959611,precise,An ancient people between Kṛṣṇa and Godāvarīdeltas. Skt.: Śālankāyana.,6.0,423.6,tropical,79.32518727703295,Medium
+50279,Sorai,India,12.376989244653016,79.03998187266694,precise,"An ancient place, cited: BAtlas 5 D4 Sorai",192.0,98.2,tropical,74.82603128503249,Medium
+50243,Sada,India,20.013925,93.330422,precise,"An ancient place, cited: BAtlas 5 G2 Sada",0.0,590.0,tropical,74.79079121142995,Medium
+50202,Pandipatna,India,12.614347,80.194277,precise,"An ancient place, cited: BAtlas 5 E4 Pandipatna",12.0,44.4,tropical,90.24690474976764,High
+50275,Solen (river),India,7.5,77.5,rough,"An ancient place, cited: BAtlas 5 D5 Solen fl.",0.0,66.7,equatorial,97.99795893864808,High
+50234,Pseudostomos (river),India,9.848470792001356,76.81861656035815,precise,The Periyar river.,87.0,208.3,equatorial,87.07483251781808,High
+50218,Pidarikulam,Sri Lanka,8.832784,80.0153675,precise,"An ancient place, cited: BAtlas 5 inset Pidarikulam",11.0,107.6,equatorial,95.92661850431186,High
+50219,Dharanikota/Pitoura,India,16.5776502,80.3483711,precise,"Dharanikota is a modern village adjoining Amaravathi on the southern bank of the Krishna river in Andhra Pradesh. Ancient habitation, attested by pottery, and a series of wharfs and water management structures in various materials including brick and stone, indicate that trade and settlement activity began at the site as early as the second century BCE. The site has been identified with Ptolemy's Pitoura, which he identifies as a ""metropolis"".",33.0,397.9,tropical,78.02568334340742,Medium
+50203,Pandiruppu,Sri Lanka,7.4263926,81.8169319,precise,"A settlement in eastern Sri Lanka that was reported in the early 20th century to have been the findspot of one, and maybe a few more, Roman bronze coins of the fourth century. Walburg suspects that this reported provenance may be incorrect.",5.0,238.8,equatorial,92.44877184439983,High
+50254,Sanpewada,India,21.025933,79.291868,precise,"An ancient place, cited: BAtlas 5 D2 Sanpewada",276.0,714.6,tropical,49.881594693089056,Low
+50281,Souboura,India,11.750868,79.763329,precise,"An ancient place, cited: BAtlas 5 D4 Souboura",7.0,17.1,tropical,91.44983178878721,High
+50278,Sopatma,India,12.188994,79.942282,precise,"One of three ""emporia"" listed in the PME and placed by it after (i.e., northward from) Kamara and Poduke. BAtlas identified it firmly with modern Marakanam, but Dayalan more recently asserts it might be tentatively identified with Mamallapuram.",14.0,35.7,tropical,90.35464016540007,High
+50297,Tangala,India,9.700443,77.833286,precise,"An ancient place, cited: BAtlas 5 D5 Tangala",136.0,181.7,equatorial,84.11493850673153,High
+510167491,Somapura Mahavihara,India,25.031275197988663,88.97691381012008,precise,Somapura Mahavihara was an early medieval Buddhist monastery (vihara) established by king Dharmapala in the late eighth century or the early ninth century CE.,19.0,289.8,subtropical,74.84417320562173,Medium
+584982267,Brihadishwara Temple,India,10.782584667711836,79.13139672701752,precise,11th century Hndu temple Tanjuvar dedicated to Shiva with smaller shrines around it.,63.0,144.1,tropical,83.34263905862376,High
+544503271,"Kalugumalai, Mangulam",India,10.0223446,78.2583678,precise,Hill near the village of Mangulam in Tamil Nadu. The hill contains several rock caves used by Jain monks and six Tamil-Brahmi inscriptions dated to the third-second centuries BCE.,249.0,192.4,tropical,67.62665031359174,Medium
+536439049,Dharmaraja Ratha,India,12.608697243152433,80.18951256413438,precise,Modern name of a seventh-century Pallava rock-cut temple in Mahābalipuram.,7.0,45.1,tropical,90.60939476153303,High
+531398484,Angkor,Cambodia,13.43333,103.8333,precise,"The capital city of the Khmer empire, founded in the late 9th century by Yasovarman I (889-901). The city was sacked in 1431 by invaders from the Ayutthaya kingdom, and was abandoned except for the temple of Angkor Wat, which remained a Buddhist shrine.",21.0,317.1,tropical,81.37134672907021,Medium
+532531493,Periyapattinam,India,9.27263,78.90232,precise,"A late medieval port town located in modern Tamil Nadu, India, on the Bay of Bengal. It seems to have flourished from the 13th century until the 17th, with Chinese and Islamic pottery from the first two centuries of that time being most abundant.",9.0,133.9,equatorial,95.29060838583396,High
+528388226,Cave 19 at Udayagiri,India,23.5404115,77.7718366,precise,"The largest cave temple at Udayagiri, known as the Amrita or Viṣṇupada cave.",435.0,721.2,subtropical,29.988161868715814,Low

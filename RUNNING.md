@@ -22,8 +22,36 @@ First-time setup only:
 ```bash
 cd central-backend
 pnpm exec prisma db push       # sync the schema
-pnpm exec prisma db seed       # seed sample users/data
+pnpm exec prisma db seed       # seeds the 4 Role rows only — no users, no sites
 ```
+
+**There is no self-service registration and no seeded admin account** — accounts
+are only created by an existing admin (`POST /api/users`), which is a
+chicken-and-egg problem on a brand new database. To bootstrap the first admin
+account, run this once from `central-backend/`:
+
+```bash
+node -e "
+require('dotenv/config');
+const bcrypt = require('bcrypt');
+const { PrismaClient } = require('@prisma/client');
+const { PrismaPg } = require('@prisma/adapter-pg');
+const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }) });
+(async () => {
+  const role = await prisma.role.findUnique({ where: { name: 'ADMIN' } });
+  const passwordHash = await bcrypt.hash('ChangeMe123!', 10);
+  const user = await prisma.user.create({
+    data: { firstName: 'Admin', lastName: 'User', email: 'admin@example.com', passwordHash, roleId: role.id, mustChangePassword: true },
+  });
+  console.log('Created admin:', user.email, '/ ChangeMe123!');
+  await prisma.\$disconnect();
+})();
+"
+```
+
+Log in with that account, then use **Admin → Users** in the app to create
+everyone else (each new account gets a generated temporary password shown
+once on screen).
 
 ## 2. Python risk service
 
@@ -69,6 +97,9 @@ backend).
 ## Demo checklist
 
 - [ ] Postgres running
-- [ ] `uvicorn risk_service:app --port 8000` running (for risk assessment / GIS features)
+- [ ] `uvicorn risk_service:app --port 8000` running (only needed for the Risk Assessment page — the rest of the app, including the GIS map, works fine without it)
 - [ ] `central-backend`: `pnpm run dev` (port 3000)
 - [ ] `frontend`: `pnpm run dev` (prints its own port)
+
+See **[DEMO.md](DEMO.md)** for a walkthrough script covering every major
+feature, and the current demo accounts (one per role) to log in with.

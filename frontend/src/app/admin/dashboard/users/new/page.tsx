@@ -1,72 +1,92 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { getUsers, saveUsers, type UserAccount, type UserRole } from "../mock-users";
-
-const ROLE_OPTIONS: UserRole[] = ["Admin", "Analyst", "Field Officer", "Senior Officer"];
+import { apiErrorMessage } from "@/lib/sites";
+import { createUser, USER_ROLE_LABELS, USER_ROLE_OPTIONS, type UserRoleName } from "@/lib/users";
 
 export default function RegisterUserPage() {
-  const router = useRouter();
-
-  const [fullName, setFullName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState<UserRole>("Field Officer");
-  const [tempPassword, setTempPassword] = useState("");
+  const [role, setRole] = useState<UserRoleName>("FIELD_OFFICER");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  function handleAutoGeneratePassword() {
-    const randomWord = ["Heritage", "Ancient", "Explore", "Ruins"][Math.floor(Math.random() * 4)];
-    const randomNum = Math.floor(100 + Math.random() * 900);
-    setTempPassword(`${randomWord}@${randomNum}!`);
-  }
+  // Set once the account is created — the backend only returns this
+  // temporary password this one time, so we hold onto it here instead
+  // of navigating away immediately.
+  const [created, setCreated] = useState<{ name: string; temporaryPassword: string } | null>(
+    null
+  );
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
 
-    if (!fullName.trim()) {
-      setError("Please enter the user's full name.");
+    if (!firstName.trim() || !lastName.trim()) {
+      setError("Please enter the user's first and last name.");
       return;
     }
     if (!email.trim() || !email.includes("@")) {
       setError("Please enter a valid email address.");
       return;
     }
-    if (!tempPassword.trim()) {
-      setError("Please enter or generate a temporary password.");
-      return;
-    }
 
     setIsSubmitting(true);
-    setTimeout(() => {
-      try {
-        const users = getUsers();
-        // Check if email already exists
-        if (users.some(u => u.email.toLowerCase() === email.trim().toLowerCase())) {
-          setError("An account with this email already exists.");
-          setIsSubmitting(false);
-          return;
-        }
+    try {
+      const { user, temporaryPassword } = await createUser({
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        email: email.trim(),
+        role,
+      });
+      setCreated({ name: `${user.firstName} ${user.lastName}`, temporaryPassword });
+    } catch (err) {
+      setError(apiErrorMessage(err));
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
-        const newUser: UserAccount = {
-          id: `user-${Date.now()}`,
-          fullName: fullName.trim(),
-          email: email.trim(),
-          role,
-          status: "Active"
-        };
+  if (created) {
+    return (
+      <div className="flex flex-1 flex-col">
+        <header className="border-b border-[#DEDBD1] bg-[#FAF6EB] px-8 py-4">
+          <span className="text-[13.5px] text-[#3A2A12] font-semibold">Register user</span>
+        </header>
 
-        saveUsers([...users, newUser]);
-        router.push("/admin/dashboard/users");
-        router.refresh();
-      } catch (err) {
-        setError("An error occurred. Please try again.");
-        setIsSubmitting(false);
-      }
-    }, 600);
+        <main className="flex-1 px-8 py-7 bg-[#F0E6C8]/30">
+          <div className="max-w-xl mx-auto rounded-[10px] border border-[#2C6B33]/30 bg-white p-6 shadow-xs">
+            <h2 className="font-serif text-[17px] text-[#2C6B33]">
+              Account created for {created.name}
+            </h2>
+            <p className="mt-1.5 text-[13px] text-[#5B6472]">
+              Share this temporary password with them securely — it will not be shown again.
+              They&apos;ll be required to change it on first login.
+            </p>
+
+            <div className="mt-4 rounded-[6px] bg-[#FAF6EB] p-4 border border-[#BB892C]/30 text-center">
+              <span className="block text-[10px] uppercase text-[#8F6A21] font-semibold">
+                Temporary Password
+              </span>
+              <code className="block text-[16px] font-mono font-bold text-[#3A2A12] mt-1 select-all">
+                {created.temporaryPassword}
+              </code>
+            </div>
+
+            <div className="mt-6 flex items-center gap-3 border-t border-[#DEDBD1] pt-4">
+              <Link
+                href="/admin/dashboard/users"
+                className="rounded-[6px] bg-[#BB892C] px-5 py-2 text-[13.5px] font-medium text-[#F4F2ED] hover:bg-[#8F6A21] transition"
+              >
+                Done — back to users
+              </Link>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
   }
 
   return (
@@ -86,23 +106,40 @@ export default function RegisterUserPage() {
           <div className="border-b border-[#DEDBD1]/60 pb-3 mb-5">
             <h2 className="font-serif text-[17px] text-[#3A2A12]">Register New User</h2>
             <p className="text-[11.5px] text-[#8A8D86]">
-              Create a new user account. No public self-registration is enabled.
+              Create a new user account. No public self-registration is enabled. A temporary
+              password is generated automatically.
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4.5">
-            <div>
-              <label htmlFor="fullName" className="block text-[12px] font-bold text-[#5B6472] uppercase mb-1">
-                Full Name
-              </label>
-              <input
-                id="fullName"
-                type="text"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                placeholder="e.g. S. Wickramasinghe"
-                className="w-full rounded-[6px] border border-[#D4CFC3] px-3.5 py-2.5 text-[13px] text-[#23262B] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
-              />
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label htmlFor="firstName" className="block text-[12px] font-bold text-[#5B6472] uppercase mb-1">
+                  First Name
+                </label>
+                <input
+                  id="firstName"
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  placeholder="e.g. Chamari"
+                  className="w-full rounded-[6px] border border-[#D4CFC3] px-3.5 py-2.5 text-[13px] text-[#23262B] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="lastName" className="block text-[12px] font-bold text-[#5B6472] uppercase mb-1">
+                  Last Name
+                </label>
+                <input
+                  id="lastName"
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  placeholder="e.g. Wickramasinghe"
+                  className="w-full rounded-[6px] border border-[#D4CFC3] px-3.5 py-2.5 text-[13px] text-[#23262B] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
+                />
+              </div>
             </div>
 
             <div>
@@ -114,7 +151,7 @@ export default function RegisterUserPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="e.g. s.wick@doa.lk"
+                placeholder="e.g. c.wickramasinghe@doa.lk"
                 className="w-full rounded-[6px] border border-[#D4CFC3] px-3.5 py-2.5 text-[13px] text-[#23262B] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
               />
             </div>
@@ -126,36 +163,15 @@ export default function RegisterUserPage() {
               <select
                 id="role"
                 value={role}
-                onChange={(e) => setRole(e.target.value as UserRole)}
+                onChange={(e) => setRole(e.target.value as UserRoleName)}
                 className="w-full rounded-[6px] border border-[#D4CFC3] bg-white px-3.5 py-2.5 text-[13px] text-[#23262B] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
               >
-                {ROLE_OPTIONS.map((opt) => (
-                  <option key={opt} value={opt}>{opt}</option>
+                {USER_ROLE_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {USER_ROLE_LABELS[opt]}
+                  </option>
                 ))}
               </select>
-            </div>
-
-            <div>
-              <label htmlFor="tempPassword" className="block text-[12px] font-bold text-[#5B6472] uppercase mb-1">
-                Temporary Password
-              </label>
-              <div className="flex gap-2 mt-1">
-                <input
-                  id="tempPassword"
-                  type="text"
-                  value={tempPassword}
-                  onChange={(e) => setTempPassword(e.target.value)}
-                  placeholder="Set password or click generate"
-                  className="flex-1 rounded-[6px] border border-[#D4CFC3] px-3.5 py-2.5 text-[13px] text-[#23262B] outline-none"
-                />
-                <button
-                  type="button"
-                  onClick={handleAutoGeneratePassword}
-                  className="rounded-[6px] border border-[#BB892C] text-[#BB892C] px-4 py-2 text-[13px] font-semibold hover:bg-[#FAF6EB]"
-                >
-                  Generate
-                </button>
-              </div>
             </div>
 
             {error && (

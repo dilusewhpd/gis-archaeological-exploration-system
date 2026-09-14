@@ -2,74 +2,104 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { getUsers, saveUsers, type UserAccount, type UserRole } from "../../mock-users";
+import { apiErrorMessage } from "@/lib/sites";
+import {
+  deactivateUser,
+  resetUserPassword,
+  updateUser,
+  USER_ROLE_LABELS,
+  USER_ROLE_OPTIONS,
+  type UserRecord,
+  type UserRoleName,
+} from "@/lib/users";
 
-const ROLE_OPTIONS: UserRole[] = ["Admin", "Analyst", "Field Officer", "Senior Officer"];
-
-export function EditUserForm({ user }: { user: UserAccount }) {
-  const [fullName, setFullName] = useState(user.fullName);
-  const [email, setEmail] = useState(user.email);
-  const [role, setRole] = useState<UserRole>(user.role);
-  const [status, setStatus] = useState(user.status);
+export function EditUserForm({ user: initialUser }: { user: UserRecord }) {
+  const [user, setUser] = useState(initialUser);
+  const [firstName, setFirstName] = useState(initialUser.firstName);
+  const [lastName, setLastName] = useState(initialUser.lastName);
+  const [email, setEmail] = useState(initialUser.email);
+  const [role, setRole] = useState<UserRoleName>(initialUser.role.name as UserRoleName);
   const [saved, setSaved] = useState(false);
-  
-  // Reset Password simulation states
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  // Reset password states
   const [tempPassword, setTempPassword] = useState<string | null>(null);
   const [isResetting, setIsResetting] = useState(false);
+  const [resetError, setResetError] = useState<string | null>(null);
+
+  // Suspend/reactivate states
+  const [isToggling, setIsToggling] = useState(false);
+  const [toggleError, setToggleError] = useState<string | null>(null);
 
   const isDirty =
-    fullName !== user.fullName || email !== user.email || role !== user.role || status !== user.status;
+    firstName !== user.firstName ||
+    lastName !== user.lastName ||
+    email !== user.email ||
+    role !== user.role.name;
 
-  function handleSave(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSave(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const users = getUsers();
-    const updated = users.map((u) => 
-      u.id === user.id ? { ...u, fullName: fullName.trim(), email: email.trim(), role, status } : u
-    );
-    saveUsers(updated);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    setSaveError(null);
+    setIsSaving(true);
+    try {
+      const updated = await updateUser(user.id, {
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        email: email.trim(),
+        role,
+      });
+      setUser(updated);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      setSaveError(apiErrorMessage(err));
+    } finally {
+      setIsSaving(false);
+    }
   }
 
-  function handleResetPassword() {
+  async function handleResetPassword() {
     setIsResetting(true);
     setTempPassword(null);
-    
-    // Simulate generating temporary credentials
-    setTimeout(() => {
-      const randomWord = ["Heritage", "Ancient", "Explore", "Ruins"][Math.floor(Math.random() * 4)];
-      const randomNum = Math.floor(100 + Math.random() * 900);
-      setTempPassword(`${randomWord}@${randomNum}!`);
+    setResetError(null);
+    try {
+      const password = await resetUserPassword(user.id);
+      setTempPassword(password);
+    } catch (err) {
+      setResetError(apiErrorMessage(err));
+    } finally {
       setIsResetting(false);
-    }, 800);
+    }
   }
 
-  function handleToggleStatus() {
-    const willDeactivate = status === "Active";
+  async function handleToggleStatus() {
+    const willDeactivate = user.isActive;
     const confirmed = window.confirm(
       willDeactivate
-        ? `Deactivate account for ${fullName}? They will lose dashboard access immediately.`
-        : `Reactivate account for ${fullName}?`
+        ? `Deactivate account for ${firstName} ${lastName}? They will lose dashboard access immediately.`
+        : `Reactivate account for ${firstName} ${lastName}?`
     );
     if (!confirmed) return;
-    const newStatus = willDeactivate ? "Disabled" as const : "Active" as const;
-    setStatus(newStatus);
 
-    // Save changes to localStorage immediately
-    const users = getUsers();
-    const updated = users.map((u) => 
-      u.id === user.id ? { ...u, status: newStatus } : u
-    );
-    saveUsers(updated);
+    setToggleError(null);
+    setIsToggling(true);
+    try {
+      if (willDeactivate) {
+        await deactivateUser(user.id);
+        setUser((prev) => ({ ...prev, isActive: false }));
+      } else {
+        const updated = await updateUser(user.id, { isActive: true });
+        setUser(updated);
+      }
+    } catch (err) {
+      setToggleError(apiErrorMessage(err));
+    } finally {
+      setIsToggling(false);
+    }
   }
 
-  // Generate initials for avatar badge
-  const initials = fullName
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
+  const initials = `${firstName[0] ?? ""}${lastName[0] ?? ""}`.toUpperCase();
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -84,17 +114,31 @@ export function EditUserForm({ user }: { user: UserAccount }) {
           </div>
 
           <div className="space-y-4.5">
-            <Field label="Full Name">
-              <input
-                type="text"
-                value={fullName}
-                onChange={(e) => {
-                  setFullName(e.target.value);
-                  setSaved(false);
-                }}
-                className="w-full rounded-[6px] border border-[#D4CFC3] px-3.5 py-2 text-[13px] text-[#3A2A12] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
-              />
-            </Field>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Field label="First Name">
+                <input
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => {
+                    setFirstName(e.target.value);
+                    setSaved(false);
+                  }}
+                  className="w-full rounded-[6px] border border-[#D4CFC3] px-3.5 py-2 text-[13px] text-[#3A2A12] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
+                />
+              </Field>
+
+              <Field label="Last Name">
+                <input
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => {
+                    setLastName(e.target.value);
+                    setSaved(false);
+                  }}
+                  className="w-full rounded-[6px] border border-[#D4CFC3] px-3.5 py-2 text-[13px] text-[#3A2A12] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
+                />
+              </Field>
+            </div>
 
             <Field label="Email Address">
               <input
@@ -113,14 +157,14 @@ export function EditUserForm({ user }: { user: UserAccount }) {
                 <select
                   value={role}
                   onChange={(e) => {
-                    setRole(e.target.value as UserRole);
+                    setRole(e.target.value as UserRoleName);
                     setSaved(false);
                   }}
                   className="w-full rounded-[6px] border border-[#D4CFC3] bg-white px-3.5 py-2 text-[13px] text-[#3A2A12] outline-none transition focus:border-[#BB892C] focus:ring-2 focus:ring-[#BB892C]/10"
                 >
-                  {ROLE_OPTIONS.map((option) => (
+                  {USER_ROLE_OPTIONS.map((option) => (
                     <option key={option} value={option}>
-                      {option}
+                      {USER_ROLE_LABELS[option]}
                     </option>
                   ))}
                 </select>
@@ -131,26 +175,32 @@ export function EditUserForm({ user }: { user: UserAccount }) {
                   <span
                     className={
                       "inline-flex items-center rounded-full px-3 py-1 text-[11.5px] font-semibold " +
-                      (status === "Active"
+                      (user.isActive
                         ? "bg-[#EAF1EA] text-[#2F5C3B] border border-[#BCE2C4]/40"
                         : "bg-[#F6E8E3] text-[#9A4B2E] border border-[#E9C4B7]/40")
                     }
                   >
-                    <span className={`mr-1.5 h-1.5 w-1.5 rounded-full ${status === "Active" ? "bg-[#2C6B33]" : "bg-[#9A4B2E]"}`} />
-                    {status}
+                    <span className={`mr-1.5 h-1.5 w-1.5 rounded-full ${user.isActive ? "bg-[#2C6B33]" : "bg-[#9A4B2E]"}`} />
+                    {user.isActive ? "Active" : "Disabled"}
                   </span>
                 </div>
               </Field>
             </div>
           </div>
 
+          {saveError && (
+            <div role="alert" className="mt-4 rounded-[6px] border border-[#E3B9A8] bg-[#FBF0EB] px-3.5 py-2.5 text-[13px] text-[#8A3A20]">
+              {saveError}
+            </div>
+          )}
+
           <div className="mt-6 flex items-center gap-3 border-t border-[#DEDBD1] pt-4">
             <button
               type="submit"
-              disabled={!isDirty}
+              disabled={!isDirty || isSaving}
               className="rounded-[6px] bg-[#BB892C] px-5 py-2 text-[13px] font-medium text-[#F4F2ED] transition hover:bg-[#8F6A21] disabled:cursor-not-allowed disabled:bg-[#DEDBD1] disabled:text-[#8A8D86]"
             >
-              Save changes
+              {isSaving ? "Saving…" : "Save changes"}
             </button>
 
             <Link
@@ -161,7 +211,7 @@ export function EditUserForm({ user }: { user: UserAccount }) {
             </Link>
 
             {saved && (
-              <span className="text-[13px] font-medium text-[#2C6B33] animate-pulse">
+              <span className="text-[13px] font-medium text-[#2C6B33]">
                 Changes saved successfully.
               </span>
             )}
@@ -176,10 +226,12 @@ export function EditUserForm({ user }: { user: UserAccount }) {
           <div className="flex h-16 w-16 items-center justify-center rounded-full border border-[#DEDBD1] bg-gradient-to-tr from-[#FAF6EB] to-[#FAF6EB]/40 shadow-inner">
             <span className="font-serif text-[24px] font-bold text-[#8F6A21] tracking-wider">{initials}</span>
           </div>
-          <h3 className="mt-4 font-serif text-[15.5px] font-medium text-[#3A2A12]">{fullName}</h3>
+          <h3 className="mt-4 font-serif text-[15.5px] font-medium text-[#3A2A12]">
+            {firstName} {lastName}
+          </h3>
           <p className="text-[11.5px] text-[#8A8D86] font-medium">{email}</p>
           <span className="mt-2.5 rounded bg-[#F4F2ED] px-2.5 py-0.5 text-[11px] font-semibold text-[#8F6A21] border border-[#DEDBD1]/60">
-            {role}
+            {USER_ROLE_LABELS[role]}
           </span>
         </div>
 
@@ -196,12 +248,18 @@ export function EditUserForm({ user }: { user: UserAccount }) {
               <p className="text-[11px] text-[#5B6472] mt-0.5">
                 Generate temporary credentials to bypass forgotten password locks.
               </p>
-              
+
               {tempPassword && (
                 <div className="mt-2.5 rounded-[6px] bg-[#FAF6EB] p-3 border border-[#BB892C]/30 text-center">
                   <span className="block text-[10px] uppercase text-[#8F6A21] font-semibold">Temporary Credentials Generated</span>
                   <code className="block text-[13px] font-mono font-bold text-[#3A2A12] mt-1 select-all">{tempPassword}</code>
                   <span className="block text-[9.5px] text-[#8A8D86] mt-1">Copy and share securely with the user.</span>
+                </div>
+              )}
+
+              {resetError && (
+                <div className="mt-2.5 rounded-[6px] border border-[#E3B9A8] bg-[#FBF0EB] px-3 py-2 text-[11.5px] text-[#8A3A20]">
+                  {resetError}
                 </div>
               )}
 
@@ -221,18 +279,25 @@ export function EditUserForm({ user }: { user: UserAccount }) {
               <p className="text-[11px] text-[#5B6472] mt-0.5">
                 Suspend database credentials immediately if keys are compromised.
               </p>
-              
+
+              {toggleError && (
+                <div className="mt-2.5 rounded-[6px] border border-[#E3B9A8] bg-[#FBF0EB] px-3 py-2 text-[11.5px] text-[#8A3A20]">
+                  {toggleError}
+                </div>
+              )}
+
               <button
                 type="button"
                 onClick={handleToggleStatus}
+                disabled={isToggling}
                 className={
-                  "mt-3 flex w-full items-center justify-center rounded-[6px] border py-2 text-[12.5px] font-medium transition " +
-                  (status === "Active"
+                  "mt-3 flex w-full items-center justify-center rounded-[6px] border py-2 text-[12.5px] font-medium transition disabled:opacity-50 " +
+                  (user.isActive
                     ? "border-[#DEDBD1] text-[#9A4B2E] hover:border-[#9A4B2E]/40 hover:bg-[#FAF6EB]/20"
                     : "border-[#DEDBD1] text-[#2F5C3B] hover:border-[#2F5C3B]/40 hover:bg-[#FAF6EB]/20")
                 }
               >
-                {status === "Active" ? "Deactivate Account" : "Activate Account"}
+                {isToggling ? "Working…" : user.isActive ? "Deactivate Account" : "Activate Account"}
               </button>
             </div>
           </div>

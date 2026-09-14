@@ -1,26 +1,30 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
-import { getUsers, type UserAccount } from "../../mock-users";
+import { apiErrorMessage } from "@/lib/sites";
+import { getUserById, type UserRecord } from "@/lib/users";
 import { EditUserForm } from "./edit-user-form";
 
 export default function EditUserPage() {
   const params = useParams();
-  const router = useRouter();
   const userId = params.id as string;
-  const [user, setUser] = useState<UserAccount | null>(null);
+  const [user, setUser] = useState<UserRecord | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const users = getUsers();
-    const found = users.find((u) => u.id === userId);
-    if (found) {
-      setUser(found);
-    } else {
-      setError("User account not found.");
-    }
+    let isMounted = true;
+    getUserById(userId)
+      .then((u) => {
+        if (isMounted) setUser(u);
+      })
+      .catch((err) => {
+        if (isMounted) setError(apiErrorMessage(err));
+      });
+    return () => {
+      isMounted = false;
+    };
   }, [userId]);
 
   if (error) {

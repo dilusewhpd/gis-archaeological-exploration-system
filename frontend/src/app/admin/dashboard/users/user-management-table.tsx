@@ -1,53 +1,97 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import { getUsers, saveUsers, type UserAccount } from "./mock-users";
+import { Fragment, useEffect, useMemo, useState } from "react";
+import { apiErrorMessage } from "@/lib/sites";
+import {
+  deactivateUser,
+  listUsers,
+  resetUserPassword,
+  updateUser,
+  USER_ROLE_LABELS,
+  type UserRecord,
+} from "@/lib/users";
 
 export function UserManagementTable() {
   const [query, setQuery] = useState("");
-  const [users, setUsers] = useState<UserAccount[]>([]);
+  const [users, setUsers] = useState<UserRecord[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [rowError, setRowError] = useState<{ id: string; message: string } | null>(null);
+  const [busyId, setBusyId] = useState<string | null>(null);
 
   useEffect(() => {
-    setUsers(getUsers());
+    void reload();
   }, []);
+
+  async function reload() {
+    setIsLoading(true);
+    try {
+      // Backend caps `limit` at 100 — well above the current user count, so
+      // this is a single fetch with client-side search (no pager needed yet).
+      const page = await listUsers({ limit: 100 });
+      setUsers(page.users);
+      setLoadError(null);
+    } catch (err) {
+      setLoadError(apiErrorMessage(err));
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   const filteredUsers = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return users;
-    return users.filter(
-      (user) =>
-        user.fullName.toLowerCase().includes(q) || user.email.toLowerCase().includes(q)
-    );
+    return users.filter((u) => {
+      const fullName = `${u.firstName} ${u.lastName}`.toLowerCase();
+      return fullName.includes(q) || u.email.toLowerCase().includes(q);
+    });
   }, [users, query]);
 
-  function handleEnable(user: UserAccount) {
-    const updated = users.map((u) => (u.id === user.id ? { ...u, status: "Active" as const } : u));
-    setUsers(updated);
-    saveUsers(updated);
-  }
-
-  function handleDisable(user: UserAccount) {
-    const confirmed = window.confirm(`Deactivate account for ${user.fullName}? They will lose dashboard access immediately.`);
+  async function handleDisable(user: UserRecord) {
+    const confirmed = window.confirm(
+      `Deactivate account for ${user.firstName} ${user.lastName}? They will lose dashboard access immediately.`
+    );
     if (!confirmed) return;
-    const updated = users.map((u) => (u.id === user.id ? { ...u, status: "Disabled" as const } : u));
-    setUsers(updated);
-    saveUsers(updated);
+
+    setRowError(null);
+    setBusyId(user.id);
+    try {
+      await deactivateUser(user.id);
+      await reload();
+    } catch (err) {
+      setRowError({ id: user.id, message: apiErrorMessage(err) });
+    } finally {
+      setBusyId(null);
+    }
   }
 
-  function handleDelete(user: UserAccount) {
-    const confirmed = window.confirm(`Are you sure you want to permanently delete user account for ${user.fullName}? This action cannot be undone.`);
-    if (!confirmed) return;
-    const updated = users.filter((u) => u.id !== user.id);
-    setUsers(updated);
-    saveUsers(updated);
+  async function handleEnable(user: UserRecord) {
+    setRowError(null);
+    setBusyId(user.id);
+    try {
+      await updateUser(user.id, { isActive: true });
+      await reload();
+    } catch (err) {
+      setRowError({ id: user.id, message: apiErrorMessage(err) });
+    } finally {
+      setBusyId(null);
+    }
   }
 
-  function handleResetPassword(user: UserAccount) {
-    const randomWord = ["Heritage", "Ancient", "Explore", "Ruins"][Math.floor(Math.random() * 4)];
-    const randomNum = Math.floor(100 + Math.random() * 900);
-    const tempPass = `${randomWord}@${randomNum}!`;
-    alert(`Reset credentials successfully generated for ${user.fullName}.\nTemporary password: ${tempPass}\nCopy and share securely.`);
+  async function handleResetPassword(user: UserRecord) {
+    setRowError(null);
+    setBusyId(user.id);
+    try {
+      const temporaryPassword = await resetUserPassword(user.id);
+      window.alert(
+        `Temporary password for ${user.firstName} ${user.lastName}:\n\n${temporaryPassword}\n\nCopy and share securely — this won't be shown again.`
+      );
+    } catch (err) {
+      setRowError({ id: user.id, message: apiErrorMessage(err) });
+    } finally {
+      setBusyId(null);
+    }
   }
 
   return (
@@ -75,7 +119,11 @@ export function UserManagementTable() {
 
       {/* Table */}
       <div className="mt-4 overflow-hidden rounded-[8px] border border-[#DEDBD1] bg-white shadow-xs">
-        {filteredUsers.length === 0 ? (
+        {isLoading ? (
+          <p className="px-5 py-8 text-center text-[13px] text-[#8A8D86]">Loading users…</p>
+        ) : loadError ? (
+          <p className="px-5 py-8 text-center text-[13px] text-[#8A3A20]">{loadError}</p>
+        ) : filteredUsers.length === 0 ? (
           <p className="px-5 py-8 text-center text-[13px] text-[#8A8D86]">
             {users.length === 0
               ? "No user accounts yet. Add one to get started."
@@ -94,67 +142,76 @@ export function UserManagementTable() {
             </thead>
             <tbody className="divide-y divide-[#DEDBD1]/60">
               {filteredUsers.map((user, i) => (
-                <tr key={user.id} className={i % 2 === 1 ? "bg-[#FAF9F6]" : undefined}>
-                  <td className="px-5 py-3 text-[#3A2A12] font-semibold">{user.fullName}</td>
-                  <td className="px-5 py-3 text-[#3A4048]">{user.email}</td>
-                  <td className="px-5 py-3 text-[#3A4048]">{user.role}</td>
-                  <td className="px-5 py-3">
-                    <span
-                      className={
-                        "inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold " +
-                        (user.status === "Active"
-                          ? "bg-[#EAF1EA] text-[#2F5C3B]"
-                          : "bg-[#F6E8E3] text-[#9A4B2E]")
-                      }
-                    >
-                      {user.status}
-                    </span>
-                  </td>
-                  <td className="px-5 py-3 text-right">
-                    <div className="flex items-center justify-end gap-3.5">
-                      <Link
-                        href={`/admin/dashboard/users/${user.id}/edit`}
-                        className="font-semibold text-[#BB892C] hover:underline"
+                <Fragment key={user.id}>
+                  <tr className={i % 2 === 1 ? "bg-[#FAF9F6]" : undefined}>
+                    <td className="px-5 py-3 text-[#3A2A12] font-semibold">
+                      {user.firstName} {user.lastName}
+                    </td>
+                    <td className="px-5 py-3 text-[#3A4048]">{user.email}</td>
+                    <td className="px-5 py-3 text-[#3A4048]">
+                      {USER_ROLE_LABELS[user.role.name as keyof typeof USER_ROLE_LABELS] ??
+                        user.role.name}
+                    </td>
+                    <td className="px-5 py-3">
+                      <span
+                        className={
+                          "inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold " +
+                          (user.isActive
+                            ? "bg-[#EAF1EA] text-[#2F5C3B]"
+                            : "bg-[#F6E8E3] text-[#9A4B2E]")
+                        }
                       >
-                        Edit
-                      </Link>
-                      
-                      {user.status === "Active" ? (
+                        {user.isActive ? "Active" : "Disabled"}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3 text-right">
+                      <div className="flex items-center justify-end gap-3.5">
+                        <Link
+                          href={`/admin/dashboard/users/${user.id}/edit`}
+                          className="font-semibold text-[#BB892C] hover:underline"
+                        >
+                          Edit
+                        </Link>
+
+                        {user.isActive ? (
+                          <button
+                            type="button"
+                            onClick={() => handleDisable(user)}
+                            disabled={busyId === user.id}
+                            className="font-semibold text-[#9A5A2E] hover:underline disabled:opacity-50"
+                          >
+                            Disable
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => handleEnable(user)}
+                            disabled={busyId === user.id}
+                            className="font-semibold text-[#2C6B33] hover:underline disabled:opacity-50"
+                          >
+                            Enable
+                          </button>
+                        )}
+
                         <button
                           type="button"
-                          onClick={() => handleDisable(user)}
-                          className="font-semibold text-[#9A5A2E] hover:underline"
+                          onClick={() => handleResetPassword(user)}
+                          disabled={busyId === user.id}
+                          className="font-semibold text-[#BB892C] hover:underline disabled:opacity-50"
                         >
-                          Disable
+                          Reset Pass
                         </button>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => handleEnable(user)}
-                          className="font-semibold text-[#2C6B33] hover:underline"
-                        >
-                          Enable
-                        </button>
-                      )}
-
-                      <button
-                        type="button"
-                        onClick={() => handleResetPassword(user)}
-                        className="font-semibold text-[#BB892C] hover:underline"
-                      >
-                        Reset Pass
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(user)}
-                        className="font-semibold text-[#B03A2E] hover:underline"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+                      </div>
+                    </td>
+                  </tr>
+                  {rowError?.id === user.id && (
+                    <tr>
+                      <td colSpan={5} className="border-t border-[#E3B9A8] bg-[#FBF0EB] px-5 py-2.5 text-[12.5px] text-[#8A3A20]">
+                        {rowError.message}
+                      </td>
+                    </tr>
+                  )}
+                </Fragment>
               ))}
             </tbody>
           </table>

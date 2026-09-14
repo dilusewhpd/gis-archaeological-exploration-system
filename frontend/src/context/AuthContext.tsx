@@ -10,6 +10,7 @@ import React, {
 } from "react";
 import {
   api,
+  AUTH_TOKEN_STORAGE_KEY,
   getStoredToken,
   setStoredToken,
   removeStoredToken,
@@ -115,8 +116,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     void initAuth();
 
+    // The `storage` event only fires in OTHER tabs/windows of the same
+    // origin, not the one that made the change — so this re-syncs a tab
+    // that's been left open when auth_token is cleared or replaced
+    // elsewhere (e.g. logging out, or logging in as a different user, in
+    // another tab). Without this, a stale tab keeps its old in-memory
+    // `user`/`token` until the next full reload.
+    const onStorage = (event: StorageEvent) => {
+      if (event.key !== AUTH_TOKEN_STORAGE_KEY || event.storageArea !== localStorage) {
+        return;
+      }
+
+      if (!event.newValue) {
+        setToken(null);
+        setUser(null);
+        return;
+      }
+
+      void (async () => {
+        try {
+          setToken(event.newValue);
+          const res = await api.get<ApiResponse<User>>("/api/auth/me");
+          if (isMounted && res?.data) {
+            setUser(res.data);
+          }
+        } catch {
+          if (isMounted) {
+            removeStoredToken();
+            setToken(null);
+            setUser(null);
+          }
+        }
+      })();
+    };
+
+    window.addEventListener("storage", onStorage);
+
     return () => {
       isMounted = false;
+      window.removeEventListener("storage", onStorage);
     };
   }, []);
 

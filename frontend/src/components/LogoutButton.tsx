@@ -13,7 +13,9 @@ export default function LogoutButton({ className }: LogoutButtonProps) {
 
   const handleLogout = () => {
     logout();
-    router.push("/auth/login");
+    // replace, not push — logging out shouldn't leave the authenticated
+    // page one "back" tap away in history.
+    router.replace("/auth/login");
   };
 
   return (

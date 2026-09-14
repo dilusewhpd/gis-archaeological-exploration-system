@@ -8,10 +8,10 @@ export default function AdminRiskAssessmentPage() {
     <div className="flex flex-1 flex-col">
       <header className="border-b border-[#DEDBD1] bg-[#FAF6EB] px-8 py-4">
         <h1 className="font-serif text-[20px] tracking-tight text-[#3A2A12]">
-          AI Risk assessment
+          Risk assessment
         </h1>
         <p className="mt-0.5 text-[13px] text-[#5B6472]">
-          Monitor the automatic AI predictive risk pipeline, compare site attributes, and review vulnerability scores.
+          Exposure risk for approved sites, scored by a trained Random Forest classifier — a heuristic indicator, not a verified damage prediction.
         </p>
       </header>
 

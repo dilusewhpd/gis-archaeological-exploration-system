@@ -42,6 +42,7 @@ export type CreateUserInput =
       ROLES.ADMIN,
       ROLES.ANALYST,
       ROLES.FIELD_OFFICER,
+      ROLES.SENIOR_OFFICER,
     ])
     .optional(),
 
@@ -84,6 +85,7 @@ export const updateUserSchema = z.object({
     ROLES.ADMIN,
     ROLES.ANALYST,
     ROLES.FIELD_OFFICER,
+    ROLES.SENIOR_OFFICER,
   ]).optional(),
 
   isActive: z.boolean().optional(),

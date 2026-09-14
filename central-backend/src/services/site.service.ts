@@ -2,6 +2,7 @@ import { Prisma, SiteStatus, SiteWorkflowAction } from "@prisma/client";
 import { prisma } from "../config/prismaDb.js";
 import { BusinessRuleError, ConflictError, ForbiddenError, NotFoundError } from "../errors/customErrors.js";
 import { CreateSiteData, GetSitesQuery, RejectSiteData, UpdateSiteData } from "../moduleTypes/sites/sites.types.js";
+import { assessSiteRisk } from "./risk.service.js";
 import { ROLES } from "../utils/constants/auth.constants.js";
 import { siteDetailsSelect } from "../utils/constants/site.constant.js";
 import { ensureSiteStatus } from "../utils/siteStatus.js";
@@ -575,6 +576,35 @@ export const getSiteWorkflowHistory = async (
   });
 
   return history;
+};
+
+/**
+ * GET /api/sites/:id/risk — only APPROVED sites have a risk profile; a
+ * draft/pending/rejected site hasn't been verified as a real site yet, so
+ * scoring it doesn't make sense.
+ */
+export const getSiteRiskAssessment = async (id: string) => {
+  const site = await prisma.site.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      status: true,
+      latitude: true,
+      longitude: true,
+    },
+  });
+
+  if (!site) {
+    throw new NotFoundError("Site not found.");
+  }
+
+  ensureSiteStatus(
+    site.status,
+    [SiteStatus.APPROVED],
+    "Only approved sites have a risk profile."
+  );
+
+  return assessSiteRisk(site.id, Number(site.latitude), Number(site.longitude));
 };
 
 export const uploadSitePhoto = async (

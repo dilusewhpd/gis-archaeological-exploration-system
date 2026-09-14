@@ -39,5 +39,11 @@ export class ValidationError extends AppError {
 export class BusinessRuleError extends AppError {
   constructor(message = "Business rule violation.") {
     super(message, 422);
-  } 
+  }
+}
+
+export class ServiceUnavailableError extends AppError {
+  constructor(message = "Service unavailable.") {
+    super(message, 503);
+  }
 }

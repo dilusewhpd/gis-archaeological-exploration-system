@@ -3,7 +3,7 @@ import { authenticate } from "../middlewares/authenticate.js";
 import { authorize } from "../middlewares/authorize.js";
 import { validate } from "../middlewares/validate.js";
 import { createSiteSchema } from "../validators/sites/create-site.validation.js";
-import { approveSiteController, createSiteController, getMySitesController, getSiteByIdController, getSiteDashboardController, getSitesController, getSiteWorkflowHistoryController, rejectSiteController, submitSiteController, updateSiteController, uploadSitePhotoController } from "../controllers/site.controller.js";
+import { approveSiteController, createSiteController, getMySitesController, getSiteByIdController, getSiteDashboardController, getSiteRiskController, getSitesController, getSiteWorkflowHistoryController, rejectSiteController, submitSiteController, updateSiteController, uploadSitePhotoController } from "../controllers/site.controller.js";
 import { uploadSitePhotoMiddleware } from "../middlewares/upload.middleware.js";
 import { ROLES } from "../utils/constants/auth.constants.js";
 import { getSitesQuerySchema } from "../validators/sites/get-sites.validation.js";
@@ -65,6 +65,18 @@ router.get(
   ),
   validateParams(siteIdParamSchema),
   getSiteWorkflowHistoryController
+);
+
+router.get(
+  "/:id/risk",
+  authenticate,
+  authorize(
+    ROLES.ADMIN,
+    ROLES.SENIOR_OFFICER,
+    ROLES.ANALYST
+  ),
+  validateParams(siteIdParamSchema),
+  getSiteRiskController
 );
 
 router.get(

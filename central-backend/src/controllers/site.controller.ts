@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { CreateSiteData, GetSitesQuery, RejectSiteData, SiteIdParam, UpdateSiteData } from "../moduleTypes/sites/sites.types.js";
-import { approveSite, createSite, getSiteById, getSiteDashboard, getSites, getSiteWorkflowHistory, rejectSite, submitSite, updateSite, uploadSitePhoto } from "../services/site.service.js";
+import { approveSite, createSite, getSiteById, getSiteDashboard, getSiteRiskAssessment, getSites, getSiteWorkflowHistory, rejectSite, submitSite, updateSite, uploadSitePhoto } from "../services/site.service.js";
 import { ROLES } from "../utils/constants/auth.constants.js";
 import { BadRequestError } from "../errors/customErrors.js";
 
@@ -230,6 +230,26 @@ export const getSiteWorkflowHistoryController = async (
       success: true,
       message: "Workflow history retrieved successfully.",
       data: history,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getSiteRiskController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.validatedParams as SiteIdParam;
+
+    const risk = await getSiteRiskAssessment(id);
+
+    return res.status(200).json({
+      success: true,
+      message: "Risk assessment retrieved successfully.",
+      data: risk,
     });
   } catch (error) {
     next(error);

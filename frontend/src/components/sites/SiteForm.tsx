@@ -1,7 +1,7 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import {
-  useMemo,
   useState,
   type ChangeEvent,
   type MouseEvent,
@@ -13,12 +13,10 @@ import {
   HISTORICAL_PERIODS,
   isPointInPolygon,
   PROVINCES,
-  projectToPercent,
   SITE_TYPES,
   SL_BOUNDS,
   SRI_LANKA_POLYGON,
   toTitleCase,
-  unprojectRatio,
 } from "@/lib/sri-lanka";
 
 /**
@@ -29,10 +27,20 @@ import {
  *  - /field_officer/dashboard/new-site
  *  - /field_officer/dashboard/records/[id]/edit
  *
- * MAP NOTE: the coordinate picker is a dependency-free box scaled to Sri
- * Lanka's bounding box, not a tiled map. Swap <CoordinatePicker/> for a real
- * map component when the GIS module lands — it only needs to emit { lat, lng }.
+ * The GPS picker (CoordinateMapPicker) is real OpenStreetMap tiles via
+ * Leaflet — same tile source as the GIS map — loaded client-only since
+ * Leaflet needs `window`. Land/sea validation (isPointInPolygon) stays
+ * here; the picker just reports where the user clicked or dragged the pin.
  */
+
+const CoordinateMapPicker = dynamic(() => import("./CoordinateMapPicker"), {
+  ssr: false,
+  loading: () => (
+    <div className="relative mt-3 flex aspect-[3/4] w-full items-center justify-center rounded-[6px] border border-[#DEDBD1] bg-[#FAF6EB] text-[12px] text-[#8A8478]">
+      Loading map…
+    </div>
+  ),
+});
 
 const EMPTY: SiteFormValues = {
   siteCode: "",
@@ -348,7 +356,7 @@ export default function SiteForm({
               Click on the map to set the site&apos;s coordinates.
             </p>
 
-            <CoordinatePicker value={coords} onChange={setCoords} />
+            <CoordinateMapPicker value={coords} onChange={setCoords} />
 
             {coords && (
               <div className="mt-3 rounded-[6px] bg-[#FAF6EB] p-2.5 text-[11px] text-[#8F6A21]">
@@ -455,96 +463,6 @@ function SelectField({
           <option key={o.value} value={o.value}>{o.label}</option>
         ))}
       </select>
-    </div>
-  );
-}
-
-function CoordinatePicker({
-  value, onChange,
-}: {
-  value: Coordinates | null;
-  onChange: (c: Coordinates) => void;
-}) {
-  const polygonPointsString = useMemo(() => {
-    return SRI_LANKA_POLYGON.map((p) => {
-      const { xPct, yPct } = projectToPercent(p.lat, p.lng);
-      return `${xPct.toFixed(1)},${yPct.toFixed(1)}`;
-    }).join(" ");
-  }, []);
-
-  const gridLines = useMemo(() => Array.from({ length: 6 }), []);
-
-  function handleClick(e: MouseEvent<HTMLDivElement>) {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const { lat, lng } = unprojectRatio(
-      (e.clientX - rect.left) / rect.width,
-      (e.clientY - rect.top) / rect.height
-    );
-    onChange({
-      lat: Math.round(lat * 10000) / 10000,
-      lng: Math.round(lng * 10000) / 10000,
-    });
-  }
-
-  const markerPos = value ? projectToPercent(value.lat, value.lng) : null;
-
-  return (
-    <div
-      role="button"
-      tabIndex={0}
-      aria-label="Click to set the site's GPS coordinates"
-      onClick={handleClick}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          onChange({
-            lat: (SL_BOUNDS.latMin + SL_BOUNDS.latMax) / 2,
-            lng: (SL_BOUNDS.lngMin + SL_BOUNDS.lngMax) / 2,
-          });
-        }
-      }}
-      className="relative mt-3 aspect-[3/4] w-full cursor-crosshair overflow-hidden rounded-[6px] border border-[#DEDBD1] bg-[#FAF6EB]"
-    >
-      <svg
-        className="absolute inset-0 h-full w-full"
-        viewBox="0 0 100 100"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        <polygon
-          points={polygonPointsString}
-          fill="#F3E9CD"
-          stroke="#D5C5A1"
-          strokeWidth={1.5}
-          vectorEffect="non-scaling-stroke"
-          className="opacity-80"
-        />
-        {gridLines.map((_, i) => {
-          const p = (i / (gridLines.length - 1)) * 100;
-          return (
-            <g key={i}>
-              <line x1={p} y1="0" x2={p} y2="100"
-                stroke="#DEDBD1" strokeWidth={1} strokeDasharray="2,2"
-                vectorEffect="non-scaling-stroke" />
-              <line x1="0" y1={p} x2="100" y2={p}
-                stroke="#DEDBD1" strokeWidth={1} strokeDasharray="2,2"
-                vectorEffect="non-scaling-stroke" />
-            </g>
-          );
-        })}
-      </svg>
-
-      {!markerPos && (
-        <p className="absolute inset-0 flex items-center justify-center px-6 text-center text-[12px] text-[#A6A199]">
-          Click anywhere to drop a pin
-        </p>
-      )}
-
-      {markerPos && (
-        <div
-          className="absolute h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-[#9A4B2E] shadow-[0_0_0_1px_rgba(154,75,46,0.4)]"
-          style={{ left: `${markerPos.xPct}%`, top: `${markerPos.yPct}%` }}
-        />
-      )}
     </div>
   );
 }

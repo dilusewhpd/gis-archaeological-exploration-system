@@ -37,7 +37,6 @@ export const ROLE_CONFIGS: Record<RoleType, RoleConfig> = {
     navItems: [
       { href: "/senior_officer/dashboard", label: "Review queue", icon: "home" },
       { href: "/senior_officer/dashboard/gis-map", label: "GIS map", icon: "map" },
-      { href: "/senior_officer/dashboard/decisions", label: "Decision support", icon: "shield-check" },
       { href: "/senior_officer/dashboard/reports", label: "Reports", icon: "doc" },
       { href: "/senior_officer/dashboard/profile", label: "Profile", icon: "gear" },
     ],
@@ -51,7 +50,6 @@ export const ROLE_CONFIGS: Record<RoleType, RoleConfig> = {
       { href: "/analyst/dashboard", label: "Dashboard", icon: "home" },
       { href: "/analyst/dashboard/gis-map", label: "GIS map", icon: "map" },
       { href: "/analyst/dashboard/risk-assessment", label: "Risk assessment", icon: "shield-check" },
-      { href: "/analyst/dashboard/decisions", label: "Decision support", icon: "shield-check" },
       { href: "/analyst/dashboard/reports", label: "Reports", icon: "doc" },
       { href: "/analyst/dashboard/profile", label: "Profile", icon: "gear" },
     ],
@@ -65,7 +63,6 @@ export const ROLE_CONFIGS: Record<RoleType, RoleConfig> = {
       { href: "/admin/dashboard", label: "Dashboard", icon: "home" },
       { href: "/admin/dashboard/gis-map", label: "GIS map", icon: "map" },
       { href: "/admin/dashboard/risk-assessment", label: "Risk assessment", icon: "shield-check" },
-      { href: "/admin/dashboard/decisions", label: "Decision support", icon: "shield-check" },
       { href: "/admin/dashboard/users", label: "Users", icon: "users" },
       { href: "/admin/dashboard/profile", label: "Profile", icon: "gear" },
     ],

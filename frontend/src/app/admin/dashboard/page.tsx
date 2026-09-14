@@ -165,9 +165,9 @@ export default function AdminDashboardPage() {
                   theme="warm"
                 />
                 <QuickLinkCard
-                  href="/admin/dashboard/decisions"
-                  title="Decision Support"
-                  description="Prioritised site listings and planning parameters."
+                  href="/admin/dashboard/risk-assessment"
+                  title="Risk Assessment"
+                  description="Model-scored exposure risk for approved sites."
                   icon={<BalanceIcon />}
                   theme="warm"
                 />

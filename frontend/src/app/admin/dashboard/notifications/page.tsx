@@ -21,8 +21,6 @@ const INITIAL_NOTIFICATIONS: Notification[] = [
     message: "Field Officer J. Perera submitted 'Sigiriya East Ridge' for validation.",
     time: "2 hours ago",
     unread: true,
-    actionLabel: "Review site",
-    actionHref: "/admin/dashboard/decisions",
   },
   {
     id: "n-2",

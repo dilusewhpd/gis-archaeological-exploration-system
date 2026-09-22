@@ -181,7 +181,7 @@ export default function ReportsPage() {
               Access previously generated reports.
             </p>
 
-            <div className="mt-4 overflow-hidden rounded-[8px] border border-[#DEDBD1]">
+            <div className="mt-4 overflow-x-auto rounded-[8px] border border-[#DEDBD1]">
               <table className="w-full text-left text-[13px]">
                 <thead>
                   <tr className="bg-[#3A2A12] text-[#F4F2ED]">

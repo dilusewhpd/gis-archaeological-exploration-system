@@ -127,7 +127,7 @@ export default function MyRecordsPage() {
           </div>
         )}
 
-        <div className="overflow-hidden rounded-[8px] border border-[#DEDBD1] bg-white">
+        <div className="overflow-x-auto rounded-[8px] border border-[#DEDBD1] bg-white">
           <table className="w-full text-left text-[13px]">
             <thead>
               <tr className="bg-[#3A2A12] text-[#F4F2ED]">

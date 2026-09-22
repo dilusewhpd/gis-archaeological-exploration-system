@@ -189,7 +189,7 @@ export default function AdminDashboardPage() {
                 Read-only. Approvals are actioned by senior officers.
               </p>
 
-              <div className="mt-4 overflow-hidden rounded-[8px] border border-[#DEDBD1]">
+              <div className="mt-4 overflow-x-auto rounded-[8px] border border-[#DEDBD1]">
                 {isLoading ? (
                   <p className="px-5 py-8 text-center text-[13px] text-[#8A8D86]">Loading…</p>
                 ) : pending.length === 0 ? (

@@ -150,7 +150,7 @@ export default function AnalystReportsPage() {
         </div>
 
         {/* Report history */}
-        <div className="mt-6 rounded-[8px] border border-[#DEDBD1] bg-white overflow-hidden">
+        <div className="mt-6 rounded-[8px] border border-[#DEDBD1] bg-white overflow-x-auto">
           <div className="flex items-center justify-between border-b border-[#DEDBD1] px-5 py-4">
             <h2 className="text-[14px] font-semibold text-[#3A2A12] uppercase tracking-wider">Report History</h2>
             <p className="text-[12px] font-medium text-[#BB892C] bg-[#FAF6EB] px-2 py-0.5 rounded border border-[#DEDBD1]/60">

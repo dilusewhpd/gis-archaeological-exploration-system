@@ -84,7 +84,7 @@ export default function AdminReportsPage() {
         </div>
 
         {/* Report history */}
-        <div className="mt-6 overflow-hidden rounded-[8px] border border-[#DEDBD1] bg-white">
+        <div className="mt-6 overflow-x-auto rounded-[8px] border border-[#DEDBD1] bg-white">
           <div className="flex items-center justify-between border-b border-[#DEDBD1] px-5 py-4">
             <h2 className="text-[14px] font-medium text-[#3A2A12]">Report history</h2>
             <p className="text-[13px] text-[#8A8D86]">{reports.length} reports</p>

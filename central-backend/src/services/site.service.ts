@@ -238,25 +238,21 @@ export const updateSite = async (
     );
   }
 
-  ensureSiteStatus(
-    site.status,
-    [SiteStatus.DRAFT, SiteStatus.REJECTED],
-    "Only draft or rejected sites can be updated."
-  );
-
   const updatedSite = await prisma.$transaction(async (tx) => {
-    const site = await tx.site.update({
+    const { count } = await tx.site.updateMany({
       where: {
         id,
+        status: { in: [SiteStatus.DRAFT, SiteStatus.REJECTED] },
       },
-
       data: {
         ...data,
         updatedById: currentUserId,
       },
-
-      select: siteDetailsSelect,
     });
+
+    if (count === 0) {
+      throw new BusinessRuleError("Only draft or rejected sites can be updated.");
+    }
 
     await tx.siteWorkflowHistory.create({
       data: {
@@ -266,7 +262,10 @@ export const updateSite = async (
       },
     });
 
-    return site;
+    return tx.site.findUniqueOrThrow({
+      where: { id },
+      select: siteDetailsSelect,
+    });
   });
 
   return updatedSite;
@@ -307,18 +306,17 @@ export const submitSite = async (
     );
   }
 
-  // DRAFT sites and REJECTED sites (revised, then resubmitted) can be submitted
-  ensureSiteStatus(
-    site.status,
-    [SiteStatus.DRAFT, SiteStatus.REJECTED],
-    "Only draft or rejected sites can be submitted for review."
-  );
-
+  // DRAFT sites and REJECTED sites (revised, then resubmitted) can be
+  // submitted. The ownership/role checks above are read-then-act too, but
+  // a user's own role/authorship can't change mid-request the way a site's
+  // workflow status can — only the status transition itself needs the
+  // atomic updateMany guard below (see approveSite).
   const submittedSite = await prisma.$transaction(
     async (tx) => {
-      const updatedSite = await tx.site.update({
+      const { count } = await tx.site.updateMany({
         where: {
           id,
+          status: { in: [SiteStatus.DRAFT, SiteStatus.REJECTED] },
         },
         data: {
           status: SiteStatus.PENDING,
@@ -329,8 +327,11 @@ export const submitSite = async (
           rejectionReason: null,
           updatedById: currentUserId,
         },
-        select: siteDetailsSelect,
       });
+
+      if (count === 0) {
+        throw new BusinessRuleError("Only draft or rejected sites can be submitted for review.");
+      }
 
       await tx.siteWorkflowHistory.create({
         data: {
@@ -340,7 +341,10 @@ export const submitSite = async (
         },
       });
 
-      return updatedSite;
+      return tx.site.findUniqueOrThrow({
+        where: { id },
+        select: siteDetailsSelect,
+      });
     },{
       timeout: 300000, // timeout in 5 minutes
     }
@@ -353,40 +357,33 @@ export const approveSite = async (
   id: string,
   currentUserId: string
 ) => {
-  const site = await prisma.site.findUnique({
-    where: { id },
-    select: {
-      id: true,
-      status: true,
-    },
-  });
-
-  if (!site) {
-    throw new NotFoundError("Site not found.");
-  }
-
-  ensureSiteStatus(
-    site.status,
-    [SiteStatus.PENDING],
-    "Only pending sites can be approved."
-  );
-
   const approvedSite = await prisma.$transaction(
     async (tx) => {
-      const updatedSite = await tx.site.update({
+      // A conditional updateMany (rather than findUnique + a separate
+      // update) makes the status check and the write atomic — Postgres
+      // serializes concurrent UPDATEs on the same row, so a duplicate
+      // approve request (e.g. a double-click that fired two requests)
+      // matches 0 rows on its turn instead of silently approving twice.
+      const { count } = await tx.site.updateMany({
         where: {
           id,
+          status: SiteStatus.PENDING,
         },
-
         data: {
           status: SiteStatus.APPROVED,
           approvedAt: new Date(),
           approvedById: currentUserId,
           updatedById: currentUserId,
         },
-
-        select: siteDetailsSelect,
       });
+
+      if (count === 0) {
+        const site = await tx.site.findUnique({ where: { id }, select: { id: true } });
+        if (!site) {
+          throw new NotFoundError("Site not found.");
+        }
+        throw new BusinessRuleError("Only pending sites can be approved.");
+      }
 
       await tx.siteWorkflowHistory.create({
         data: {
@@ -396,7 +393,10 @@ export const approveSite = async (
         },
       });
 
-      return updatedSite;
+      return tx.site.findUniqueOrThrow({
+        where: { id },
+        select: siteDetailsSelect,
+      });
     },{
       timeout: 300000, // timeout in 5 minutes
     }
@@ -410,39 +410,29 @@ export const rejectSite = async (
   data: RejectSiteData,
   currentUserId: string
 ) => {
-  const site = await prisma.site.findUnique({
-    where: { id },
-    select: {
-      id: true,
-      status: true,
-    },
-  });
-
-  if (!site) {
-    throw new NotFoundError("Site not found.");
-  }
-
-  ensureSiteStatus(
-    site.status,
-    [SiteStatus.PENDING],
-    "Only pending sites can be rejected."
-  );
-
   const rejectedSite = await prisma.$transaction(async (tx) => {
-    const updatedSite = await tx.site.update({
+    // See approveSite — an atomic conditional updateMany closes the same
+    // double-submit race for rejection.
+    const { count } = await tx.site.updateMany({
       where: {
         id,
+        status: SiteStatus.PENDING,
       },
-
       data: {
         status: SiteStatus.REJECTED,
         rejectedAt: new Date(),
         rejectionReason: data.rejectionReason,
         updatedById: currentUserId,
       },
-
-      select: siteDetailsSelect,
     });
+
+    if (count === 0) {
+      const site = await tx.site.findUnique({ where: { id }, select: { id: true } });
+      if (!site) {
+        throw new NotFoundError("Site not found.");
+      }
+      throw new BusinessRuleError("Only pending sites can be rejected.");
+    }
 
     await tx.siteWorkflowHistory.create({
       data: {
@@ -453,7 +443,10 @@ export const rejectSite = async (
       },
     });
 
-    return updatedSite;
+    return tx.site.findUniqueOrThrow({
+      where: { id },
+      select: siteDetailsSelect,
+    });
   },{
       timeout: 300000, // timeout in 5 minutes
   });

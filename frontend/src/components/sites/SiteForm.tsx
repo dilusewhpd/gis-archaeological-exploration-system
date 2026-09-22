@@ -2,6 +2,8 @@
 
 import dynamic from "next/dynamic";
 import {
+  useEffect,
+  useRef,
   useState,
   type ChangeEvent,
   type MouseEvent,
@@ -41,6 +43,10 @@ const CoordinateMapPicker = dynamic(() => import("./CoordinateMapPicker"), {
     </div>
   ),
 });
+
+// Mirrors the backend's multer config (upload.middleware.ts).
+const ALLOWED_PHOTO_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
 
 const EMPTY: SiteFormValues = {
   siteCode: "",
@@ -103,16 +109,50 @@ export default function SiteForm({
   const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
   const [localError, setLocalError] = useState<string | null>(null);
 
+  // `busy` disabling the button only takes effect on the next render — a
+  // genuine rapid double-click can fire both handlers before that render
+  // happens. This ref blocks re-entry synchronously, closing that gap; it
+  // stays in sync with `busy` so a later failed submit can be retried.
+  const submittingRef = useRef(false);
+  useEffect(() => {
+    submittingRef.current = busy;
+  }, [busy]);
+
   function set<K extends keyof SiteFormValues>(key: K, value: SiteFormValues[K]) {
     setV((prev) => ({ ...prev, [key]: value }));
+    setLocalError(null);
+  }
+
+  function updateCoords(next: Coordinates | ((prev: Coordinates | null) => Coordinates)) {
+    setCoords(next);
+    setLocalError(null);
   }
 
   function handlePhotoChange(e: ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files ?? []);
     if (files.length === 0) return;
-    setPhotos((prev) => [...prev, ...files]);
-    setPhotoPreviews((prev) => [...prev, ...files.map((f) => URL.createObjectURL(f))]);
     e.target.value = "";
+
+    // The <input accept> attribute only filters the OS file picker — a
+    // drag-drop or a renamed file can still get here, so re-check the type
+    // and size (matches the backend's own limits) before it reaches a
+    // broken-looking preview or a failed upload at submit time.
+    const validFiles: File[] = [];
+    for (const file of files) {
+      if (!ALLOWED_PHOTO_TYPES.includes(file.type)) {
+        setLocalError(`${file.name} isn't a supported image type. Use JPEG, PNG, or WebP.`);
+        continue;
+      }
+      if (file.size > MAX_PHOTO_BYTES) {
+        setLocalError(`${file.name} is too large (max 10MB).`);
+        continue;
+      }
+      validFiles.push(file);
+    }
+    if (validFiles.length === 0) return;
+
+    setPhotos((prev) => [...prev, ...validFiles]);
+    setPhotoPreviews((prev) => [...prev, ...validFiles.map((f) => URL.createObjectURL(f))]);
   }
 
   function removePhoto(index: number) {
@@ -157,10 +197,13 @@ export default function SiteForm({
 
   function handleClick(e: MouseEvent<HTMLButtonElement>, mode: "primary" | "secondary") {
     e.preventDefault();
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     setLocalError(null);
     const problem = validate();
     if (problem) {
       setLocalError(problem);
+      submittingRef.current = false;
       return;
     }
     const payload = buildSitePayload({
@@ -356,7 +399,7 @@ export default function SiteForm({
               Click on the map to set the site&apos;s coordinates.
             </p>
 
-            <CoordinateMapPicker value={coords} onChange={setCoords} />
+            <CoordinateMapPicker value={coords} onChange={updateCoords} />
 
             {coords && (
               <div className="mt-3 rounded-[6px] bg-[#FAF6EB] p-2.5 text-[11px] text-[#8F6A21]">
@@ -376,7 +419,7 @@ export default function SiteForm({
                 min={SL_BOUNDS.latMin}
                 max={SL_BOUNDS.latMax}
                 onChange={(lat) =>
-                  setCoords((prev) => ({ lat, lng: prev?.lng ?? (SL_BOUNDS.lngMin + SL_BOUNDS.lngMax) / 2 }))
+                  updateCoords((prev) => ({ lat, lng: prev?.lng ?? (SL_BOUNDS.lngMin + SL_BOUNDS.lngMax) / 2 }))
                 }
               />
               <ManualCoordField
@@ -385,7 +428,7 @@ export default function SiteForm({
                 min={SL_BOUNDS.lngMin}
                 max={SL_BOUNDS.lngMax}
                 onChange={(lng) =>
-                  setCoords((prev) => ({ lng, lat: prev?.lat ?? (SL_BOUNDS.latMin + SL_BOUNDS.latMax) / 2 }))
+                  updateCoords((prev) => ({ lng, lat: prev?.lat ?? (SL_BOUNDS.latMin + SL_BOUNDS.latMax) / 2 }))
                 }
               />
             </div>

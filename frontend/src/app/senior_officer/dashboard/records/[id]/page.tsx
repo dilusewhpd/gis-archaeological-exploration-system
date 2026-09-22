@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import SiteDetailView from "@/components/sites/SiteDetailView";
@@ -29,6 +29,12 @@ export default function SeniorReviewDetailPage() {
   const [reason, setReason] = useState("");
   const [busy, setBusy] = useState<"approve" | "reject" | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  // `busy` disabling the buttons only takes effect on the next render — a
+  // genuine rapid double-click can fire both handlers before that render
+  // happens, which (confirmed while testing) raced the backend into
+  // writing two APPROVED history rows for one click. This ref blocks
+  // re-entry synchronously.
+  const actionInFlightRef = useRef(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -52,6 +58,8 @@ export default function SeniorReviewDetailPage() {
   }, [siteId]);
 
   async function handleApprove() {
+    if (actionInFlightRef.current) return;
+    actionInFlightRef.current = true;
     setActionError(null);
     setBusy("approve");
     try {
@@ -61,15 +69,18 @@ export default function SeniorReviewDetailPage() {
     } catch (err) {
       setActionError(apiErrorMessage(err));
       setBusy(null);
+      actionInFlightRef.current = false;
     }
   }
 
   async function handleReject() {
+    if (actionInFlightRef.current) return;
     setActionError(null);
     if (reason.trim().length < MIN_REASON) {
       setActionError(`The rejection reason must be at least ${MIN_REASON} characters.`);
       return;
     }
+    actionInFlightRef.current = true;
     setBusy("reject");
     try {
       await rejectSite(siteId, reason.trim());
@@ -78,6 +89,7 @@ export default function SeniorReviewDetailPage() {
     } catch (err) {
       setActionError(apiErrorMessage(err));
       setBusy(null);
+      actionInFlightRef.current = false;
     }
   }
 

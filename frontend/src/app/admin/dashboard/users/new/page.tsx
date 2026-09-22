@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { apiErrorMessage } from "@/lib/sites";
 import { createUser, USER_ROLE_LABELS, USER_ROLE_OPTIONS, type UserRoleName } from "@/lib/users";
@@ -19,9 +19,14 @@ export default function RegisterUserPage() {
   const [created, setCreated] = useState<{ name: string; temporaryPassword: string } | null>(
     null
   );
+  // `isSubmitting` disabling the button only takes effect on the next
+  // render — a rapid double-click can fire handleSubmit twice before that
+  // render happens. This ref blocks re-entry synchronously.
+  const submittingRef = useRef(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (submittingRef.current) return;
     setError(null);
 
     if (!firstName.trim() || !lastName.trim()) {
@@ -33,6 +38,7 @@ export default function RegisterUserPage() {
       return;
     }
 
+    submittingRef.current = true;
     setIsSubmitting(true);
     try {
       const { user, temporaryPassword } = await createUser({
@@ -46,6 +52,7 @@ export default function RegisterUserPage() {
       setError(apiErrorMessage(err));
     } finally {
       setIsSubmitting(false);
+      submittingRef.current = false;
     }
   }
 

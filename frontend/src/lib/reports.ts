@@ -3,12 +3,16 @@ import { ApiError, getStoredToken } from "@/lib/api";
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000";
 
+export interface DownloadedReport {
+  filename: string;
+}
+
 /**
  * Downloads the field officer's "Exploration Log" PDF from
  * GET /api/reports/my-sites and triggers a real browser save — the backend
  * streams a freshly generated PDF, so there is no history to fetch.
  */
-export async function downloadMySitesReport(): Promise<void> {
+export async function downloadMySitesReport(): Promise<DownloadedReport> {
   const token = getStoredToken();
   const headers = new Headers();
   if (token) headers.set("Authorization", `Bearer ${token}`);
@@ -41,4 +45,6 @@ export async function downloadMySitesReport(): Promise<void> {
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
+
+  return { filename };
 }

@@ -10,8 +10,8 @@ One account per role, already seeded in the dev database:
 | Role | Email | Password |
 |---|---|---|
 | Field Officer | `diluni@gmail.com` | `Gl4*C1@3Zz` |
-| Senior Officer | `senior.officer@doa.lk` | `aG@j&u2JHJ` |
-| Analyst | `analyst@doa.lk` | `Y5a#*sP1@V` |
+| Senior Officer | `senior.officer@doa.lk` | `Rk7#pN2$vTq9` |
+| Analyst | `analyst@doa.lk` | `Bz3&mW8!qLr5` |
 | Admin | `admin@example.com` | `Hg6#&uBlbf` |
 
 (Each account has `mustChangePassword` set, but that's informational only —

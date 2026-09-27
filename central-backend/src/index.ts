@@ -5,6 +5,7 @@ import authRoutes from './routes/auth.routes.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import userRoutes from './routes/user.routes.js';
 import siteRoutes from './routes/site.routes.js';
+import reportRoutes from './routes/report.routes.js';
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Content-Disposition'],
   })
 );
 
@@ -35,6 +37,7 @@ app.get("/health", (_req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/sites", siteRoutes);
+app.use("/api/reports", reportRoutes);
 
 app.use(errorHandler);
 

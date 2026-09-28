@@ -34,7 +34,7 @@ export default function QuickLinkCard({
         {/* Icon Header */}
         <div className={`grid h-10 w-10 place-items-center rounded-lg bg-[#F4F3EF] text-[#5B6472] transition-colors duration-300 ${accentBg} ${accentText} shrink-0`}>
           {icon}
-        </div>
+        </div>p
 
         {/* Text */}
         <h3 className="mt-4 font-serif text-[15px] font-semibold text-[#3A2A12] leading-snug">
